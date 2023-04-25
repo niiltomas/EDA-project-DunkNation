@@ -55,12 +55,6 @@ build CMakeFiles/EDA2.dir/library.c.obj: C_COMPILER__EDA2_Debug C$:/Users/Nil/CL
   OBJECT_DIR = CMakeFiles\EDA2.dir
   OBJECT_FILE_DIR = CMakeFiles\EDA2.dir
 
-build CMakeFiles/EDA2.dir/estructuras.c.obj: C_COMPILER__EDA2_Debug C$:/Users/Nil/CLionProjects/EDA2/estructuras.c || cmake_object_order_depends_target_EDA2
-  DEP_FILE = CMakeFiles\EDA2.dir\estructuras.c.obj.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu11
-  OBJECT_DIR = CMakeFiles\EDA2.dir
-  OBJECT_FILE_DIR = CMakeFiles\EDA2.dir
-
 
 # =============================================================================
 # Link build statements for STATIC_LIBRARY target EDA2
@@ -69,7 +63,7 @@ build CMakeFiles/EDA2.dir/estructuras.c.obj: C_COMPILER__EDA2_Debug C$:/Users/Ni
 #############################################
 # Link the static library libEDA2.a
 
-build libEDA2.a: C_STATIC_LIBRARY_LINKER__EDA2_Debug CMakeFiles/EDA2.dir/library.c.obj CMakeFiles/EDA2.dir/estructuras.c.obj
+build libEDA2.a: C_STATIC_LIBRARY_LINKER__EDA2_Debug CMakeFiles/EDA2.dir/library.c.obj
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = CMakeFiles\EDA2.dir
   POST_BUILD = cd .

@@ -1,2 +1,0 @@
-C:\PROGRA~2\MinGW\bin\ar.exe qc libEDA2.a CMakeFiles/EDA2.dir/library.c.obj CMakeFiles/EDA2.dir/estructuras.c.obj
-C:\PROGRA~2\MinGW\bin\ranlib.exe libEDA2.a

@@ -21,28 +21,28 @@ void menu() {
 
         switch (opcion) {
             case 1:
-                // Código para insertar un nuevo usuario
+                // Código --> insertar un nuevo usuario
                 break;
             case 2:
-                // Código para listar todos los usuarios existentes
+                // Código --> listar todos los usuarios existentes
                 break;
             case 3:
-                // Código para operar como un usuario específico
+                // Código --> operar como un usuario específico
                 break;
             case 4:
-                // Código para enviar solicitudes de amistad
+                // Código --> enviar solicitudes de amistad
                 break;
             case 5:
-                // Código para gestionar las solicitudes pendientes
+                // Código --> gestionar las solicitudes pendientes
                 break;
             case 6:
-                // Código para realizar una publicación
+                // Código --> realizar una publicación
                 break;
             case 7:
-                // Código para listar las publicaciones del usuario seleccionado
+                // Código --> listar las publicaciones del usuario seleccionado
                 break;
             case 8:
-                // Volver al menú principal
+                // Volver --> menú principal
                 break;
             case 9:
                 printf("Saliendo del programa...\n");

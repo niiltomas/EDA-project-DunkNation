@@ -1,22 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "estructuras.c"
 
 void menu() {
     int opcion;
 
     do {
-        printf("\n----- MENÚ -----\n");
+        printf("\n----- MENU -----\n");
         printf("1. Insertar un nuevo usuario\n");
         printf("2. Listar todos los usuarios existentes\n");
-        printf("3. Operar como un usuario específico\n");
+        printf("3. Operar como un usuario especIfico\n");
         printf("4. Enviar solicitudes de amistad\n");
         printf("5. Gestionar las solicitudes pendientes\n");
-        printf("6. Realizar una publicación\n");
+        printf("6. Realizar una publicacion\n");
         printf("7. Listar las publicaciones del usuario seleccionado\n");
-        printf("8. Volver al menú principal\n");
-        printf("9. Salir (Terminar ejecución)\n");
+        printf("8. Volver al menu principal\n");
+        printf("9. Salir (Terminar ejecucion)\n");
 
-        printf("\n Elija una opción: ");
+        printf("\n Elija una opcion: ");
         scanf("%d", &opcion);
 
         switch (opcion) {
@@ -53,3 +54,5 @@ void menu() {
         }
     } while (opcion != 9);
 }
+
+

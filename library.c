@@ -99,3 +99,5 @@ void AddControls(HWND hwnd)
 
     ///boton login
 }
+
+//hola

@@ -98,5 +98,4 @@ void AddControls(HWND hwnd)
     CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
 
     ///boton login
-    ///CreateWindowW(L"Button",L"ALL USERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
 }

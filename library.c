@@ -39,8 +39,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
     wc.lpszClassName = L"myWindowClass";
     wc.lpfnWndProc = WindowProcedure;
     if(!RegisterClassW(&wc)) return -1;
-    CreateWindowW(L"myWindowClass",L"RED SOCIAL",WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100,500,500,
+    CreateWindowW(L"myWindowClass",L"DUNK NATION",WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100,500,500,
                   NULL,NULL,NULL,NULL);
+
     MSG msg = {0};
     while(GetMessage(&msg,NULL,0,0))
     {
@@ -51,18 +52,23 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
 }
 LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 {
+    int aux;
     switch(msg)
     {
         case WM_COMMAND: ///ÉS EL MISSATGE
             switch(wp)
             {
                 case FILE_MENU_EXIT:
-                    DestroyWindow(hwnd);
+                    aux= MessageBoxW(hwnd,L"Estas segur que vols sortir?",L"EXIT",MB_YESNO|MB_ICONEXCLAMATION);
+                    if (aux==IDYES)
+                    {
+                        DestroyWindow(hwnd);
+                    }
                     break;
                 case GENERATE_BUTTON:
                     break;
                 case LOGIN:
-                    ///CreateWindowW(L"Button",L"ALL USERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
+                    MessageBoxW(NULL,L"NAME AND PASSWORD",L"LOGIN",MB_OK );
                     break;
             }
 
@@ -93,8 +99,8 @@ void AddControls(HWND hwnd)
 {
     ///botons del main
     CreateWindowW(L"Button",L"LOGIN",WS_VISIBLE |WS_CHILD|WS_BORDER,100,50,98,38,hwnd,(HMENU)LOGIN,0,0);
-    CreateWindowW(L"Button",L"NEW USER",WS_VISIBLE |WS_CHILD|WS_BORDER,250,50,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
-    CreateWindowW(L"Button",L"ALL USERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
+    CreateWindowW(L"Button",L"NEW PLAYER",WS_VISIBLE |WS_CHILD|WS_BORDER ,250,50,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
+    CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
     CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
 
     ///boton login

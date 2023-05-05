@@ -26,10 +26,11 @@ LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 void AddMenus(HWND);
 void AddControls(HWND);
 void registerDialogClass(HINSTANCE);
+void displayDialog(HWND);
 
-HWND hName, hAge,hOut;
+
 HMENU hMenu;
-///HWND hEdit;
+
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow)
 {
     WNDCLASSW wc={0};
@@ -38,8 +39,10 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
     wc.hInstance=hInst;
     wc.lpszClassName = L"myWindowClass";
     wc.lpfnWndProc = WindowProcedure;
-    if(!RegisterClassW(&wc)) return -1;
-    registerDialogClass
+    if(!RegisterClassW(&wc)) {
+        return -1;
+    }
+    registerDialogClass(hInst);
     CreateWindowW(L"myWindowClass",L"DUNK NATION",WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100,500,500,
                   NULL,NULL,NULL,NULL);
 
@@ -75,15 +78,18 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 
             break;
         case WM_CREATE: ///moment en el què la finestra s'ha creat i tot seguit hi afegim els menus etc. a la finestra
+            displayDialog(hwnd);
             AddMenus(hwnd);
             AddControls(hwnd);
             break;
         case WM_DESTROY:
             PostQuitMessage(0);
             break;
+        default:
+            return DefWindowProcW(hwnd,msg,wp,lp);
 
     }
-    return DefWindowProcW(hwnd,msg,wp,lp);
+
 }
 
 void AddMenus(HWND hwnd)
@@ -109,23 +115,31 @@ void AddControls(HWND hwnd)
 
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
-    switch (msg)
+    switch(msg)
     {
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
+        default:
             return DefWindowProcW(hwnd,msg,wp,lp);
 
     }
 }
+
 void registerDialogClass(HINSTANCE hInst)
 {
     WNDCLASSW dialog={0};
     dialog.hbrBackground= (HBRUSH) COLOR_WINDOW;
-    dialog.hCursor = LoadCursor (NULL,IDC_ARROW);
+    dialog.hCursor = LoadCursor (NULL,IDC_CROSS);
     dialog.hInstance=hInst;
     dialog.lpszClassName = L"myDialogClass";
-    dialog.lpfnWndProc = WindowProcedure;
-    if(!RegisterClassW(&dialog))
+    dialog.lpfnWndProc = DialogProcedure;
+
+    RegisterClassW(&dialog);
+
+}
+void displayDialog(HWND hwnd)
+{
+    CreateWindowW(L"myDialogClass",L"Dialog",WS_VISIBLE | WS_OVERLAPPEDWINDOW,400,400,200,200,hwnd,0,0,0);
 
 }

@@ -25,7 +25,7 @@ LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 
 void AddMenus(HWND);
 void AddControls(HWND);
-
+void registerDialogClass(HINSTANCE);
 
 HWND hName, hAge,hOut;
 HMENU hMenu;
@@ -39,6 +39,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
     wc.lpszClassName = L"myWindowClass";
     wc.lpfnWndProc = WindowProcedure;
     if(!RegisterClassW(&wc)) return -1;
+    registerDialogClass
     CreateWindowW(L"myWindowClass",L"DUNK NATION",WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100,500,500,
                   NULL,NULL,NULL,NULL);
 
@@ -106,4 +107,25 @@ void AddControls(HWND hwnd)
     ///boton login
 }
 
-//hola
+LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
+{
+    switch (msg)
+    {
+        case WM_CLOSE:
+            DestroyWindow(hwnd);
+            break;
+            return DefWindowProcW(hwnd,msg,wp,lp);
+
+    }
+}
+void registerDialogClass(HINSTANCE hInst)
+{
+    WNDCLASSW dialog={0};
+    dialog.hbrBackground= (HBRUSH) COLOR_WINDOW;
+    dialog.hCursor = LoadCursor (NULL,IDC_ARROW);
+    dialog.hInstance=hInst;
+    dialog.lpszClassName = L"myDialogClass";
+    dialog.lpfnWndProc = WindowProcedure;
+    if(!RegisterClassW(&dialog))
+
+}

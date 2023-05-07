@@ -43,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
         return -1;
     }
     registerDialogClass(hInst);
-    CreateWindowW(L"myWindowClass",L"DUNK NATION",WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100,500,500,
+    CreateWindowW(L"myWindowClass",L"DUNK NATION",WS_OVERLAPPEDWINDOW | WS_VISIBLE, 300, 100,500,500,
                   NULL,NULL,NULL,NULL);
 
     MSG msg = {0};
@@ -72,13 +72,13 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
                 case GENERATE_BUTTON:
                     break;
                 case LOGIN:
-                    MessageBoxW(NULL,L"NAME AND PASSWORD",L"LOGIN",MB_OK );
+                    displayDialog(hwnd);
                     break;
             }
 
             break;
         case WM_CREATE: ///moment en el què la finestra s'ha creat i tot seguit hi afegim els menus etc. a la finestra
-            displayDialog(hwnd);
+
             AddMenus(hwnd);
             AddControls(hwnd);
             break;
@@ -117,6 +117,14 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
     switch(msg)
     {
+        case WM_COMMAND:
+            switch(wp)
+            {
+                case 1:
+                    DestroyWindow(hwnd);
+                    break;
+            }
+            break;
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
@@ -130,9 +138,9 @@ void registerDialogClass(HINSTANCE hInst)
 {
     WNDCLASSW dialog={0};
     dialog.hbrBackground= (HBRUSH) COLOR_WINDOW;
-    dialog.hCursor = LoadCursor (NULL,IDC_CROSS);
+    dialog.hCursor = LoadCursor (NULL,IDC_ARROW);
     dialog.hInstance=hInst;
-    dialog.lpszClassName = L"myDialogClass";
+    dialog.lpszClassName = L"login";
     dialog.lpfnWndProc = DialogProcedure;
 
     RegisterClassW(&dialog);
@@ -140,6 +148,14 @@ void registerDialogClass(HINSTANCE hInst)
 }
 void displayDialog(HWND hwnd)
 {
-    CreateWindowW(L"myDialogClass",L"Dialog",WS_VISIBLE | WS_OVERLAPPEDWINDOW,400,400,200,200,hwnd,0,0,0);
-
+    ///ventana emergente login
+    HWND hDlg= CreateWindowW(L"login",L"LOGIN",WS_VISIBLE | WS_OVERLAPPEDWINDOW,400,400,500,300,hwnd,0,0,0);
+    ///botón cerrar
+    CreateWindowW(L"Button",L"Close",WS_VISIBLE|WS_CHILD,190,200,100,40,hDlg,(HMENU)1,NULL,NULL);
+    ///cuadro de texto: "introduce el nombre de usuario"
+    CreateWindowW(L"Static",L"Introduce el nombre de usuario:",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)1,NULL,NULL);/// posicion (x,y) en la ventana (en pixeles) i dimensiones (x,y)
+    CreateWindowW(L"Edit",L"...",WS_VISIBLE |WS_CHILD |WS_BORDER|ES_MULTILINE|ES_AUTOVSCROLL |ES_AUTOHSCROLL,20,70,100,50,hDlg,(HMENU)GENERATE_BUTTON,0,0);
+    ///cuadro de texto: "introduce la contraseña"
+    CreateWindowW(L"Static",L"Introduce la contraseña del usuario:",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)1,NULL,NULL);
+    CreateWindowW(L"Edit",L"",WS_VISIBLE |WS_CHILD |WS_BORDER|ES_MULTILINE|ES_AUTOVSCROLL |ES_AUTOHSCROLL,20,170,100,50,hDlg,(HMENU)GENERATE_BUTTON,0,0);
 }

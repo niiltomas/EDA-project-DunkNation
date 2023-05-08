@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "codigo primcipal.h"
 #include "codigo primcipal.c"
-
+#include "estructuras.c"
 
 #define FILE_MENU_EXIT 3
 #define GENERATE_BUTTON 5
@@ -23,10 +23,12 @@ void AddControls(HWND);
 
 HMENU hMenu;
 
+ListNode* userList = NULL;
+ListNode* current;
+
 ///no tocar nada de aqui, ya que es la configuracion de la ventana principal
 /// : ##################################################################################################
-int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow)
-{
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow) {
     WNDCLASSW wc={0};
     wc.hbrBackground= (HBRUSH) COLOR_WINDOW;
     wc.hCursor = LoadCursor (NULL,IDC_ARROW);
@@ -48,8 +50,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
     return 0;
 }
 ///#########################################################################
-LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
-{
+LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
     User* user= malloc(sizeof(User));
     char username[20];
     int aux,password;
@@ -66,6 +67,19 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
                     }
                     break;
                 case GENERATE_BUTTON:///sitio donde se tendrá que poner el codigo de mostrar todos los usuarios
+                    // Recorrer la lista de usuarios e imprimir sus datos
+                    ListNode* current = userList;
+                    while (current != NULL) {
+                        printf("Username: %s\n", current->user->username);
+                        printf("Age: %d\n", current->user->age);
+                        printf("Email: %s\n", current->user->email);
+                        printf("City: %s\n", current->user->city);
+                        for (int i = 0; i < MAX_PREFERENCES; i++) {
+                            printf("- %s\n", current->user->preferences[i]);
+                        }
+                        printf("\n");
+                        current = current->next;
+                    }
                     break;
                 case NEW_PLAYER:///en esta parte hay donde se escanea la parte del new player (la entrada es por consola)
                     MessageBox(hwnd, "click aceptar, then enter name age email and city(separated by space)", "New player", MB_OK);
@@ -82,7 +96,27 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
                     for (int i = 0; i < MAX_PREFERENCES; i++) {
                         printf("- %s\n", user->preferences[i]);
                     }
+
+
+                    user = malloc(sizeof(User)); // Asignar memoria para el usuario
+                    scanf("%s %d %s %s", user->username, &user->age, user->email, user->city); // Leer datos del usuario desde la consola
+                    for (int i = 0; i < MAX_PREFERENCES; i++) {
+                        scanf("%s", user->preferences[i]);
+                    }
+                    ListNode* newNode = malloc(sizeof(ListNode));  // Crear un nuevo nodo para el usuario
+                    newNode->user = user;
+                    newNode->next = NULL;
+                    if (userList == NULL) { // Agregar el nuevo nodo a la lista
+                        userList = newNode; // La lista está vacía, el nuevo nodo es el primer nodo
+                    } else {
+                        ListNode* current = userList;
+                        while (current->next != NULL) { // La lista no está vacía, agregar el nuevo nodo al final
+                            current = current->next;
+                        }
+                        current->next = newNode;
+                    }
                     break;
+
                 case LOGIN: ///parte donde se escanea los parametros del user
                     MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK);
                     scanf("%s %d",username,&password);
@@ -106,16 +140,14 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp)
 
 }
 
-void AddMenus(HWND hwnd)///exit de arriba a la izquierda
-{
+void AddMenus(HWND hwnd){ ///exit de arriba a la izquierda
     hMenu = CreateMenu();
     AppendMenu(hMenu,MF_STRING,FILE_MENU_EXIT,"Exit");
     SetMenu(hwnd,hMenu);
 
 }
 
-void AddControls(HWND hwnd)
-{
+void AddControls(HWND hwnd) {
     ///botones del main
     CreateWindowW(L"Button",L"LOGIN",WS_VISIBLE |WS_CHILD|WS_BORDER,100,50,98,38,hwnd,(HMENU)LOGIN,0,0);
     CreateWindowW(L"Button",L"NEW PLAYER",WS_VISIBLE |WS_CHILD|WS_BORDER ,250,50,98,38,hwnd,(HMENU)NEW_PLAYER,0,0);
@@ -123,6 +155,8 @@ void AddControls(HWND hwnd)
     CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
 
 }
+
+
 
 
 

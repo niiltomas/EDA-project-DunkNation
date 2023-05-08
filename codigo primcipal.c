@@ -1,3 +1,4 @@
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include "estructuras.c"
@@ -55,4 +56,5 @@ void menu() {
     } while (opcion != 9);
 }
 
+*/
 

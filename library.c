@@ -71,7 +71,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     while (current != NULL) {
                         printf("Username: %s\n", current->user->username);
                         printf("Age: %d\n", current->user->age);
-                        printf("Email: %c\n", current->user->email);
+                        printf("Email: %s\n", current->user->email);
                         printf("City: %s\n", current->user->city);
                         for (int i = 0; i < MAX_PREFERENCES; i++) {
                             printf("- %s\n", current->user->preferences[i]);

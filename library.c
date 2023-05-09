@@ -84,7 +84,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     break;
                 case NEW_PLAYER:///en esta parte hay donde se escanea la parte del new player (la entrada es por consola)
                     MessageBox(hwnd, "click aceptar, then enter name age email and city(separated by space)", "New player", MB_OK);
-                    scanf("%s %d %c %s", user->username, &user->age, &user->email, user->city);
+                    scanf("%s %d %s %s", user->username, &user->age, user->email, user->city);
                     MessageBox(hwnd, "click aceptar, then enter preferences separated by spaces", "New player", MB_OK);
                     for (int i = 0; i < MAX_PREFERENCES; i++) {
                         scanf("%s", user->preferences[i]);
@@ -92,7 +92,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     ///prints para comprobar
                     printf("Username: %s\n", user->username);
                     printf("Age: %d\n", user->age);
-                    printf("Email: %c\n", user->email);
+                    printf("Email: %s\n", user->email);
                     printf("City: %s\n", user->city);
                     for (int i = 0; i < MAX_PREFERENCES; i++) {
                         printf("- %s\n", user->preferences[i]);

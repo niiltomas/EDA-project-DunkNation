@@ -52,6 +52,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
 ///#########################################################################
 LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
     User* user= malloc(sizeof(User));
+    ListNode* current = userList;
     char username[20];
     int aux,password;
     switch(msg)
@@ -68,11 +69,11 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     break;
                 case GENERATE_BUTTON:///sitio donde se tendrá que poner el codigo de mostrar todos los usuarios
                     // Recorrer la lista de usuarios e imprimir sus datos
-                    ListNode* current = userList;
+                    ///ListNode* current = userList;
                     while (current != NULL) {
                         printf("Username: %s\n", current->user->username);
                         printf("Age: %d\n", current->user->age);
-                        printf("Email: %s\n", current->user->email);
+                        printf("Email: %c\n", current->user->email);
                         printf("City: %s\n", current->user->city);
                         for (int i = 0; i < MAX_PREFERENCES; i++) {
                             printf("- %s\n", current->user->preferences[i]);
@@ -83,7 +84,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     break;
                 case NEW_PLAYER:///en esta parte hay donde se escanea la parte del new player (la entrada es por consola)
                     MessageBox(hwnd, "click aceptar, then enter name age email and city(separated by space)", "New player", MB_OK);
-                    scanf("%s %d %s %s", user->username, &user->age, user->email, user->city);
+                    scanf("%s %d %c %s", user->username, &user->age, &user->email, user->city);
                     MessageBox(hwnd, "click aceptar, then enter preferences separated by spaces", "New player", MB_OK);
                     for (int i = 0; i < MAX_PREFERENCES; i++) {
                         scanf("%s", user->preferences[i]);
@@ -91,25 +92,25 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     ///prints para comprobar
                     printf("Username: %s\n", user->username);
                     printf("Age: %d\n", user->age);
-                    printf("Email: %s\n", user->email);
+                    printf("Email: %c\n", user->email);
                     printf("City: %s\n", user->city);
                     for (int i = 0; i < MAX_PREFERENCES; i++) {
                         printf("- %s\n", user->preferences[i]);
                     }
 
 
-                    user = malloc(sizeof(User)); // Asignar memoria para el usuario
-                    scanf("%s %d %s %s", user->username, &user->age, user->email, user->city); // Leer datos del usuario desde la consola
-                    for (int i = 0; i < MAX_PREFERENCES; i++) {
-                        scanf("%s", user->preferences[i]);
-                    }
+                    ///user = malloc(sizeof(User)); // Asignar memoria para el usuario
+                    ///scanf("%s %d %c %s", user->username, &user->age, &user->email, user->city); // Leer datos del usuario desde la consola
+                    ///for (int i = 0; i < MAX_PREFERENCES; i++) {
+                    ///scanf("%s", user->preferences[i]);
+                    ///}
                     ListNode* newNode = malloc(sizeof(ListNode));  // Crear un nuevo nodo para el usuario
                     newNode->user = user;
                     newNode->next = NULL;
                     if (userList == NULL) { // Agregar el nuevo nodo a la lista
                         userList = newNode; // La lista está vacía, el nuevo nodo es el primer nodo
                     } else {
-                        ListNode* current = userList;
+                        current = userList;
                         while (current->next != NULL) { // La lista no está vacía, agregar el nuevo nodo al final
                             current = current->next;
                         }

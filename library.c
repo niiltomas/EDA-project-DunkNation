@@ -4,8 +4,6 @@
 #include <stddef.h>
 #include <wchar.h>
 #include <stdlib.h>
-#include "codigo primcipal.h"
-#include "codigo primcipal.c"
 #include "estructuras.c"
 
 #define FILE_MENU_EXIT 3

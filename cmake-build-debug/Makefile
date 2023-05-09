@@ -56,10 +56,10 @@ RM = "C:\Program Files\JetBrains\CLion 2022.3.1\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\r\CLionProjects\EDA2
+CMAKE_SOURCE_DIR = C:\Users\34601\Documents\test\EDA2app
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\r\CLionProjects\EDA2\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\34601\Documents\test\EDA2app\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -86,9 +86,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\r\CLionProjects\EDA2\cmake-build-debug\CMakeFiles C:\Users\r\CLionProjects\EDA2\cmake-build-debug\\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\34601\Documents\test\EDA2app\cmake-build-debug\CMakeFiles C:\Users\34601\Documents\test\EDA2app\cmake-build-debug\\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\r\CLionProjects\EDA2\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\34601\Documents\test\EDA2app\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -127,54 +127,6 @@ EDA2: cmake_check_build_system
 EDA2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDA2.dir\build.make CMakeFiles/EDA2.dir/build
 .PHONY : EDA2/fast
-
-code.obj: code.c.obj
-.PHONY : code.obj
-
-# target to build an object file
-code.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDA2.dir\build.make CMakeFiles/EDA2.dir/code.c.obj
-.PHONY : code.c.obj
-
-code.i: code.c.i
-.PHONY : code.i
-
-# target to preprocess a source file
-code.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDA2.dir\build.make CMakeFiles/EDA2.dir/code.c.i
-.PHONY : code.c.i
-
-code.s: code.c.s
-.PHONY : code.s
-
-# target to generate assembly for a file
-code.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDA2.dir\build.make CMakeFiles/EDA2.dir/code.c.s
-.PHONY : code.c.s
-
-codigo_primcipal.obj: codigo_primcipal.c.obj
-.PHONY : codigo_primcipal.obj
-
-# target to build an object file
-codigo_primcipal.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDA2.dir\build.make CMakeFiles/EDA2.dir/codigo_primcipal.c.obj
-.PHONY : codigo_primcipal.c.obj
-
-codigo_primcipal.i: codigo_primcipal.c.i
-.PHONY : codigo_primcipal.i
-
-# target to preprocess a source file
-codigo_primcipal.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDA2.dir\build.make CMakeFiles/EDA2.dir/codigo_primcipal.c.i
-.PHONY : codigo_primcipal.c.i
-
-codigo_primcipal.s: codigo_primcipal.c.s
-.PHONY : codigo_primcipal.s
-
-# target to generate assembly for a file
-codigo_primcipal.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDA2.dir\build.make CMakeFiles/EDA2.dir/codigo_primcipal.c.s
-.PHONY : codigo_primcipal.c.s
 
 estructuras.obj: estructuras.c.obj
 .PHONY : estructuras.obj
@@ -233,12 +185,6 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... EDA2
-	@echo ... code.obj
-	@echo ... code.i
-	@echo ... code.s
-	@echo ... codigo_primcipal.obj
-	@echo ... codigo_primcipal.i
-	@echo ... codigo_primcipal.s
 	@echo ... estructuras.obj
 	@echo ... estructuras.i
 	@echo ... estructuras.s

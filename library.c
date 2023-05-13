@@ -11,20 +11,23 @@
 #define LOGIN 6
 #define NEW_PLAYER 7
 #define MAX_PREFERENCES 2
+#define ARCHIVO_USERS 8
 
 LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 
 ///para incluir una función en el codigo antes se tiene que llamar aqui
 void AddMenus(HWND);
 void AddControls(HWND);
-
+int read_users_file(const char*,User*,HWND);
 
 HMENU hMenu;
+
 
 ListNode* userList = NULL;
 ListNode* current;
 
 ///no tocar nada de aqui, ya que es la configuracion de la ventana principal
+///es la equivalencia al main "normal" pero es el main utilizado para abrir una ventana
 /// : ##################################################################################################
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow) {
     WNDCLASSW wc={0};
@@ -51,13 +54,15 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
 LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
     User* user= malloc(sizeof(User));
     ListNode* current = userList;
+    ListNode* head = NULL;
     char username[20];
-    int aux,password;
+    int aux,password, num_users=0;
     switch(msg)
     {
         case WM_COMMAND: ///ÉS EL MISSATGE
             switch(wp)
             {
+
                 case FILE_MENU_EXIT:
                     aux= MessageBoxW(hwnd,L"Estas segur que vols sortir?",L"EXIT",MB_YESNO|MB_ICONEXCLAMATION);
                     if (aux==IDYES)
@@ -65,9 +70,23 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         DestroyWindow(hwnd);
                     }
                     break;
+
+                case ARCHIVO_USERS:///leer archivo que contiene 20 los datos de 20 usuarios
+                    num_users=read_users_file("archivo_users.csv",user,hwnd);
+                    for (int i = 0; i < num_users; i++) {
+                        printf("Usuario %d:\n", i+1);
+                        printf(" - Nombre de usuario: %s\n", user[i].username);
+                        printf(" - Edad: %d\n", user[i].age);
+                        printf(" - Correo electronico: %s\n", user[i].email);
+                        printf(" - Ciudad: %s\n", user[i].city);
+                        printf(" - Preferencia 1: %s\n", user[i].preferences[0]);
+                        printf(" - Preferencia 2: %s\n", user[i].preferences[1]);
+
+                    }
+                    break;
                 case GENERATE_BUTTON:///sitio donde se tendrá que poner el codigo de mostrar todos los usuarios
                     // Recorrer la lista de usuarios e imprimir sus datos
-                    ///ListNode* current = userList;
+                    current = userList;
                     while (current != NULL) {
                         printf("Username: %s\n", current->user->username);
                         printf("Age: %d\n", current->user->age);
@@ -97,19 +116,14 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     }
 
 
-                    ///user = malloc(sizeof(User)); // Asignar memoria para el usuario
-                    ///scanf("%s %d %c %s", user->username, &user->age, &user->email, user->city); // Leer datos del usuario desde la consola
-                    ///for (int i = 0; i < MAX_PREFERENCES; i++) {
-                    ///scanf("%s", user->preferences[i]);
-                    ///}
-                    ListNode* newNode = malloc(sizeof(ListNode));  // Crear un nuevo nodo para el usuario
+                    ListNode* newNode = malloc(sizeof(ListNode));  /// Crear un nuevo nodo para el usuario
                     newNode->user = user;
                     newNode->next = NULL;
-                    if (userList == NULL) { // Agregar el nuevo nodo a la lista
-                        userList = newNode; // La lista está vacía, el nuevo nodo es el primer nodo
+                    if (userList == NULL) { /// Agregar el nuevo nodo a la lista
+                        userList = newNode; /// La lista está vacía, el nuevo nodo es el primer nodo
                     } else {
                         current = userList;
-                        while (current->next != NULL) { // La lista no está vacía, agregar el nuevo nodo al final
+                        while (current->next != NULL) { /// La lista no está vacía, agregar el nuevo nodo al final
                             current = current->next;
                         }
                         current->next = newNode;
@@ -148,19 +162,31 @@ void AddMenus(HWND hwnd){ ///exit de arriba a la izquierda
 
 void AddControls(HWND hwnd) {
     ///botones del main
+    ///primer parametro indica si es un boton (interactuable) o fijo, el segungo el nombre a imprimir al boton, el siguiente bordes, visible,... ,
+    ///los cuatro siguientes hacen referencia a las dimensiones en pixeles (x,y) (tercer,cuarto paramtro) y localización de los botones (x,y) (primero,segundo).
+    /// los ultimos parametros nos van a dirigir a las funciones correspondientes que se encuentran en el menu principal
     CreateWindowW(L"Button",L"LOGIN",WS_VISIBLE |WS_CHILD|WS_BORDER,100,50,98,38,hwnd,(HMENU)LOGIN,0,0);
     CreateWindowW(L"Button",L"NEW PLAYER",WS_VISIBLE |WS_CHILD|WS_BORDER ,250,50,98,38,hwnd,(HMENU)NEW_PLAYER,0,0);
     CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
-    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
-
+    CreateWindowW(L"Button",L"USER_FILE",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)ARCHIVO_USERS,0,0);
+    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,248,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
 }
 
+int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el archivo; parametros de entrada(nombre de archivo, user (struct USER) y ventana hwnd)
+    FILE *fp=fopen(file,"r"); ///abrir fichero
+    if (fp == NULL) {
+        MessageBox(hwnd, "Ha habido un error al abrir el archivo\n", "login", MB_OK);///ventana emergente en el menu principal
+        printf("Error al abrir el archivo\n");
+        return 0;
+    }
+    int i=0;
+    printf("%s","fitxer obert correctament\n");
+    while(fscanf(fp,"%[^,],%d,%[^,],%[^,],%[^,],%[^,\n]\n",user[i].username,&user[i].age,user[i].email,user[i].city,user[i].preferences[0],user[i].preferences[1])!=EOF){
+        i++;
+    }
+    ///llegeix els parametres fins que troba una coma
+    printf("%s","fitxer llegit correctament\n");
 
-
-
-
-///otros para mas adelante si tenemos que guardar los valores del user
-// Copy user preferences to User structure
-///for (int i = 0; i < MAX_PREFERENCES; i++) {
-///strncpy(user->preferences[i], preferences[i], sizeof(user->preferences[i]) - 1);
-///user->preferences[i][sizeof(user->preferences[i]) - 1] = '\0';
+    fclose(fp);///cerramos el fichero
+    return i; ///devolvemos el numero de usuarios
+}

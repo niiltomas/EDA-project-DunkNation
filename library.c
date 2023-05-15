@@ -19,9 +19,11 @@ LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 void AddMenus(HWND);
 void AddControls(HWND);
 int read_users_file(const char*,User*,HWND);
+void cargarlogo();
 
 HMENU hMenu;
-
+HWND hLogo;
+HBITMAP hLogoImage,hGenerateImage;
 
 ListNode* userList = NULL;
 ListNode* current;
@@ -140,6 +142,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
 
             break;
         case WM_CREATE: ///moment en el què la finestra s'ha creat i tot seguit hi afegim els menus etc. a la finestra
+            cargarlogo();
             AddMenus(hwnd);
             AddControls(hwnd);
             break;
@@ -170,6 +173,8 @@ void AddControls(HWND hwnd) {
     CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
     CreateWindowW(L"Button",L"USER_FILE",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)ARCHIVO_USERS,0,0);
     CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,248,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
+    hLogo=CreateWindowW(L"Static",NULL,WS_VISIBLE |WS_CHILD|SS_BITMAP,0,200,38,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
+    SendMessageW(hLogo,STM_SETIMAGE,IMAGE_BITMAP,(LPARAM)hLogoImage);
 }
 
 int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el archivo; parametros de entrada(nombre de archivo, user (struct USER) y ventana hwnd)
@@ -189,4 +194,8 @@ int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el ar
 
     fclose(fp);///cerramos el fichero
     return i; ///devolvemos el numero de usuarios
+}
+
+void cargarlogo(){
+    hLogoImage=(HBITMAP)LoadImageW(NULL,L"myDir\\logo2.bmp",IMAGE_BITMAP,0,0,LR_LOADFROMFILE);
 }

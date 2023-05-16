@@ -4,7 +4,9 @@
 Integrantes del grupo:
 
 
-Nil Tomas (u214575),  Anshpreet Singh Kaur (u215093),  Danial Imran Muhammad Begum (u215090)
+- Nil Tomas (u214575)
+- Anshpreet Singh Kaur (u215093) 
+- Danial Imran Muhammad Begum (u215090)
 
 # **INFORME DEL PROJECTO**
 
@@ -58,8 +60,9 @@ This subsection should include at least a diagram of the system architecture and
 This subsection should describe how errors were handled in the project and the reasoning behind.
 
 ### Diseño de modelo de datos [maximo 250 palabras]
+En el proyecto creamos dos estructuras de **Users** y **ListNode**.
+La estructura **"User"** se utiliza para gurdar datos de usuario.
 
-This subsection should include at least a data flow diagram of the solution and its description.
 
 ### Descripción y procesamiento del conjunto de datos [maximo 250 palabras]
 

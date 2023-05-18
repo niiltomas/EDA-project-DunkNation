@@ -12,17 +12,18 @@
 #define NEW_PLAYER 7
 #define MAX_PREFERENCES 2
 #define ARCHIVO_USERS 8
-
 LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 
 ///para incluir una función en el codigo antes se tiene que llamar aqui
 void AddMenus(HWND);
 void AddControls(HWND);
+void registerDialogClass(HINSTANCE);
+void displayDialog(HWND);
 int read_users_file(const char*,User*,HWND);
 void cargarlogo();
 
 HMENU hMenu;
-HWND hLogo;
+HWND hLogo,hEdit;
 HBITMAP hLogoImage,hGenerateImage;
 
 ListNode* userList = NULL;
@@ -41,7 +42,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
     if(!RegisterClassW(&wc)) {
         return -1;
     }
-
+    registerDialogClass(hInst);
     CreateWindowW(L"myWindowClass",L"DUNK NATION",WS_OVERLAPPEDWINDOW | WS_VISIBLE, 300, 100,500,500,NULL,NULL,NULL,NULL);
 
     MSG msg = {0};
@@ -133,10 +134,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     break;
 
                 case LOGIN: ///parte donde se escanea los parametros del user
-                    MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK);
-                    scanf("%s %d",username,&password);
-                    printf("\nuser: %s\n",username);
-                    printf("\npassword: %d\n",password);
+                    displayDialog(hwnd);
+                    ///aqui és donde se deberá poner que si clica 1,2,3,4 haga una cosa o otra. creas un  define con el nombre y numero assignado y lo llamas por el boton de la forma correcta
+                    ///y dps que haga lo que tenga que hacer
+                    ///MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK);
                     break;
             }
 
@@ -173,7 +174,7 @@ void AddControls(HWND hwnd) {
     CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
     CreateWindowW(L"Button",L"USER_FILE",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)ARCHIVO_USERS,0,0);
     CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,248,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
-    hLogo=CreateWindowW(L"Static",NULL,WS_VISIBLE |WS_CHILD|SS_BITMAP,0,200,38,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
+    hLogo=CreateWindowW(L"Static",NULL,WS_VISIBLE |WS_CHILD|SS_BITMAP,0,0,38,38,hwnd,0,0,0);
     SendMessageW(hLogo,STM_SETIMAGE,IMAGE_BITMAP,(LPARAM)hLogoImage);
 }
 
@@ -197,5 +198,53 @@ int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el ar
 }
 
 void cargarlogo(){
-    hLogoImage=(HBITMAP)LoadImageW(NULL,L"myDir\\logo2.bmp",IMAGE_BITMAP,0,0,LR_LOADFROMFILE);
+    hLogoImage=(HBITMAP)LoadImageW(NULL,L"logo2.bmp",IMAGE_BITMAP,0,0,LR_LOADFROMFILE);
+}
+
+LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
+{
+    switch(msg)
+    {
+        case WM_COMMAND:
+            switch(wp)
+            {
+                case 1:
+                    DestroyWindow(hwnd);
+                    break;
+            }
+            break;
+        case WM_CLOSE:
+            DestroyWindow(hwnd);
+            break;
+        default:
+            return DefWindowProcW(hwnd,msg,wp,lp);
+
+    }
+}
+
+void registerDialogClass(HINSTANCE hInst)///Mejor no tocar XD
+{
+    WNDCLASSW dialog={0};
+    dialog.hbrBackground= (HBRUSH) COLOR_WINDOW;
+    dialog.hCursor = LoadCursor (NULL,IDC_ARROW);
+    dialog.hInstance=hInst;
+    dialog.lpszClassName = L"login";
+    dialog.lpfnWndProc = DialogProcedure;
+
+    RegisterClassW(&dialog);
+
+}
+void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
+{
+    ///ventana emergente login
+    HWND hDlg= CreateWindowW(L"login",L"LOGIN",WS_VISIBLE | WS_OVERLAPPEDWINDOW,400,400,500,300,hwnd,0,0,0);
+    ///botón cerrar
+    CreateWindowW(L"Button",L"Close",WS_VISIBLE|WS_CHILD,190,200,100,40,hDlg,(HMENU)1,NULL,NULL);
+    ///a partir de aqui, lo de las coordenadas i dimensiones es importante, y lkos tipos, botones, static,,,... el video lo explica perfectamente, vale la pena
+    ///cuadro de texto: "introduce el nombre de usuario"
+    CreateWindowW(L"Static",L"Introduce el nombre de usuario:",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)1,NULL,NULL);/// posicion (x,y) en la ventana (en pixeles) i dimensiones (x,y)
+    CreateWindowW(L"Edit",L"...",WS_VISIBLE |WS_CHILD |WS_BORDER|ES_MULTILINE|ES_AUTOVSCROLL |ES_AUTOHSCROLL,20,70,100,50,hDlg,(HMENU)NEW_PLAYER,0,0);
+    ///cuadro de texto: "introduce la contraseña"
+    CreateWindowW(L"Static",L"Introduce la contraseña del usuario:",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)1,NULL,NULL);
+    CreateWindowW(L"Edit",L"",WS_VISIBLE |WS_CHILD |WS_BORDER|ES_MULTILINE|ES_AUTOVSCROLL |ES_AUTOHSCROLL,20,170,100,50,hDlg,(HMENU)GENERATE_BUTTON,0,0);
 }

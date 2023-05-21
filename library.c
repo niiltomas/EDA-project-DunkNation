@@ -157,12 +157,32 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
 
 }
 
-void AddMenus(HWND hwnd){ ///exit de arriba a la izquierda
-    hMenu = CreateMenu();
-    AppendMenu(hMenu,MF_STRING,FILE_MENU_EXIT,"Exit");
-    SetMenu(hwnd,hMenu);
 
-}
+void AddMenus(HWND hwnd) {///exit de arriba a la izquierda
+        hMenu = CreateMenu();
+
+        /// Crear el elemento de menu "File"
+        HMENU hFileMenu = CreateMenu();
+        AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hFileMenu, "File");
+
+        // Crear elementos de submenu en "File"
+        AppendMenu(hFileMenu, MF_STRING, FILE_MENU_EXIT, "Exit");
+
+        ///Crear el elemento de  Submenu
+        HMENU hSubMenu = CreateMenu();
+        AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hSubMenu, "Submenu");
+
+        // Agregar elementos de submenú en Submenu
+        AppendMenu(hSubMenu, MF_STRING,SUBMENU_ITEM_2 , "Submenu Item 1");
+        AppendMenu(hSubMenu, MF_STRING, SUBMENU_ITEM_2 , "Submenu Item 2");
+
+        // Add the rest of the menu items
+        AppendMenu(hMenu, MF_STRING, GENERATE_BUTTON, "All Players");
+        AppendMenu(hMenu, MF_STRING, ARCHIVO_USERS, "User File");
+
+        SetMenu(hwnd, hMenu);
+    }
+
 
 void AddControls(HWND hwnd) {
     ///botones del main

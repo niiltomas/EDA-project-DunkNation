@@ -7,6 +7,7 @@ typedef struct {
     char email[50];
     char city[50];
     char preferences[MAX_PREFERENCES][50];
+    int password;
 }User;
 
 

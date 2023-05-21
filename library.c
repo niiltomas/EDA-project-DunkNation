@@ -22,6 +22,17 @@ void displayDialog(HWND);
 int read_users_file(const char*,User*,HWND);
 void cargarlogo();
 
+ListNode* searchUserByUsername(char* username, ListNode* userList){ /// Buscar un usuario por su nombre de usuario  en la lista de usuarios y devolver el nodo que lo contiene  (si no existe, devolver NULL)
+    ListNode* current = userList;
+    while (current != NULL) {
+        if (strcmp(current->user->username, username) == 0) {
+        return current;
+        }
+        current = current->next;
+    }
+    return NULL;
+}
+
 HMENU hMenu;
 HWND hLogo,hEdit;
 HBITMAP hLogoImage,hGenerateImage;
@@ -138,6 +149,19 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     ///aqui és donde se deberá poner que si clica 1,2,3,4 haga una cosa o otra. creas un  define con el nombre y numero assignado y lo llamas por el boton de la forma correcta
                     ///y dps que haga lo que tenga que hacer
                     ///MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK);
+                    scanf("%s %d", username, &password);
+                    printf("Username: %s\n", username);
+                    printf("Password: %d\n", password);
+                    while (current != NULL) {
+                        if (strcmp(current->user->username, username) == 0 && current->user->password == password) {
+                            printf("Login successful\n");
+                            break;
+                        }
+                        current = current->next;
+                    }
+                    if (current == NULL) {
+                        printf("Login failed\n");
+                    }
                     break;
             }
 
@@ -212,7 +236,6 @@ int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el ar
     }
     ///llegeix els parametres fins que troba una coma
     printf("%s","fitxer llegit correctament\n");
-
     fclose(fp);///cerramos el fichero
     return i; ///devolvemos el numero de usuarios
 }

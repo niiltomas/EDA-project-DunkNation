@@ -195,9 +195,28 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
 
 void AddMenus(HWND hwnd){ ///exit de arriba a la izquierda
     hMenu = CreateMenu();
-    AppendMenu(hMenu,MF_STRING,FILE_MENU_EXIT,"Exit");
-    SetMenu(hwnd,hMenu);
 
+    /// Crear el elemento de menu "File"
+    HMENU hFileMenu = CreateMenu();
+    AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hFileMenu, "File");
+
+    // Crear elementos de submenu en "File"
+    AppendMenu(hFileMenu, MF_STRING, FILE_MENU_EXIT, "Exit");
+
+    ///Crear el elemento de  Submenu
+    HMENU hSubMenu = CreateMenu();
+    AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hSubMenu, "Submenu");
+
+    // Agregar elementos de submenú en Submenu
+    UINT_PTR SUBMENU_ITEM_2;
+    AppendMenu(hSubMenu, MF_STRING, SUBMENU_ITEM_2 , "Submenu Item 1");
+    AppendMenu(hSubMenu, MF_STRING, SUBMENU_ITEM_2 , "Submenu Item 2");
+
+    // Add the rest of the menu items
+    AppendMenu(hMenu, MF_STRING, GENERATE_BUTTON, "All Players");
+    AppendMenu(hMenu, MF_STRING, ARCHIVO_USERS, "User File");
+
+    SetMenu(hwnd, hMenu);
 }
 
 void AddControls(HWND hwnd) {
@@ -234,5 +253,53 @@ int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el ar
 }
 
 void cargarlogo(){
-    hLogoImage=(HBITMAP)LoadImageW(NULL,L"myDir\\logo2.bmp",IMAGE_BITMAP,0,0,LR_LOADFROMFILE);
+    hLogoImage=(HBITMAP)LoadImageW(NULL,L"logo2.bmp",IMAGE_BITMAP,0,0,LR_LOADFROMFILE);
+}
+
+LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
+{
+    switch(msg)
+    {
+        case WM_COMMAND:
+            switch(wp)
+            {
+                case 1:
+                    DestroyWindow(hwnd);
+                    break;
+            }
+            break;
+        case WM_CLOSE:
+            DestroyWindow(hwnd);
+            break;
+        default:
+            return DefWindowProcW(hwnd,msg,wp,lp);
+
+    }
+}
+
+void registerDialogClass(HINSTANCE hInst)///Mejor no tocar XD
+{
+    WNDCLASSW dialog={0};
+    dialog.hbrBackground= (HBRUSH) COLOR_WINDOW;
+    dialog.hCursor = LoadCursor (NULL,IDC_ARROW);
+    dialog.hInstance=hInst;
+    dialog.lpszClassName = L"login";
+    dialog.lpfnWndProc = DialogProcedure;
+
+    RegisterClassW(&dialog);
+
+}
+void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
+{
+    ///ventana emergente login
+    HWND hDlg= CreateWindowW(L"login",L"LOGIN",WS_VISIBLE | WS_OVERLAPPEDWINDOW,400,400,500,300,hwnd,0,0,0);
+    ///botón cerrar
+    CreateWindowW(L"Button",L"Close",WS_VISIBLE|WS_CHILD,190,200,100,40,hDlg,(HMENU)1,NULL,NULL);
+    ///a partir de aqui, lo de las coordenadas i dimensiones es importante, y lkos tipos, botones, static,,,... el video lo explica perfectamente, vale la pena
+    ///cuadro de texto: "introduce el nombre de usuario"
+    CreateWindowW(L"Static",L"Introduce el nombre de usuario:",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)1,NULL,NULL);/// posicion (x,y) en la ventana (en pixeles) i dimensiones (x,y)
+    CreateWindowW(L"Edit",L"...",WS_VISIBLE |WS_CHILD |WS_BORDER|ES_MULTILINE|ES_AUTOVSCROLL |ES_AUTOHSCROLL,20,70,100,50,hDlg,(HMENU)NEW_PLAYER,0,0);
+    ///cuadro de texto: "introduce la contraseña"
+    CreateWindowW(L"Static",L"Introduce la contraseña del usuario:",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)1,NULL,NULL);
+    CreateWindowW(L"Edit",L"",WS_VISIBLE |WS_CHILD |WS_BORDER|ES_MULTILINE|ES_AUTOVSCROLL |ES_AUTOHSCROLL,20,170,100,50,hDlg,(HMENU)GENERATE_BUTTON,0,0);
 }

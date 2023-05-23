@@ -144,11 +144,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     break;
 
                 case LOGIN: ///parte donde se escanea los parametros del user
-                    /*MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK);
+                    MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK);
                     scanf("%s %d",username,&password);
                     printf("\nuser: %s\n",username);
                     printf("\npassword: %d\n",password);
-                    break;*/
 
                     ListNode* userList = NULL;
                     // Código para agregar usuarios a la lista userList
@@ -208,7 +207,7 @@ void AddMenus(HWND hwnd){ ///exit de arriba a la izquierda
     AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hSubMenu, "Submenu");
 
     // Agregar elementos de submenú en Submenu
-    UINT_PTR SUBMENU_ITEM_2;
+    const UINT_PTR SUBMENU_ITEM_2;
     AppendMenu(hSubMenu, MF_STRING, SUBMENU_ITEM_2 , "Submenu Item 1");
     AppendMenu(hSubMenu, MF_STRING, SUBMENU_ITEM_2 , "Submenu Item 2");
 

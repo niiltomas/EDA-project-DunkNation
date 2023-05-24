@@ -144,7 +144,54 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     break;
 
                 case LOGIN: ///parte donde se escanea los parametros del user
-                    MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK);
+
+                    ///Para operar con un usuario primero tenemos que buscar por el nombre de usuario a la persona, para ello, la tarea es implementar un algoritmo de búsqueda que recorra la lista de usuarios hasta encontrarlo y luego mostrar el submenú para ese usuario. Si no se encuentra el usuario, mostrar un mensaje de error.
+                    MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK); ///mensaje de login
+                    scanf("%s %d",username,&password); ///escanea el username y el password
+                    printf("\nuser: %s\n",username); ///print para comprobar que se ha escaneado bien el username
+                    printf("\npassword: %d\n",password); ///print para comprobar que se ha escaneado bien el password (en este caso es un int)
+                    current = userList; ///se crea un nodo para recorrer la lista de usuarios y buscar el username que se ha escaneado anteriormente y comprobar si existe o no en la lista de usuarios (si no existe, se muestra un mensaje de error)
+                    while (current != NULL) {
+                        if (strcmp(current->user->username, username) == 0) {
+                            break;
+                        }
+                        current = current->next;
+                    } ///si el usuario existe, se muestra el submenu de ese usuario (en este caso, el submenu es el mismo que el de new player) y si no existe, se muestra un mensaje de error y se vuelve al menu principal (en este caso, el menu principal es el mismo que el de new player)
+                    if (current != NULL) {
+                        MessageBox(hwnd, "click aceptar, then enter name age email and city(separated by space)", "New player", MB_OK);
+                        scanf("%s %d %s %s", user->username, &user->age, user->email, user->city);
+                        MessageBox(hwnd, "click aceptar, then enter preferences separated by spaces", "New player", MB_OK);
+                        for (int i = 0; i < MAX_PREFERENCES; i++) {
+                            scanf("%s", user->preferences[i]);
+                        }
+                        ///prints para comprobar
+                        printf("Username: %s\n", user->username);
+                        printf("Age: %d\n", user->age);
+                        printf("Email: %s\n", user->email);
+                        printf("City: %s\n", user->city);
+                        for (int i = 0; i < MAX_PREFERENCES; i++) {
+                            printf("- %s\n", user->preferences[i]);
+                        }
+
+                        ListNode* newNode = malloc(sizeof(ListNode));  /// Crear un nuevo nodo para el usuario
+                        newNode->user = user;
+                        newNode->next = NULL;
+                        if (userList == NULL) { /// Agregar el nuevo nodo a la lista
+                            userList = newNode; /// La lista está vacía, el nuevo nodo es el primer nodo
+                        } else {
+                            current = userList;
+                            while (current->next != NULL) { /// La lista no está vacía, agregar el nuevo nodo al final
+                                current = current->next;
+                            }
+                            current->next = newNode;
+                        }
+                    } else {
+                        MessageBox(hwnd, "Usuario no encontrado", "Error", MB_OK);
+                    } ///fin de la parte de login (en este caso, el login es el mismo que el de new player) y se vuelve al menu principal (en este caso, el menu principal es el mismo que el de new player)
+                    break;
+
+
+                    /*MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK);
                     scanf("%s %d",username,&password);
                     printf("\nuser: %s\n",username);
                     printf("\npassword: %d\n",password);
@@ -173,7 +220,8 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         printf("Usuario no encontrado.\n");
                     }
 
-                    return 0;
+                    return 0;*/
+                    break;
             }
 
             break;
@@ -207,7 +255,7 @@ void AddMenus(HWND hwnd){ ///exit de arriba a la izquierda
     AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hSubMenu, "Submenu");
 
     // Agregar elementos de submenú en Submenu
-    const UINT_PTR SUBMENU_ITEM_2;
+    UINT_PTR SUBMENU_ITEM_2;
     AppendMenu(hSubMenu, MF_STRING, SUBMENU_ITEM_2 , "Submenu Item 1");
     AppendMenu(hSubMenu, MF_STRING, SUBMENU_ITEM_2 , "Submenu Item 2");
 

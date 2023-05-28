@@ -95,7 +95,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     break;
                 case GENERATE_BUTTON:///sitio donde se tendrá que poner el codigo de mostrar todos los usuarios
                     // Recorrer la lista de usuarios e imprimir sus datos
-                    current = userList;
+                    current = userList;////
                     while (current != NULL) {
                         printf("Username: %s\n", current->user->username);
                         printf("Age: %d\n", current->user->age);

@@ -21,7 +21,7 @@ void AddControls(HWND);
 void registerDialogClass(HINSTANCE);
 void displayDialog(HWND);
 int read_users_file(const char*,User*,HWND);
-
+void printuser(ListNode*);
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -29,7 +29,7 @@ HBITMAP hLogoImage,hGenerateImage;
 
 ListNode* userList = NULL;
 ListNode* current;
-ListNode* searchUserByUsername(char* , int, ListNode* );
+ListNode* searchUser(char* , int, ListNode* );
 
 
 ///no tocar nada de aqui, ya que es la configuracion de la ventana principal
@@ -61,7 +61,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
 LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
     User* user= malloc(sizeof(User));
     ListNode* current = userList;
-    ListNode* head = NULL;
     ListNode* foundUser = NULL;
     char username[20],lol;
     int aux,password, num_users=0;
@@ -70,7 +69,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
         case WM_COMMAND: ///ÉS EL MISSATGE
             switch(wp)
             {
-
                 case FILE_MENU_EXIT:
                     aux= MessageBoxW(hwnd,L"Estas segur que vols sortir?",L"EXIT",MB_YESNO|MB_ICONEXCLAMATION);
                     if (aux==IDYES)
@@ -85,7 +83,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         printf("Usuario %d:\n", i+1);
                         printf(" - Nombre de usuario: %s\n", user[i].username);
                         printf(" - Edad: %d\n", user[i].age);
-                        printf(" - Edad: %d\n", user[i].password);
+                        printf(" - password: %d\n", user[i].password);
                         printf(" - Correo electronico: %s\n", user[i].email);
                         printf(" - Ciudad: %s\n", user[i].city);
                         printf(" - Preferencia 1: %s\n", user[i].preferences[0]);
@@ -97,14 +95,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     // Recorrer la lista de usuarios e imprimir sus datos
                     current = userList;////
                     while (current != NULL) {
-                        printf("Username: %s\n", current->user->username);
-                        printf("Age: %d\n", current->user->age);
-                        printf("Age: %d\n", current->user->password);
-                        printf("Email: %s\n", current->user->email);
-                        printf("City: %s\n", current->user->city);
-                        for (int i = 0; i < MAX_PREFERENCES; i++) {
-                            printf("- %s\n", current->user->preferences[i]);
-                        }
+                        printuser(current);///imprime los datos del usuario
                         printf("\n");
                         current = current->next;
                     }
@@ -126,7 +117,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         printf("- %s\n", user->preferences[i]);
                     }
 
-                    ListNode* newNode = malloc(sizeof(ListNode));  /// Crear un nuevo nodo para el usuario
+                    ListNode* newNode = malloc(sizeof(ListNode)*2);  /// Crear un nuevo nodo para el usuario
                     newNode->user = user;
                     newNode->next = NULL;
                     if (userList == NULL) { /// Agregar el nuevo nodo a la lista
@@ -139,49 +130,25 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         current->next = newNode;
                     }
                     break;
+                case SUBMENU_ITEM_2:
+                    printf("hola");
+                    break;
 
                 case LOGIN: ///parte donde se escanea los parametros del user
+                    ///Para operar con un usuario primero tenemos que buscar por el nombre de usuario a la persona, para ello,
+                    /// la tarea es implementar un algoritmo de búsqueda que recorra la lista de usuarios hasta encontrarlo
+                    /// y luego mostrar el submenú para ese usuario. Si no se encuentra el usuario, mostrar un mensaje de error.
                     MessageBox(hwnd, "click aceptar, then enter username and a numerical password (separated by space)", "login", MB_OK);
-                    scanf("%s %d", username, &password);
-                    printf("\nuser: %s\n", username);
-                    printf("\npassword: %d\n", password);
-                    foundUser = searchUserByUsername(username,password, userList);
-                    if (foundUser != NULL) displayDialog(hwnd);
-
-                    ///Para operar con un usuario primero tenemos que buscar por el nombre de usuario a la persona, para ello, la tarea es implementar un algoritmo de búsqueda que recorra la lista de usuarios hasta encontrarlo y luego mostrar el submenú para ese usuario. Si no se encuentra el usuario, mostrar un mensaje de error.
-
-
-
-                    /*MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK);
-                    scanf("%s %d",username,&password);
-                    printf("\nuser: %s\n",username);
-                    printf("\npassword: %d\n",password);
-
-                    ListNode* userList = NULL;
-                    // Código para agregar usuarios a la lista userList
-
-                    // Ejemplo de búsqueda por nombre de usuario
-                    char searchUsername[20];
-                    printf("Ingrese el nombre de usuario a buscar: ");
-                    scanf("%s", searchUsername);
-
-                    ListNode* foundUser = searchUserByUsername(searchUsername, userList);
+                    scanf("%s %d", username, &password);///escaneamos el nombre de usuario y password
+                    foundUser = searchUser(username,password, userList); ///recorremos los usuarios inscritos
                     if (foundUser != NULL) {
                         printf("Usuario encontrado:\n");
-                        printf(" - Nombre de usuario: %s\n", foundUser->user->username);
-                        printf(" - Edad: %d\n", foundUser->user->age);
-                        printf(" - Correo electrónico: %s\n", foundUser->user->email);
-                        printf(" - Ciudad: %s\n", foundUser->user->city);
-                        printf(" - Preferencia 1: %s\n", foundUser->user->preferences[0]);
-                        printf(" - Preferencia 2: %s\n", foundUser->user->preferences[1]);
-
-                        // Mostrar el submenú aquí
-
-                    } else {
-                        printf("Usuario no encontrado.\n");
+                        printuser(foundUser);///función que imprime los datos del user
+                        displayDialog(hwnd);///se abre la ventana emergente del usuario donde hay la gestión de las solicitudes de amistad
                     }
-
-                    return 0;*/
+                    else {
+                        printf("Usuario no encontrado:\n");
+                    }
                     break;
             }
 
@@ -224,7 +191,7 @@ void AddControls(HWND hwnd) {
 
 int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el archivo; parametros de entrada(nombre de archivo, user (struct USER) y ventana hwnd)
     FILE *fp=fopen(file,"r"); ///abrir fichero
-    if (fp == NULL) {
+    if (fp == NULL) {///comprobamos que el fichero se haya abierto correctamente
         MessageBox(hwnd, "Ha habido un error al abrir el archivo\n", "login", MB_OK);///ventana emergente en el menu principal
         printf("Error al abrir el archivo\n");
         return 0;
@@ -253,6 +220,12 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                 case 1:
                     DestroyWindow(hwnd);
                     break;
+                case 2:
+                    printf("\n aqui és on s'haurà d'anar gestionant totes les solicituds d'amistat rebudes\n");
+                    break;
+                case 3:
+                    printf("\n aqui és on s'haurà de fer el codi per enviar les solicituds damistat\n");
+                    break;
             }
             break;
         case WM_CLOSE:
@@ -260,7 +233,6 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
             break;
         default:
             return DefWindowProcW(hwnd,msg,wp,lp);
-
     }
 }
 
@@ -285,64 +257,32 @@ void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
     CreateWindowW(L"Button",L"Close",WS_VISIBLE|WS_CHILD,190,200,100,40,hDlg,(HMENU)1,NULL,NULL);
 
     ///boton para enviar una solicitud de amistad"
-    CreateWindowW(L"Button",L" Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)1,NULL,NULL);
+    CreateWindowW(L"Button",L" Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)2,NULL,NULL);
 
     ///boton para ver solicitudes pendientes de aceptar"
-    CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)1,NULL,NULL);
+    CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)3,NULL,NULL);
 
 }
-ListNode* searchUserByUsername(char* username,int password, ListNode* userList) {
+ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
+///El algoritmo utilizado es sequencial, ya que los usuarios no estan ordenados, por lo que va a recorrer toda la lista de usuarios hasta encontrarlo
     ListNode* current = userList;
     while (current != NULL) {
+        /// Comprueba si el nombre de usuario y la contraseña coinciden con el usuario actual de la lista de users
         if (strcmp(current->user->username, username) == 0 && current->user->password == password) {
-            return current;
+            return current;/// Devolver el usuario actual si se encuentra
         }
-        current = current->next;
+        current = current->next;///si no lo encontramos, pasamos al siguiente
     }
-    return NULL;
+    return NULL;///Devuelve NULL si no encontró el usuario
 }
 
-///
-///MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "login", MB_OK); ///mensaje de login
-//                    scanf("%s %d",username,&password); ///escanea el username y el password
-//                    printf("\nuser: %s\n",username); ///print para comprobar que se ha escaneado bien el username
-//                    printf("\npassword: %d\n",password); ///print para comprobar que se ha escaneado bien el password (en este caso es un int)
-//                    current = userList; ///se crea un nodo para recorrer la lista de usuarios y buscar el username que se ha escaneado anteriormente y comprobar si existe o no en la lista de usuarios (si no existe, se muestra un mensaje de error)
-//                    while (current != NULL) {
-//                        if (strcmp(current->user->username, username) == 0) {
-//                            break;
-//                        }
-//                        current = current->next;
-//                    } ///si el usuario existe, se muestra el submenu de ese usuario (en este caso, el submenu es el mismo que el de new player) y si no existe, se muestra un mensaje de error y se vuelve al menu principal (en este caso, el menu principal es el mismo que el de new player)
-//                    if (current != NULL) {
-//                        MessageBox(hwnd, "click aceptar, then enter name age email and city(separated by space)", "New player", MB_OK);
-//                        scanf("%s %d %s %s", user->username, &user->age, user->email, user->city);
-//                        MessageBox(hwnd, "click aceptar, then enter preferences separated by spaces", "New player", MB_OK);
-//                        for (int i = 0; i < MAX_PREFERENCES; i++) {
-//                            scanf("%s", user->preferences[i]);
-//                        }
-//                        ///prints para comprobar
-//                        printf("Username: %s\n", user->username);
-//                        printf("Age: %d\n", user->age);
-//                        printf("Email: %s\n", user->email);
-//                        printf("City: %s\n", user->city);
-//                        for (int i = 0; i < MAX_PREFERENCES; i++) {
-//                            printf("- %s\n", user->preferences[i]);
-//                        }
-//
-//                        ListNode* newNode = malloc(sizeof(ListNode));  /// Crear un nuevo nodo para el usuario
-//                        newNode->user = user;
-//                        newNode->next = NULL;
-//                        if (userList == NULL) { /// Agregar el nuevo nodo a la lista
-//                            userList = newNode; /// La lista está vacía, el nuevo nodo es el primer nodo
-//                        } else {
-//                            current = userList;
-//                            while (current->next != NULL) { /// La lista no está vacía, agregar el nuevo nodo al final
-//                                current = current->next;
-//                            }
-//                            current->next = newNode;
-//                        }
-//                    } else {
-//                        MessageBox(hwnd, "Usuario no encontrado", "Error", MB_OK);
-//                    } ///fin de la parte de login (en este caso, el login es el mismo que el de new player) y se vuelve al menu principal (en este caso, el menu principal es el mismo que el de new player)
-//                    break;
+void printuser(ListNode*User){///función de impresión de usuarios
+    printf(" - Nombre de usuario: %s\n", User->user->username);
+    printf(" - Edad: %d\n", User->user->age);
+    printf(" - Password: %d\n", User->user->password);
+    printf(" - Correo electronico: %s\n", User->user->email);
+    printf(" - Ciudad: %s\n", User->user->city);
+    for (int i = 0; i < MAX_PREFERENCES; i++) {
+        printf("- %s\n", User->user->preferences[i]);
+    }
+}

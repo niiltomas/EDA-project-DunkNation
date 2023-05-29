@@ -12,7 +12,7 @@
 #define NEW_PLAYER 7
 #define MAX_PREFERENCES 2
 #define ARCHIVO_USERS 8
-#define SUBMENU_ITEM_2 13
+
 LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 
 ///para incluir una función en el codigo antes se tiene que llamar aqui
@@ -130,10 +130,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         current->next = newNode;
                     }
                     break;
-                case SUBMENU_ITEM_2:
-                    printf("hola");
-                    break;
-
                 case LOGIN: ///parte donde se escanea los parametros del user
                     ///Para operar con un usuario primero tenemos que buscar por el nombre de usuario a la persona, para ello,
                     /// la tarea es implementar un algoritmo de búsqueda que recorra la lista de usuarios hasta encontrarlo

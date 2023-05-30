@@ -10,9 +10,8 @@ typedef struct {
     int password;
 }User;
 
-
-
 typedef struct ListNode {
     User* user;
     struct ListNode* next;
 } ListNode;
+

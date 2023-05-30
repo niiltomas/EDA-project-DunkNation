@@ -29,7 +29,8 @@ HBITMAP hLogoImage,hGenerateImage;
 
 ListNode* userList = NULL;
 ListNode* current;
-ListNode* searchUser(char* , int, ListNode* );
+ListNode* searchUser(char*, int, ListNode* );
+ListNode* searchUser2(char*, ListNode* );
 
 
 ///no tocar nada de aqui, ya que es la configuracion de la ventana principal
@@ -208,6 +209,10 @@ int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el ar
 
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
+    User* user= malloc(sizeof(User));
+    ListNode* current = userList;
+    ListNode* foundUser = NULL;
+    char *username[20];
     switch(msg)
     {
         case WM_COMMAND:
@@ -217,10 +222,24 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     DestroyWindow(hwnd);
                     break;
                 case 2:
-                    printf("\n aqui és on s'haurà d'anar gestionant totes les solicituds d'amistat rebudes\n");
+                    //printf("\n aqui és on s'haurà d'anar gestionant totes les solicituds d'amistat rebudes\n");
                     break;
                 case 3:
-                    printf("\n aqui és on s'haurà de fer el codi per enviar les solicituds damistat\n");
+                    //printf("\n aqui és on s'haurà de fer el codi per enviar les solicituds damistat\n");
+                    MessageBox(hwnd, "Haz clic en Aceptar y luego ingresa el nombre de usuario al que deseas enviar una solicitud", "Enviar solicitud de amistad", MB_OK);
+                    scanf("%s", username);  // Escanea el nombre de usuario
+                    foundUser = searchUser2(username, userList);  // Busca el usuario en la lista
+                    if (foundUser != NULL) {
+                        // Usuario encontrado, muestra los datos y abre la ventana emergente
+                        printf("Usuario encontrado:\n");
+                        printuser(foundUser);
+
+                        // Mostrar un mensaje de confirmación
+                        MessageBox(hwnd, "Solicitud de amistad enviada", "Confirmación", MB_OK | MB_ICONINFORMATION);
+                    } else {
+                        // Usuario no encontrado, muestra un mensaje de error
+                        MessageBox(hwnd, "Usuario no encontrado", "Error", MB_OK | MB_ICONERROR);
+                    }
                     break;
             }
             break;
@@ -253,10 +272,10 @@ void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
     CreateWindowW(L"Button",L"Close",WS_VISIBLE|WS_CHILD,190,200,100,40,hDlg,(HMENU)1,NULL,NULL);
 
     ///boton para enviar una solicitud de amistad"
-    CreateWindowW(L"Button",L" Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)2,NULL,NULL);
+    CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)2,NULL,NULL);
 
     ///boton para ver solicitudes pendientes de aceptar"
-    CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)3,NULL,NULL);
+    CreateWindowW(L"Button",L"Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)3,NULL,NULL);
 
 }
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
@@ -265,6 +284,19 @@ ListNode* searchUser(char* username,int password, ListNode* userList) {///funci�
     while (current != NULL) {
         /// Comprueba si el nombre de usuario y la contraseña coinciden con el usuario actual de la lista de users
         if (strcmp(current->user->username, username) == 0 && current->user->password == password) {
+            return current;/// Devolver el usuario actual si se encuentra
+        }
+        current = current->next;///si no lo encontramos, pasamos al siguiente
+    }
+    return NULL;///Devuelve NULL si no encontró el usuario
+}
+
+ListNode *searchUser2(char *username, ListNode *userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
+///El algoritmo utilizado es sequencial, ya que los usuarios no estan ordenados, por lo que va a recorrer toda la lista de usuarios hasta encontrarlo
+    ListNode *current = userList;
+    while (current != NULL) {
+        /// Comprueba si el nombre de usuario y la contraseña coinciden con el usuario actual de la lista de users
+        if (strcmp(current->user->username, username) == 0) {
             return current;/// Devolver el usuario actual si se encuentra
         }
         current = current->next;///si no lo encontramos, pasamos al siguiente

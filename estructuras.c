@@ -1,5 +1,10 @@
 #define MAX_PREFERENCES 2
 
+typedef struct FriendRequest {
+    char sender[50];
+    struct FriendRequest* next;
+} FriendRequest;
+
 //Estructura del usuario
 typedef struct {
     char username[50];
@@ -8,16 +13,10 @@ typedef struct {
     char city[50];
     char preferences[MAX_PREFERENCES][50];
     int password;
-    void *friendRequests;
+    struct FriendRequestNode *friendRequests;
 }User;
 
 typedef struct ListNode {
     User* user;
     struct ListNode* next;
 } ListNode;
-
-typedef struct FriendRequest {
-    User* sender;
-    User* receiver;
-    struct FriendRequest* next;
-} FriendRequest;

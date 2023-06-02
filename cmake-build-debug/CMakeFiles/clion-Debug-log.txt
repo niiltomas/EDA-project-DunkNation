@@ -1,4 +1,4 @@
-"C:\Program Files\JetBrains\CLion 2022.3.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\r\CLionProjects\EDA2 -B C:\Users\r\CLionProjects\EDA2\cmake-build-debug
+"C:\Program Files\JetBrains\CLion 2022.3.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S C:\Users\34601\Documents\test\EDA\EDA2final -B C:\Users\34601\Documents\test\EDA\EDA2final\cmake-build-debug
 -- The C compiler identification is GNU 11.2.0
 -- Detecting C compiler ABI info
 -- Detecting C compiler ABI info - done
@@ -7,4 +7,4 @@
 -- Detecting C compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: C:/Users/r/CLionProjects/EDA2/cmake-build-debug
+-- Build files have been written to: C:/Users/34601/Documents/test/EDA/EDA2final/cmake-build-debug

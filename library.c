@@ -169,13 +169,11 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
 
 }
 
-
 void AddMenus(HWND hwnd) {///exit de arriba a la izquierda
         hMenu = CreateMenu();
         AppendMenu(hMenu,MF_STRING,FILE_MENU_EXIT,"Exit");
         SetMenu(hwnd, hMenu);
     }
-
 
 void AddControls(HWND hwnd) {
     ///botones del main
@@ -211,7 +209,6 @@ int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el ar
 }
 
 
-
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
     User* user= malloc(sizeof(User));
@@ -229,13 +226,14 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     break;
                 case 2:
                     //printf("\n aqui és on s'haurà d'anar gestionant totes les solicituds d'amistat rebudes\n");
+                    printf(foundUser->user->username);
+                    printf(foundUser->user->friendRequests);
                     currentRequest = foundUser->user->friendRequests;
                     while (currentRequest != NULL) {
                         printf("Solicitud de amistad:\n");
-                        printf("Enviada por: %s\n", currentRequest->sender->username);
+                        printf("Enviada por: %s\n", currentRequest->sender);
                         currentRequest = currentRequest->next;
                     }
-
                     break;
                 case 3:
                     //printf("\n aqui és on s'haurà de fer el codi per enviar les solicituds damistat\n");
@@ -333,10 +331,9 @@ void printuser(ListNode*User){///función de impresión de usuarios
 
 void enqueueFriendRequest(User* sender, User* receiver) {
     FriendRequest* newRequest = malloc(sizeof(FriendRequest));
-    newRequest->sender = sender;
-    newRequest->receiver = receiver;
+    //newRequest->sender = sender->username;
+    strcpy(newRequest->sender, sender->username);
     newRequest->next = NULL;
-
     if (friendRequests == NULL) {
         friendRequests = newRequest;
     } else {

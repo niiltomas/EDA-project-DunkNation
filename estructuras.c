@@ -8,6 +8,7 @@
 typedef struct {
     char contenido[MAX_CARACTERES + 1];
 } Publicacion;
+
 //Estructura del usuario
 typedef struct {
     char username[50];
@@ -25,11 +26,37 @@ typedef struct ListNode {
     struct ListNode* next;
 } ListNode;
 
+// Nodo de la cola
+typedef struct QueueNode {
+    User user;
+    struct QueueNode* next;
+} QueueNode;
+
+
 typedef struct Node {
     char palabra[MAX_LENGTH];
     int conteo;
     struct Node* siguiente;
 } Node;
+
+// Estructura de una solicitud de amistad
+typedef struct {
+    User* sender;
+    User* receiver;
+} FriendRequest;
+
+// Nodo de la cola de solicitudes de amistad
+typedef struct FriendRequestNode {
+    FriendRequest* request;
+    struct FriendRequestNode* next;
+} FriendRequestNode;
+
+// Cola de solicitudes de amistad
+typedef struct {
+    FriendRequestNode* front;
+    FriendRequestNode* rear;
+} FriendRequestQueue;
+
 
 typedef struct {
     Node* tabla[TABLE_SIZE];

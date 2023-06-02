@@ -304,3 +304,99 @@ void printuser(ListNode*User){///función de impresión de usuarios
     //        printf("- %s\n", User->user->preferences[i]);
     //    }
 }
+
+// Función para realizar una publicación
+void realizarPublicacion(User* usuario, const char* contenido) {
+    if (strlen(contenido) <= MAX_CARACTERES) {
+        Publicacion* nuevaPublicacion = (Publicacion*)malloc(sizeof(Publicacion));
+        strcpy(nuevaPublicacion->contenido, contenido);
+
+        // Añadir la nueva publicación al timeline del usuario
+        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones + 1) * sizeof(Publicacion));
+        usuario->timeline[usuario->numPublicaciones] = *nuevaPublicacion;
+        usuario->numPublicaciones++;
+
+        printf("Publicación realizada con éxito.\n");
+    } else {
+        printf("La publicación excede el límite de caracteres permitidos (%d).\n", MAX_CARACTERES);
+    }
+}
+
+// Función para eliminar una publicación del timeline
+void eliminarPublicacion(User* usuario, int indice) {
+    if (indice >= 0 && indice < usuario->numPublicaciones) {
+        // Liberar la memoria de la publicación a eliminar
+        free(usuario->timeline[indice].contenido);
+
+        // Desplazar las publicaciones restantes para llenar el espacio vacío
+        for (int i = indice; i < usuario->numPublicaciones - 1; i++) {
+            usuario->timeline[i] = usuario->timeline[i + 1];
+        }
+
+        // Redimensionar el timeline para reflejar la eliminación
+        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones - 1) * sizeof(Publicacion));
+        usuario->numPublicaciones--;
+
+        printf("Publicación eliminada con éxito.\n");
+    } else {
+        printf("Índice de publicación inválido.\n");
+    }
+}
+
+// Función para revisar el timeline de un usuario
+void revisarTimeline(const User* usuario) {
+    printf("Timeline de %s:\n", usuario->username);
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        printf("- %s\n", usuario->timeline[i].contenido);
+    }
+}
+
+// Función para liberar la memoria del timeline
+void liberarTimeline(User* usuario) {
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        free(usuario->timeline[i].contenido);
+    }
+    free(usuario->timeline);
+    usuario->timeline = NULL;
+    usuario->numPublicaciones = 0;
+}
+
+int calcularHash(char* palabra) {
+    int hash = 0;
+    int i = 0;
+
+    while (palabra[i] != '\0') {
+        hash += palabra[i];
+        i++;
+    }
+
+    return hash % TABLE_SIZE;
+}
+
+void inicializarTabla(HashTable* tabla) {
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        tabla->tabla[i] = NULL;
+    }
+}
+
+void insertarPalabra(HashTable* tabla, char* palabra) {
+    int indice = calcularHash(palabra);
+
+    Node* nodo = tabla->tabla[indice];
+
+    while (nodo != NULL) {
+        if (strcmp(nodo->palabra, palabra) == 0) {
+            nodo->conteo++;
+            return;
+        }
+
+        nodo = nodo->siguiente;
+    }
+
+    Node* nuevoNodo = (Node*)malloc(sizeof(Node));
+    strcpy(nuevoNodo->palabra, palabra);
+    nuevoNodo->conteo = 1;
+    nuevoNodo->siguiente = tabla->tabla[indice];
+    tabla->tabla[indice] = nuevoNodo;
+}
+

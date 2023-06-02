@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "estructuras.c"
 
+
 #define FILE_MENU_EXIT 3
 #define GENERATE_BUTTON 5
 #define LOGIN 6
@@ -22,7 +23,6 @@ void registerDialogClass(HINSTANCE);
 void displayDialog(HWND);
 int read_users_file(const char*,User*,HWND);
 void printuser(ListNode*);
-void enqueueFriendRequest(User* sender, User* receiver);
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -32,7 +32,6 @@ ListNode* userList = NULL;
 ListNode* current;
 ListNode* searchUser(char*, int, ListNode* );
 ListNode* searchUser2(char*, ListNode* );
-FriendRequest* friendRequests = NULL;
 
 
 ///no tocar nada de aqui, ya que es la configuracion de la ventana principal
@@ -122,7 +121,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
 
                     ListNode* newNode = malloc(sizeof(ListNode)*2);  /// Crear un nuevo nodo para el usuario
                     newNode->user = user;
-                    newNode->user->friendRequests = NULL;  // Inicializa la cola de solicitudes de amistad del nuevo usuario
                     newNode->next = NULL;
                     if (userList == NULL) { /// Agregar el nuevo nodo a la lista
                         userList = newNode; /// La lista está vacía, el nuevo nodo es el primer nodo
@@ -144,8 +142,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     if (foundUser != NULL) {
                         printf("Usuario encontrado:\n");
                         printuser(foundUser);///función que imprime los datos del user
-                        foundUser->user->friendRequests = friendRequests;
-
                         displayDialog(hwnd);///se abre la ventana emergente del usuario donde hay la gestión de las solicitudes de amistad
                     }
                     else {
@@ -169,11 +165,13 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
 
 }
 
+
 void AddMenus(HWND hwnd) {///exit de arriba a la izquierda
         hMenu = CreateMenu();
         AppendMenu(hMenu,MF_STRING,FILE_MENU_EXIT,"Exit");
         SetMenu(hwnd, hMenu);
     }
+
 
 void AddControls(HWND hwnd) {
     ///botones del main
@@ -209,13 +207,13 @@ int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el ar
 }
 
 
+
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
     User* user= malloc(sizeof(User));
-    FriendRequest* currentRequest = NULL;
     ListNode* current = userList;
     ListNode* foundUser = NULL;
-    char username[20];
+    char *username[20];
     switch(msg)
     {
         case WM_COMMAND:
@@ -226,14 +224,6 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     break;
                 case 2:
                     //printf("\n aqui és on s'haurà d'anar gestionant totes les solicituds d'amistat rebudes\n");
-                    printf(foundUser->user->username);
-                    printf(foundUser->user->friendRequests);
-                    currentRequest = foundUser->user->friendRequests;
-                    while (currentRequest != NULL) {
-                        printf("Solicitud de amistad:\n");
-                        printf("Enviada por: %s\n", currentRequest->sender);
-                        currentRequest = currentRequest->next;
-                    }
                     break;
                 case 3:
                     //printf("\n aqui és on s'haurà de fer el codi per enviar les solicituds damistat\n");
@@ -244,9 +234,6 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                         // Usuario encontrado, muestra los datos y abre la ventana emergente
                         printf("Usuario encontrado:\n");
                         printuser(foundUser);
-
-                        User *receiverUser;
-                        enqueueFriendRequest(foundUser->user, receiverUser);
 
                         // Mostrar un mensaje de confirmación
                         MessageBox(hwnd, "Solicitud de amistad enviada", "Confirmación", MB_OK | MB_ICONINFORMATION);
@@ -328,19 +315,61 @@ void printuser(ListNode*User){///función de impresión de usuarios
         printf("- %s\n", User->user->preferences[i]);
     }
 }
+/// funcion para realizar mensaje/publicaiones:
 
-void enqueueFriendRequest(User* sender, User* receiver) {
-    FriendRequest* newRequest = malloc(sizeof(FriendRequest));
-    //newRequest->sender = sender->username;
-    strcpy(newRequest->sender, sender->username);
-    newRequest->next = NULL;
-    if (friendRequests == NULL) {
-        friendRequests = newRequest;
+void realizarPublicacion(User* usuario, const char* contenido) {
+    if (strlen(contenido) <= MAX_CARACTERES) {
+        Publicacion* nuevaPublicacion = (Publicacion*)malloc(sizeof(Publicacion));
+        strcpy(nuevaPublicacion->contenido, contenido);
+
+        // Añadir la nueva publicación al timeline del usuario
+        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones + 1) * sizeof(Publicacion));
+        usuario->timeline[usuario->numPublicaciones] = *nuevaPublicacion;
+        usuario->numPublicaciones++;
+
+        printf("Publicación realizada con éxito.\n");
     } else {
-        FriendRequest* current = friendRequests;
-        while (current->next != NULL) {
-            current = current->next;
-        }
-        current->next = newRequest;
+        printf("La publicación excede el límite de caracteres permitidos (%d).\n", MAX_CARACTERES);
     }
 }
+
+/// funcion para eliminar mensaje/publicaion:
+
+void eliminarPublicacion(User* usuario, int indice) {
+    if (indice >= 0 && indice < usuario->numPublicaciones) {
+        // Liberar la memoria de la publicación a eliminar
+        free(usuario->timeline[indice].contenido);
+
+        // Desplazar las publicaciones restantes para llenar el espacio vacío
+        for (int i = indice; i < usuario->numPublicaciones - 1; i++) {
+            usuario->timeline[i] = usuario->timeline[i + 1];
+        }
+
+        // Redimensionar el timeline para reflejar la eliminación
+        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones - 1) * sizeof(Publicacion));
+        usuario->numPublicaciones--;
+
+        printf("Publicación eliminada con éxito.\n");
+    } else {
+        printf("Índice de publicación inválido.\n");
+    }
+}
+
+/// funcion para revisar  el timeline:
+void revisarTimeline(const User* usuario) {
+    printf("Timeline de %s:\n", usuario->username);
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        printf("- %s\n", usuario->timeline[i].contenido);
+    }
+}
+
+/// Función para liberar la memoria del timeline:
+void liberarTimeline(User* usuario) {
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        free(usuario->timeline[i].contenido);
+    }
+    free(usuario->timeline);
+    usuario->timeline = NULL;
+    usuario->numPublicaciones = 0;
+}
+

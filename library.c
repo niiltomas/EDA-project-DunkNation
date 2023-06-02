@@ -39,7 +39,7 @@ ListNode* searchUser2(char*, ListNode* );
 /// : ##################################################################################################
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow) {
     WNDCLASSW wc={0};
-    wc.hbrBackground= (HBRUSH) COLOR_WINDOW;
+    wc.hbrBackground = (HBRUSH) COLOR_WINDOW;
     wc.hCursor = LoadCursor (NULL,IDC_ARROW);
     wc.hInstance=hInst;
     wc.lpszClassName = L"myWindowClass";
@@ -61,7 +61,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
 
 ///#########################################################################
 LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
-    User user[20];
+    User* user = malloc(sizeof(User));
+    User users[20];
     ListNode* current = userList;
     ListNode* foundUser = NULL;
     char username[20];
@@ -82,14 +83,14 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
 
                 case ARCHIVO_USERS:///leer archivo que contiene 20 los datos de 20 usuarios
                     ///abrir fichero
-                    num_users=read_users_file(user);
+                    num_users=read_users_file(users);
                     for (int i = 0; i < num_users; i++) {
                         printf("Usuario %d:\n", i+1);
-                        printf(" - Nombre de usuario: %s\n", user[i].username);
-                        printf(" - Edad: %d\n", user[i].age);
-                        printf(" - password: %d\n", user[i].password);
-                        printf(" - Correo electronico: %s\n", user[i].email);
-                        printf(" - Ciudad: %s\n", user[i].city);
+                        printf(" - Nombre de usuario: %s\n", users[i].username);
+                        printf(" - Edad: %d\n", users[i].age);
+                        printf(" - password: %d\n", users[i].password);
+                        printf(" - Correo electronico: %s\n", users[i].email);
+                        printf(" - Ciudad: %s\n", users[i].city);
                         ///printf(" - Preferencia 1: %s\n", user[i].preferences[0]);
                         /// printf(" - Preferencia 2: %s\n", user[i].preferences[1]);
 
@@ -162,9 +163,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
             break;
         default:
             return DefWindowProcW(hwnd,msg,wp,lp);
-
     }
-
 }
 
 
@@ -309,7 +308,6 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     if (requestNode == NULL) {
                         printf("Solicitud no encontrada.\n");
                     }
-
                     break;
 
                 case 3:
@@ -499,4 +497,3 @@ void insertarPalabra(HashTable* tabla, char* palabra) {
     nuevoNodo->siguiente = tabla->tabla[indice];
     tabla->tabla[indice] = nuevoNodo;
 }
-

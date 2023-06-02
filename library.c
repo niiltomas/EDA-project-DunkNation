@@ -78,7 +78,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     aux= MessageBoxW(hwnd,L"Estas segur que vols sortir?",L"EXIT",MB_YESNO|MB_ICONEXCLAMATION);
                     if (aux==IDYES)
                     {
-                        DestroyWindow(hwnd);
+                        DestroyWindow(hwnd);///
                     }
                     break;
 

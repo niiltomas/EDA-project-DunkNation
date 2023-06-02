@@ -15,7 +15,6 @@ typedef struct {
     Publicacion* timeline;
     int numPublicaciones;
 }User;
-
 typedef struct ListNode {
     User* user;
     struct ListNode* next;

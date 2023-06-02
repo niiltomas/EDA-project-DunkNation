@@ -315,6 +315,44 @@ void printuser(ListNode*User){///función de impresión de usuarios
         printf("- %s\n", User->user->preferences[i]);
     }
 }
+/// funcion para realizar mensaje/publicaiones:
+void realizarPublicacion(User* usuario, const char* contenido) {
+    if (strlen(contenido) <= MAX_CARACTERES) {
+        Publicacion* nuevaPublicacion = (Publicacion*)malloc(sizeof(Publicacion));
+        strcpy(nuevaPublicacion->contenido, contenido);
+
+        // Añadir la nueva publicación al timeline del usuario
+        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones + 1) * sizeof(Publicacion));
+        usuario->timeline[usuario->numPublicaciones] = *nuevaPublicacion;
+        usuario->numPublicaciones++;
+
+        printf("Publicación realizada con éxito.\n");
+    } else {
+        printf("La publicación excede el límite de caracteres permitidos (%d).\n", MAX_CARACTERES);
+    }
+}
+
+/// funcion para eliminar mensaje/publicaion:
+void eliminarPublicacion(User* usuario, int indice) {
+    if (indice >= 0 && indice < usuario->numPublicaciones) {
+        // Liberar la memoria de la publicación a eliminar
+        free(usuario->timeline[indice].contenido);
+
+        // Desplazar las publicaciones restantes para llenar el espacio vacío
+        for (int i = indice; i < usuario->numPublicaciones - 1; i++) {
+            usuario->timeline[i] = usuario->timeline[i + 1];
+        }
+
+        // Redimensionar el timeline para reflejar la eliminación
+        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones - 1) * sizeof(Publicacion));
+        usuario->numPublicaciones--;
+
+        printf("Publicación eliminada con éxito.\n");
+    } else {
+        printf("Índice de publicación inválido.\n");
+    }
+}
+
 
 
 

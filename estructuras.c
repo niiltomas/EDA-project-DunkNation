@@ -1,6 +1,7 @@
 #define MAX_PREFERENCES 2
 #define MAX_CARACTERES 120
 // Definición de la estructura de publicación
+
 typedef struct {
     char contenido[MAX_CARACTERES + 1];
 } Publicacion;
@@ -15,6 +16,8 @@ typedef struct {
     Publicacion* timeline;
     int numPublicaciones;
 }User;
+
+
 typedef struct ListNode {
     User* user;
     struct ListNode* next;

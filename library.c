@@ -316,6 +316,7 @@ void printuser(ListNode*User){///función de impresión de usuarios
     }
 }
 /// funcion para realizar mensaje/publicaiones:
+
 void realizarPublicacion(User* usuario, const char* contenido) {
     if (strlen(contenido) <= MAX_CARACTERES) {
         Publicacion* nuevaPublicacion = (Publicacion*)malloc(sizeof(Publicacion));
@@ -333,6 +334,7 @@ void realizarPublicacion(User* usuario, const char* contenido) {
 }
 
 /// funcion para eliminar mensaje/publicaion:
+
 void eliminarPublicacion(User* usuario, int indice) {
     if (indice >= 0 && indice < usuario->numPublicaciones) {
         // Liberar la memoria de la publicación a eliminar
@@ -353,6 +355,21 @@ void eliminarPublicacion(User* usuario, int indice) {
     }
 }
 
+/// funcion para revisar  el timeline:
+void revisarTimeline(const User* usuario) {
+    printf("Timeline de %s:\n", usuario->username);
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        printf("- %s\n", usuario->timeline[i].contenido);
+    }
+}
 
-
+/// Función para liberar la memoria del timeline:
+void liberarTimeline(User* usuario) {
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        free(usuario->timeline[i].contenido);
+    }
+    free(usuario->timeline);
+    usuario->timeline = NULL;
+    usuario->numPublicaciones = 0;
+}
 

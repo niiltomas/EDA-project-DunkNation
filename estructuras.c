@@ -15,3 +15,16 @@ typedef struct ListNode {
     struct ListNode* next;
 } ListNode;
 
+
+
+// Nodo de la cola
+typedef struct QueueNode {
+    User user;
+    struct QueueNode* next;
+} QueueNode;
+
+// Cola de solicitudes de amistad
+typedef struct {
+    QueueNode* front;
+    QueueNode* rear;
+} FriendRequestQueue;

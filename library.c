@@ -195,7 +195,7 @@ int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el ar
     }
     int i=0;
     printf("%s","fitxer obert correctament\n");
-    while(fscanf(fp,"%[^,],%d,%d,%[^,],%[^,],%[^,],%[^,\n]\n",user[i].username,&user[i].password,&user[i].age,user[i].email,user[i].city,user[i].preferences[0],user[i].preferences[1])!=EOF){
+    while(  fscanf(fp,"%[^,],%d,%d,%[^,],%[^,],%[^,],%[^,\n]\n",user[i].username,&user[i].password,&user[i].age,user[i].email,user[i].city,user[i].preferences[0],user[i].preferences[1])!=EOF){
         i++;
     }
     ///llegeix els parametres fins que troba una coma

@@ -13,6 +13,7 @@
 #define NEW_PLAYER 7
 #define MAX_PREFERENCES 2
 #define ARCHIVO_USERS 8
+#define SORTUSERS 9
 
 LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 
@@ -29,7 +30,6 @@ HWND hLogo,hEdit;
 HBITMAP hLogoImage,hGenerateImage;
 
 ListNode* userList = NULL;
-ListNode* current;
 ListNode* searchUser(char*, int, ListNode* );
 ListNode* searchUser2(char*, ListNode* );
 
@@ -64,7 +64,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
     User* user= malloc(sizeof(User));
     ListNode* current = userList;
     ListNode* foundUser = NULL;
-    char username[20],lol;
+    char username[20];
     int aux,password, num_users=0;
     switch(msg)
     {
@@ -90,7 +90,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         printf(" - Ciudad: %s\n", user[i].city);
                         printf(" - Preferencia 1: %s\n", user[i].preferences[0]);
                         printf(" - Preferencia 2: %s\n", user[i].preferences[1]);
-
                     }
                     break;
                 case GENERATE_BUTTON:///sitio donde se tendrá que poner el codigo de mostrar todos los usuarios
@@ -119,7 +118,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         printf("- %s\n", user->preferences[i]);
                     }
 
-                    ListNode* newNode = malloc(sizeof(ListNode)*2);  /// Crear un nuevo nodo para el usuario
+                    ListNode* newNode = malloc(sizeof(ListNode));  /// Crear un nuevo nodo para el usuario
                     newNode->user = user;
                     newNode->next = NULL;
                     if (userList == NULL) { /// Agregar el nuevo nodo a la lista
@@ -132,7 +131,12 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         current->next = newNode;
                     }
                     break;
+                case SORTUSERS:
+                    printf("f");
+                    break;
+
                 case LOGIN: ///parte donde se escanea los parametros del user
+
                     ///Para operar con un usuario primero tenemos que buscar por el nombre de usuario a la persona, para ello,
                     /// la tarea es implementar un algoritmo de búsqueda que recorra la lista de usuarios hasta encontrarlo
                     /// y luego mostrar el submenú para ese usuario. Si no se encuentra el usuario, mostrar un mensaje de error.
@@ -182,7 +186,8 @@ void AddControls(HWND hwnd) {
     CreateWindowW(L"Button",L"NEW PLAYER",WS_VISIBLE |WS_CHILD|WS_BORDER ,250,50,98,38,hwnd,(HMENU)NEW_PLAYER,0,0);
     CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
     CreateWindowW(L"Button",L"USER_FILE",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)ARCHIVO_USERS,0,0);
-    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,248,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
+    CreateWindowW(L"Button",L"SORT USERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,98,38,hwnd,(HMENU)SORTUSERS,0,0);
+    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,250,190,98,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
     hLogo=CreateWindowW(L"Static",NULL,WS_VISIBLE |WS_CHILD|SS_BITMAP,0,0,38,38,hwnd,0,0,0);
     SendMessageW(hLogo,STM_SETIMAGE,IMAGE_BITMAP,(LPARAM)hLogoImage);
 }
@@ -213,7 +218,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     User* user= malloc(sizeof(User));
     ListNode* current = userList;
     ListNode* foundUser = NULL;
-    char *username[20];
+    char username[20];
     switch(msg)
     {
         case WM_COMMAND:

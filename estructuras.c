@@ -8,6 +8,7 @@ typedef struct {
     char city[50];
     char preferences[MAX_PREFERENCES][50];
     int password;
+    void *friendRequests;
 }User;
 
 typedef struct ListNode {
@@ -15,3 +16,8 @@ typedef struct ListNode {
     struct ListNode* next;
 } ListNode;
 
+typedef struct FriendRequest {
+    User* sender;
+    User* receiver;
+    struct FriendRequest* next;
+} FriendRequest;

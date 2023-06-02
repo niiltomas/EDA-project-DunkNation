@@ -22,6 +22,7 @@ void registerDialogClass(HINSTANCE);
 void displayDialog(HWND);
 int read_users_file(const char*,User*,HWND);
 void printuser(ListNode*);
+void enqueueFriendRequest(User* sender, User* receiver);
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -31,6 +32,7 @@ ListNode* userList = NULL;
 ListNode* current;
 ListNode* searchUser(char*, int, ListNode* );
 ListNode* searchUser2(char*, ListNode* );
+FriendRequest* friendRequests = NULL;
 
 
 ///no tocar nada de aqui, ya que es la configuracion de la ventana principal
@@ -120,6 +122,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
 
                     ListNode* newNode = malloc(sizeof(ListNode)*2);  /// Crear un nuevo nodo para el usuario
                     newNode->user = user;
+                    newNode->user->friendRequests = NULL;  // Inicializa la cola de solicitudes de amistad del nuevo usuario
                     newNode->next = NULL;
                     if (userList == NULL) { /// Agregar el nuevo nodo a la lista
                         userList = newNode; /// La lista está vacía, el nuevo nodo es el primer nodo
@@ -141,6 +144,8 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     if (foundUser != NULL) {
                         printf("Usuario encontrado:\n");
                         printuser(foundUser);///función que imprime los datos del user
+                        foundUser->user->friendRequests = friendRequests;
+
                         displayDialog(hwnd);///se abre la ventana emergente del usuario donde hay la gestión de las solicitudes de amistad
                     }
                     else {
@@ -210,9 +215,10 @@ int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el ar
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
     User* user= malloc(sizeof(User));
+    FriendRequest* currentRequest = NULL;
     ListNode* current = userList;
     ListNode* foundUser = NULL;
-    char *username[20];
+    char username[20];
     switch(msg)
     {
         case WM_COMMAND:
@@ -223,6 +229,13 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     break;
                 case 2:
                     //printf("\n aqui és on s'haurà d'anar gestionant totes les solicituds d'amistat rebudes\n");
+                    currentRequest = foundUser->user->friendRequests;
+                    while (currentRequest != NULL) {
+                        printf("Solicitud de amistad:\n");
+                        printf("Enviada por: %s\n", currentRequest->sender->username);
+                        currentRequest = currentRequest->next;
+                    }
+
                     break;
                 case 3:
                     //printf("\n aqui és on s'haurà de fer el codi per enviar les solicituds damistat\n");
@@ -233,6 +246,9 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                         // Usuario encontrado, muestra los datos y abre la ventana emergente
                         printf("Usuario encontrado:\n");
                         printuser(foundUser);
+
+                        User *receiverUser;
+                        enqueueFriendRequest(foundUser->user, receiverUser);
 
                         // Mostrar un mensaje de confirmación
                         MessageBox(hwnd, "Solicitud de amistad enviada", "Confirmación", MB_OK | MB_ICONINFORMATION);
@@ -312,5 +328,22 @@ void printuser(ListNode*User){///función de impresión de usuarios
     printf(" - Ciudad: %s\n", User->user->city);
     for (int i = 0; i < MAX_PREFERENCES; i++) {
         printf("- %s\n", User->user->preferences[i]);
+    }
+}
+
+void enqueueFriendRequest(User* sender, User* receiver) {
+    FriendRequest* newRequest = malloc(sizeof(FriendRequest));
+    newRequest->sender = sender;
+    newRequest->receiver = receiver;
+    newRequest->next = NULL;
+
+    if (friendRequests == NULL) {
+        friendRequests = newRequest;
+    } else {
+        FriendRequest* current = friendRequests;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newRequest;
     }
 }

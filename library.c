@@ -14,7 +14,7 @@
 #define MAX_PREFERENCES 2
 #define ARCHIVO_USERS 8
 #define SORTUSERS 9
-
+#define MAX_CHAR 100
 LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 
 ///para incluir una función en el codigo antes se tiene que llamar aqui
@@ -22,7 +22,7 @@ void AddMenus(HWND);
 void AddControls(HWND);
 void registerDialogClass(HINSTANCE);
 void displayDialog(HWND);
-int read_users_file(const char*,User*,HWND);
+int read_users_file(User*);
 void printuser(ListNode*);
 
 HMENU hMenu;
@@ -30,8 +30,8 @@ HWND hLogo,hEdit;
 HBITMAP hLogoImage,hGenerateImage;
 
 ListNode* userList = NULL;
-ListNode* searchUser(char*, int, ListNode* );
-ListNode* searchUser2(char*, ListNode* );
+ListNode* current;
+ListNode* searchUser(char* , int, ListNode* );
 
 
 ///no tocar nada de aqui, ya que es la configuracion de la ventana principal
@@ -61,11 +61,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
 
 ///#########################################################################
 LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
-    User* user= malloc(sizeof(User));
+    User user[20];
     ListNode* current = userList;
     ListNode* foundUser = NULL;
     char username[20];
     int aux,password, num_users=0;
+    FILE *fp=fopen("archivo_users.csv","r");
     switch(msg)
     {
         case WM_COMMAND: ///ÉS EL MISSATGE
@@ -80,7 +81,8 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     break;
 
                 case ARCHIVO_USERS:///leer archivo que contiene 20 los datos de 20 usuarios
-                    num_users=read_users_file("archivo_users.csv",user,hwnd);
+                    ///abrir fichero
+                    num_users=read_users_file(user);
                     for (int i = 0; i < num_users; i++) {
                         printf("Usuario %d:\n", i+1);
                         printf(" - Nombre de usuario: %s\n", user[i].username);
@@ -88,8 +90,9 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         printf(" - password: %d\n", user[i].password);
                         printf(" - Correo electronico: %s\n", user[i].email);
                         printf(" - Ciudad: %s\n", user[i].city);
-                        printf(" - Preferencia 1: %s\n", user[i].preferences[0]);
-                        printf(" - Preferencia 2: %s\n", user[i].preferences[1]);
+                        ///printf(" - Preferencia 1: %s\n", user[i].preferences[0]);
+                        /// printf(" - Preferencia 2: %s\n", user[i].preferences[1]);
+
                     }
                     break;
                 case GENERATE_BUTTON:///sitio donde se tendrá que poner el codigo de mostrar todos los usuarios
@@ -131,12 +134,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         current->next = newNode;
                     }
                     break;
-                case SORTUSERS:
-                    printf("f");
-                    break;
-
                 case LOGIN: ///parte donde se escanea los parametros del user
-
                     ///Para operar con un usuario primero tenemos que buscar por el nombre de usuario a la persona, para ello,
                     /// la tarea es implementar un algoritmo de búsqueda que recorra la lista de usuarios hasta encontrarlo
                     /// y luego mostrar el submenú para ese usuario. Si no se encuentra el usuario, mostrar un mensaje de error.
@@ -171,10 +169,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
 
 
 void AddMenus(HWND hwnd) {///exit de arriba a la izquierda
-        hMenu = CreateMenu();
-        AppendMenu(hMenu,MF_STRING,FILE_MENU_EXIT,"Exit");
-        SetMenu(hwnd, hMenu);
-    }
+    hMenu = CreateMenu();
+    AppendMenu(hMenu,MF_STRING,FILE_MENU_EXIT,"Exit");
+    SetMenu(hwnd, hMenu);
+}
 
 
 void AddControls(HWND hwnd) {
@@ -186,39 +184,52 @@ void AddControls(HWND hwnd) {
     CreateWindowW(L"Button",L"NEW PLAYER",WS_VISIBLE |WS_CHILD|WS_BORDER ,250,50,98,38,hwnd,(HMENU)NEW_PLAYER,0,0);
     CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
     CreateWindowW(L"Button",L"USER_FILE",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)ARCHIVO_USERS,0,0);
-    CreateWindowW(L"Button",L"SORT USERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,98,38,hwnd,(HMENU)SORTUSERS,0,0);
-    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,250,190,98,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
+    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,248,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
     hLogo=CreateWindowW(L"Static",NULL,WS_VISIBLE |WS_CHILD|SS_BITMAP,0,0,38,38,hwnd,0,0,0);
     SendMessageW(hLogo,STM_SETIMAGE,IMAGE_BITMAP,(LPARAM)hLogoImage);
 }
 
-int read_users_file(const char* file,User* user,HWND hwnd){///funció leer el archivo; parametros de entrada(nombre de archivo, user (struct USER) y ventana hwnd)
-    FILE *fp=fopen(file,"r"); ///abrir fichero
+int read_users_file(User* user){///funció leer el archivo; parametros de entrada(nombre de archivo, user (struct USER) y ventana hwnd)
+    int max_usuarios=20;
+    FILE* fp=fopen("archivo_users.csv","r");
     if (fp == NULL) {///comprobamos que el fichero se haya abierto correctamente
-        MessageBox(hwnd, "Ha habido un error al abrir el archivo\n", "login", MB_OK);///ventana emergente en el menu principal
         printf("Error al abrir el archivo\n");
         return 0;
     }
+
+    char linea[MAX_CHAR];
     int i=0;
-    printf("%s","fitxer obert correctament\n");
-    while(fscanf(fp,"%[^,],%d,%d,%[^,],%[^,],%[^,],%[^,\n]\n",user[i].username,&user[i].password,&user[i].age,user[i].email,user[i].city,user[i].preferences[0],user[i].preferences[1])!=EOF){
+    while (fgets(linea, MAX_CHAR, fp) != NULL && i < max_usuarios) {
+        char* token;
+        token = strtok(linea, ",");
+
+        strncpy(user[i].username, token, MAX_CHAR);
+        token = strtok(NULL, ",");
+
+        user[i].age = atoi(token);
+        token = strtok(NULL, ",");
+
+        user[i].password = atoi(token);
+        token = strtok(NULL, ",");
+
+        strncpy(user[i].email, token, MAX_CHAR);
+        token = strtok(NULL, ",");
+
+        strncpy(user[i].city, token, MAX_CHAR);
+        token = strtok(NULL, ",");
+
         i++;
     }
-    ///llegeix els parametres fins que troba una coma
-    printf("%s","fitxer llegit correctament\n");
 
-    fclose(fp);///cerramos el fichero
-    return i; ///devolvemos el numero de usuarios
+    fclose(fp);
+    return i;
 }
+
 
 
 
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
-    User* user= malloc(sizeof(User));
-    ListNode* current = userList;
-    ListNode* foundUser = NULL;
-    char username[20];
     switch(msg)
     {
         case WM_COMMAND:
@@ -228,24 +239,10 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     DestroyWindow(hwnd);
                     break;
                 case 2:
-                    //printf("\n aqui és on s'haurà d'anar gestionant totes les solicituds d'amistat rebudes\n");
+                    printf("\n aqui és on s'haurà d'anar gestionant totes les solicituds d'amistat rebudes\n");
                     break;
                 case 3:
-                    //printf("\n aqui és on s'haurà de fer el codi per enviar les solicituds damistat\n");
-                    MessageBox(hwnd, "Haz clic en Aceptar y luego ingresa el nombre de usuario al que deseas enviar una solicitud", "Enviar solicitud de amistad", MB_OK);
-                    scanf("%s", username);  // Escanea el nombre de usuario
-                    foundUser = searchUser2(username, userList);  // Busca el usuario en la lista
-                    if (foundUser != NULL) {
-                        // Usuario encontrado, muestra los datos y abre la ventana emergente
-                        printf("Usuario encontrado:\n");
-                        printuser(foundUser);
-
-                        // Mostrar un mensaje de confirmación
-                        MessageBox(hwnd, "Solicitud de amistad enviada", "Confirmación", MB_OK | MB_ICONINFORMATION);
-                    } else {
-                        // Usuario no encontrado, muestra un mensaje de error
-                        MessageBox(hwnd, "Usuario no encontrado", "Error", MB_OK | MB_ICONERROR);
-                    }
+                    printf("\n aqui és on s'haurà de fer el codi per enviar les solicituds damistat\n");
                     break;
             }
             break;
@@ -278,10 +275,10 @@ void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
     CreateWindowW(L"Button",L"Close",WS_VISIBLE|WS_CHILD,190,200,100,40,hDlg,(HMENU)1,NULL,NULL);
 
     ///boton para enviar una solicitud de amistad"
-    CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)2,NULL,NULL);
+    CreateWindowW(L"Button",L" Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)2,NULL,NULL);
 
     ///boton para ver solicitudes pendientes de aceptar"
-    CreateWindowW(L"Button",L"Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)3,NULL,NULL);
+    CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)3,NULL,NULL);
 
 }
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
@@ -297,84 +294,13 @@ ListNode* searchUser(char* username,int password, ListNode* userList) {///funci�
     return NULL;///Devuelve NULL si no encontró el usuario
 }
 
-ListNode *searchUser2(char *username, ListNode *userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
-///El algoritmo utilizado es sequencial, ya que los usuarios no estan ordenados, por lo que va a recorrer toda la lista de usuarios hasta encontrarlo
-    ListNode *current = userList;
-    while (current != NULL) {
-        /// Comprueba si el nombre de usuario y la contraseña coinciden con el usuario actual de la lista de users
-        if (strcmp(current->user->username, username) == 0) {
-            return current;/// Devolver el usuario actual si se encuentra
-        }
-        current = current->next;///si no lo encontramos, pasamos al siguiente
-    }
-    return NULL;///Devuelve NULL si no encontró el usuario
-}
-
 void printuser(ListNode*User){///función de impresión de usuarios
     printf(" - Nombre de usuario: %s\n", User->user->username);
     printf(" - Edad: %d\n", User->user->age);
     printf(" - Password: %d\n", User->user->password);
     printf(" - Correo electronico: %s\n", User->user->email);
     printf(" - Ciudad: %s\n", User->user->city);
-    for (int i = 0; i < MAX_PREFERENCES; i++) {
-        printf("- %s\n", User->user->preferences[i]);
-    }
+    ///for (int i = 0; i < MAX_PREFERENCES; i++) {
+    //        printf("- %s\n", User->user->preferences[i]);
+    //    }
 }
-/// funcion para realizar mensaje/publicaiones:
-
-void realizarPublicacion(User* usuario, const char* contenido) {
-    if (strlen(contenido) <= MAX_CARACTERES) {
-        Publicacion* nuevaPublicacion = (Publicacion*)malloc(sizeof(Publicacion));
-        strcpy(nuevaPublicacion->contenido, contenido);
-
-        // Añadir la nueva publicación al timeline del usuario
-        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones + 1) * sizeof(Publicacion));
-        usuario->timeline[usuario->numPublicaciones] = *nuevaPublicacion;
-        usuario->numPublicaciones++;
-
-        printf("Publicación realizada con éxito.\n");
-    } else {
-        printf("La publicación excede el límite de caracteres permitidos (%d).\n", MAX_CARACTERES);
-    }
-}
-
-/// funcion para eliminar mensaje/publicaion:
-
-void eliminarPublicacion(User* usuario, int indice) {
-    if (indice >= 0 && indice < usuario->numPublicaciones) {
-        // Liberar la memoria de la publicación a eliminar
-        free(usuario->timeline[indice].contenido);
-
-        // Desplazar las publicaciones restantes para llenar el espacio vacío
-        for (int i = indice; i < usuario->numPublicaciones - 1; i++) {
-            usuario->timeline[i] = usuario->timeline[i + 1];
-        }
-
-        // Redimensionar el timeline para reflejar la eliminación
-        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones - 1) * sizeof(Publicacion));
-        usuario->numPublicaciones--;
-
-        printf("Publicación eliminada con éxito.\n");
-    } else {
-        printf("Índice de publicación inválido.\n");
-    }
-}
-
-/// funcion para revisar  el timeline:
-void revisarTimeline(const User* usuario) {
-    printf("Timeline de %s:\n", usuario->username);
-    for (int i = 0; i < usuario->numPublicaciones; i++) {
-        printf("- %s\n", usuario->timeline[i].contenido);
-    }
-}
-
-/// Función para liberar la memoria del timeline:
-void liberarTimeline(User* usuario) {
-    for (int i = 0; i < usuario->numPublicaciones; i++) {
-        free(usuario->timeline[i].contenido);
-    }
-    free(usuario->timeline);
-    usuario->timeline = NULL;
-    usuario->numPublicaciones = 0;
-}
-

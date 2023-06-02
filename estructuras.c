@@ -4,7 +4,6 @@
 #define TABLE_SIZE 100
 
 // Definición de la estructura de publicación
-
 typedef struct {
     char contenido[MAX_CARACTERES + 1];
 } Publicacion;
@@ -48,6 +47,8 @@ typedef struct {
 // Nodo de la cola de solicitudes de amistad
 typedef struct FriendRequestNode {
     FriendRequest* request;
+    User* sender; // Remitente de la solicitud
+    User* receiver; // Receptor de la solicitud
     struct FriendRequestNode* next;
 } FriendRequestNode;
 

@@ -5,6 +5,9 @@
 #include <wchar.h>
 #include <stdlib.h>
 #include "estructuras.c"
+#include <vector>
+#include <string>
+#include <iostream>
 
 #define FILE_MENU_EXIT 3
 #define GENERATE_BUTTON 5
@@ -314,3 +317,18 @@ void printuser(ListNode*User){///función de impresión de usuarios
         printf("- %s\n", User->user->preferences[i]);
     }
 }
+#define MAX_CARACTERES 120
+// Definición de la estructura de publicación
+typedef struct {
+    char contenido[MAX_CARACTERES + 1];
+} Publicacion;
+
+// Definición de la estructura de usuario
+typedef struct {
+    char nombre[50];
+    Publicacion* timeline;
+    int numPublicaciones;
+} Usuario;
+
+
+

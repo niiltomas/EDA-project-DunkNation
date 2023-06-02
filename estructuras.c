@@ -31,6 +31,27 @@ typedef struct Node {
     struct Node* siguiente;
 } Node;
 
+
+
+// Estructura de una solicitud de amistad
+typedef struct {
+    User* sender;
+    User* receiver;
+} FriendRequest;
+
+// Nodo de la cola de solicitudes de amistad
+typedef struct FriendRequestNode {
+    FriendRequest* request;
+    struct FriendRequestNode* next;
+} FriendRequestNode;
+
+// Cola de solicitudes de amistad
+typedef struct {
+    FriendRequestNode* front;
+    FriendRequestNode* rear;
+} FriendRequestQueue;
+
+
 typedef struct {
     Node* tabla[TABLE_SIZE];
 } HashTable;

@@ -1,5 +1,8 @@
 #define MAX_PREFERENCES 2
 #define MAX_CARACTERES 120
+#define MAX_LENGTH 1000
+#define TABLE_SIZE 100
+
 // Definición de la estructura de publicación
 
 typedef struct {
@@ -17,11 +20,18 @@ typedef struct {
     int numPublicaciones;
 }User;
 
-
 typedef struct ListNode {
     User* user;
     struct ListNode* next;
 } ListNode;
 
+typedef struct Node {
+    char palabra[MAX_LENGTH];
+    int conteo;
+    struct Node* siguiente;
+} Node;
 
+typedef struct {
+    Node* tabla[TABLE_SIZE];
+} HashTable;
 

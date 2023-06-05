@@ -170,7 +170,7 @@ En la misma línea, tuvimos otro problema relacionado con este fichero, y consis
 
 El segundo error que nos encontramos, fue la imposibilidad de implementar una imagen como logo de la red social. El código compilaba bien, pero la imagen no se mostraba. A día de hoy, aún no lo hemos conseguido resolver, a continuación adjuntamos el logo que teníamos pensado implementar:
 
-Figura 2: Logo Dunk Nation [15/06/23]()
+Figura 2: Logo Dunk Nation [15/06/23](https://github.com/niiltomas/EDA2/blob/e4e3110ad528569583962592079e26e703b6c3fb/Logo_DunkNation.png)
 
 
 ### Diseño de modelo de datos [maximo 250 palabras]

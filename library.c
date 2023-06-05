@@ -476,7 +476,7 @@ void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
 
     ///boton para publicar publicaciones"
     CreateWindowW(L"Button",L"Publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)4,NULL,NULL);
-    CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,180, 300,30,hDlg,(HMENU)4,NULL,NULL);
+    CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,180, 300,30,hDlg,(HMENU)5,NULL,NULL);
 
 }
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
@@ -574,10 +574,10 @@ void print_user_list(ListNode* llista) {
 }
 int read_users_file(User* user, ListNode** llista) {
     int max_usuarios = 20;
-    FILE* fp = fopen("archivo_users.csv", "r");
-    if (fp == NULL) {
+    FILE* fp = fopen("archivo_users.csv", "r"); ///abrimos el fichero
+    if (fp == NULL) { ///comprobamos que se haya abierto correctamente
         printf("Error al abrir el archivo\n");
-        return 0;
+        return 0; ///si no devolvemos 0
     }
 
     char linea[MAX_CHAR];
@@ -586,29 +586,29 @@ int read_users_file(User* user, ListNode** llista) {
         char* token;
         token = strtok(linea, ",");
 
-        User* newUser = (User*)malloc(sizeof(User));
+        User* newUser = (User*)malloc(sizeof(User)); ///creamos el nuevo usuario
         if (newUser == NULL) {
             printf("Error al asignar memoria para el nuevo usuario\n");
             fclose(fp);
             return 0;
         }
 
-        strncpy(newUser->username, token, MAX_CHAR);
+        strncpy(newUser->username, token, MAX_CHAR);// lee los datos del nombre
         token = strtok(NULL, ",");
 
-        newUser->age = atoi(token);
+        newUser->age = atoi(token);// lee los datos de la edad
         token = strtok(NULL, ",");
 
-        newUser->password = atoi(token);
+        newUser->password = atoi(token);// lee los datos de la contraseña
         token = strtok(NULL, ",");
 
-        strncpy(newUser->email, token, MAX_CHAR);
+        strncpy(newUser->email, token, MAX_CHAR);// lee los datos del email
         token = strtok(NULL, ",");
 
-        strncpy(newUser->city, token, MAX_CHAR);
+        strncpy(newUser->city, token, MAX_CHAR);// lee los datos de la ciudad
         token = strtok(NULL, ",");
 
-        ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));
+        ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));// Crear un nuevo nodo de lista
         if (newNode == NULL) {
             printf("Error al asignar memoria para el nuevo nodo de lista\n");
             free(newUser);
@@ -616,15 +616,40 @@ int read_users_file(User* user, ListNode** llista) {
             return 0;
         }
 
-        newNode->user = newUser;
-        newNode->next = *llista;
-        *llista= newNode;
+        newNode->user = newUser;// Asignamos el usuario al nodo
+        newNode->next = *llista;// Asignamos el siguiente nodo al actual
+        *llista= newNode;// Actualizamos el puntero de la lista al nuevo nodo
 
         i++;
     }
+// Ordenar la lista por orden alfabético utilizando el nombre (ordenamiento burbuja)
+    ///declaramos las variables y listas enlazadas que utilizaremos, además de inicalizarlas
+    int swapped;
+    ListNode* ptr1;
+    ListNode* lptr = NULL;
 
-    fclose(fp);
-    return i;
+    do {
+        swapped = 0;
+        ptr1 = *llista;
+
+        while (ptr1->next != lptr) {
+            // Comparar los nombres sin distinguir entre mayúsculas y minúsculas
+            if (strcasecmp(ptr1->user->username, ptr1->next->user->username) > 0) {
+                // Intercambiar los usuarios entre nodos para lograr el ordenamiento
+                User* temp = ptr1->user;
+                ptr1->user = ptr1->next->user;
+                ptr1->next->user = temp;
+                swapped = 1;  // Indicar que se realizó un intercambio
+            }
+
+            ptr1 = ptr1->next;  // Avanzar al siguiente nodo
+        }
+
+        lptr = ptr1;  // Marcar el último nodo ordenado
+    } while (swapped);  // Repetir hasta que no se realicen intercambios
+
+    fclose(fp); ///cerramos el fichero
+    return i; ///devolvemos el numero de usuarios leídos
 }
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////

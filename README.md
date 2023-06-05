@@ -176,7 +176,10 @@ El segundo error que nos encontramos, fue la imposibilidad de implementar una im
 
 ### Diseño de modelo de datos [maximo 250 palabras]
 
-Esta subsección debe incluir al menos un diagrama de flujo de datos de la solución y su descripción.
+![Figura 3: Diagrama de datos [05/06/23]](https://github.com/niiltomas/EDA2/blob/e1bfa0864e4c1642ab1949c7cb0d86aa9bc370d6/DIAGRAMA%20DE%20DATOS.png)
+
+Empezando por el inicio, podemos o bien hacer un nuevo registro o registrar 20 usuarios. Después hacemos un login, y si el nombre de usuario y contraseña son correctos podremos entrar al submenú del usuario. Dentro del menú podremos decidir si bien cerramos la sesión, enviamos una solicitud de amistad a otro usuario que esté registrado (si el nombre es correcto, si no nos direccionará al submenú). Además también tendremos otro botón para gestionar las solicitudes recibidas (si para añadir amigo o no para no serlo) y finalmente un botón para crear una publicación, y escribir el lugar del encuentro en el que vamos a jugar a baloncesto. Y este es el funcionamiento de nuestra red social.
+
 
 ### Descripción y procesamiento del conjunto de datos [maximo 250 palabras]
 

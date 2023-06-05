@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/r/CLionProjects/EDA2/estructuras.c" "CMakeFiles/EDA2.dir/estructuras.c.obj" "gcc" "CMakeFiles/EDA2.dir/estructuras.c.obj.d"
-  "C:/Users/r/CLionProjects/EDA2/library.c" "CMakeFiles/EDA2.dir/library.c.obj" "gcc" "CMakeFiles/EDA2.dir/library.c.obj.d"
+  "C:/Users/anshp/CLionProjects/EDr/estructuras.c" "CMakeFiles/EDA2.dir/estructuras.c.obj" "gcc" "CMakeFiles/EDA2.dir/estructuras.c.obj.d"
+  "C:/Users/anshp/CLionProjects/EDr/library.c" "CMakeFiles/EDA2.dir/library.c.obj" "gcc" "CMakeFiles/EDA2.dir/library.c.obj.d"
   )
 
 # Targets to which this target links.

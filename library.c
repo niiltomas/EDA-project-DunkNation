@@ -25,6 +25,8 @@ void displayDialog(HWND);
 void printuser(ListNode*);
 void print_user_list(ListNode*);
 int read_users_file(User*, ListNode**);
+void agregarPublicacion(User* usuario, Publicacion* publicacion);
+Publicacion* crearPublicacion(const char* contenido);
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -229,7 +231,7 @@ void AddControls(HWND hwnd) {
 
 
 
-FriendRequestQueue friendRequestsQueue;
+FriendRequestQueue friendRequestsQueue = { NULL, NULL };
 FriendRequestQueue sentRequestsQueue = { NULL, NULL };
 
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
@@ -238,6 +240,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     ListNode* current = userList;
     ListNode* foundUser = NULL;
     char username[20];
+    char contenido[MAX_CARACTERES];
     switch(msg)
     {
         case WM_COMMAND:
@@ -407,21 +410,25 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                         printf("Para: %s\n", currentNode->request->receiver->username);
                         currentNode = currentNode->next;
                     }
-
-                    break;
-
                     break;
 
             }
 
         case 4:
-            printf("Solicitudes de amistad recibidas:\n");
-            FriendRequestNode* currentNode = friendRequestsQueue.front;
-            while (currentNode != NULL) {
-                printf("De: %s\n", currentNode->request->sender->username);
-                currentNode = currentNode->next;
-            }
 
+            printf("Ingresa el contenido de la publicacion: ");
+            fgets(contenido, MAX_CARACTERES, stdin);
+
+            // Eliminar el salto de línea al final del contenido
+            contenido[strcspn(contenido, "\n")] = '\0';
+
+            // Crear la publicación
+            Publicacion* publicacion = crearPublicacion(contenido);
+
+            // Agregar la publicación al timeline del usuario
+            agregarPublicacion(user, publicacion);
+
+            printf("Publicacion realizada con exito.\n");
             break;
 
         case WM_CLOSE:
@@ -465,6 +472,9 @@ void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
 
     ///boton para ver solicitudes pendientes de aceptar"
     CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)2,NULL,NULL);
+
+    ///boton para publicar publicaciones"
+    CreateWindowW(L"Button",L"Publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)4,NULL,NULL);
 
 }
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.

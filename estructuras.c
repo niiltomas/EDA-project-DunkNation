@@ -18,6 +18,10 @@ typedef struct {
     int password;
     Publicacion* timeline;
     int numPublicaciones;
+    struct User** friends;
+    int num_friends;
+    struct User** friend_requests;
+    int num_friend_requests;
 }User;
 
 typedef struct ListNode {
@@ -26,11 +30,10 @@ typedef struct ListNode {
 } ListNode;
 
 // Nodo de la cola
-typedef struct QueueNode {
+/*typedef struct QueueNode {
     User user;
     struct QueueNode* next;
-} QueueNode;
-
+} QueueNode;*/
 
 typedef struct Node {
     char palabra[MAX_LENGTH];
@@ -58,9 +61,18 @@ typedef struct {
     FriendRequestNode* rear;
 } FriendRequestQueue;
 
-
 typedef struct {
     Node* tabla[TABLE_SIZE];
 } HashTable;
 
+
+typedef struct QueueNode {
+    User* user;
+    struct QueueNode* next;
+} QueueNode;
+
+typedef struct Queue {
+    QueueNode* front;
+    QueueNode* rear;
+} Queue;
 

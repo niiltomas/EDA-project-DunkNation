@@ -4,7 +4,7 @@
 Integrantes del grupo:
 
 
-- Nil Tomas (u214575)
+- Nil Tomàs (u214575)
 - Anshpreet Singh Kaur (u215093) 
 - Danial Imran Muhammad Begum (u215090)
 
@@ -12,7 +12,7 @@ Integrantes del grupo:
 
 ## **TABLA DE CONTENIDOS**
 
-1. Introduccion
+1. Introducción
 2. Objetivos del projecto
 3. Solución
 4. Referencias
@@ -152,7 +152,8 @@ Esta sección debe profundizar en la solución desarrollada para este proyecto.
 
 La arquitectura de nuestra red social, se basa en una arquitectura de tres capas, compuesta por la capa de creación de la ventana de la interfaz, la capa de interacción de la interfaz con el/los usuario/s y la capa de datos y funciones que permite el correcto funcionamiento de la interacción. Para ayudar a la comprensión del funcionamiento, a continuación se adjunta un diagrama del funcionamiento general de la interfaz:
 
-[Figura 1: Diagrama interfaz gráfica de Dunk Nation [04/06/23]](https://github.com/niiltomas/EDA2/blob/0763fc1c0a5e66e6652519bc115237aaae3f387d/Captura%20de%20pantalla%202023-06-05%20110034.png)
+![Figura 1: Diagrama interfaz gráfica de Dunk Nation [04/06/23]](https://github.com/niiltomas/EDA2/blob/0763fc1c0a5e66e6652519bc115237aaae3f387d/Captura%20de%20pantalla%202023-06-05%20110034.png)
+
 El primer bloque, se caracteriza por crear la interfaz y su configuración. En primer lugar, hemos definido la estructura WNDCLASSW para registrar la clase de ventana, donde habrá información sobre el color de fondo (COLOR_WINDOW), el cursor (IDC_ARROW) o la instancia del programa hInst, entre otras funciones. A continuación con CreateWindowW creamos la interfaz con dimensiones (500,500)px  y nombre DUNK NATION. Cabe destacar que para inicializar esta ventana hemos utilizado la función de Windows WINAPI llamada WinMain(), donde va a ser la equivalencia al main() sin capa gráfica.
 
 En el segundo bloque, correspondiente a la implementación de todas aquellas interacciones interfaz - usuario, se encuentran por una parte, en las funciones AddMenus() y AddControls() a todas aquellas que corresponden a implementaciones de botones (creados con la función CreateWindowW) de la página principal como el NEW PLAYER, LOGIN, EXIT, etc. Cada uno de estos botones tendrá una hInstance definida, que cuando el usuario interaccione con el botón, este lo direccionará a la función LRESULT CALLBACK WindowProcedure donde va a ser ejecutada la funcionalidad para el botón seleccionado. Esta parte corresponde al menú principal, por lo que las ventanas que emerjan de la principal, van a tener la misma configuración que las anteriores (igual que sus botones), pero en vez de estar definidas en AddMenus() y AddControls() se localizan en las funciones registerDialogClass() y DisplayDialog() y sus botones van a redireccionar a LRESULT CALLBACK DialogProcedure()
@@ -170,7 +171,7 @@ En la misma línea, tuvimos otro problema relacionado con este fichero, y consis
 
 El segundo error que nos encontramos, fue la imposibilidad de implementar una imagen como logo de la red social. El código compilaba bien, pero la imagen no se mostraba. A día de hoy, aún no lo hemos conseguido resolver, a continuación adjuntamos el logo que teníamos pensado implementar:
 
-Figura 2: Logo Dunk Nation [15/06/23](https://github.com/niiltomas/EDA2/blob/e4e3110ad528569583962592079e26e703b6c3fb/Logo_DunkNation.png)
+![Figura 2: Logo Dunk Nation [15/06/23]](https://github.com/niiltomas/EDA2/blob/e4e3110ad528569583962592079e26e703b6c3fb/Logo_DunkNation.png)
 
 
 ### Diseño de modelo de datos [maximo 250 palabras]
@@ -179,8 +180,27 @@ Esta subsección debe incluir al menos un diagrama de flujo de datos de la soluc
 
 ### Descripción y procesamiento del conjunto de datos [maximo 250 palabras]
 
-Esta subsección debe incluir una descripción de los conjuntos de datos utilizados, cómo se leyeron y procesaron.
+En esta subsección presentamos una visión detallada de los conjuntos de datos utilizados en nuestra red social, como los hemos obtenido y procesado.
+El primer conjunto de datos utilizado, es un archivo de datos de 20 usuarios archivo_users.csv que creamos nosotros mismos de forma totalmente aleatoria. Cada usuario tiene asignado un nombre, edad, contraseña, email y ciudad. Para procesar el archivo nos decantamos por escanear cada línea del archivo por separado, y añadiendo cada usuario a una lista enlazada.
+
+
+El segundo conjunto de datos utilizado, es el registro de un nuevo usuario (este paso se puede realizar varias veces con el fin de tener varios usuarios registrados a la plataforma) el cual se obtuvo mediante una introducción manual de los datos del usuario y se escaneó mediante la función scanf(). A continuación los guardamos en la lista enlazada de tipo ListNode llamada newNode almacenando así todos los usuarios con sus datos correspondientes.
+
 
 ## **REFERENCIAS**
+MindMeister [4/06/23]. Recuperado de https://www.mindmeister.com/es
 
-Esta sección debe incluir las referencias utilizadas en el informe. Estas referencias incluyen cualquier sitio web, material de lectura, publicaciones o libros utilizados como inspiración.
+OpenAI [s.f.]. Recuperado de https://chat.openai.com/ 
+
+The Pentamollis Project. [01/05/23]. Windows GUI Programming with C/C++ (Win32API) | Part -1 |Creating a window. YouTube. Recuperado de https://youtu.be/8GCvZs55mEM 
+
+The Pentamollis Project. [01/05/23]. Windows GUI Programming with C/C++ (Win32API) | Part -2 |Menus. YouTube. Recuperado de https://youtu.be/7K6HCeog09c 
+
+The Pentamollis Project. [01/05/23]. Windows GUI Programming with C/C++ (Win32API) | Part -3 |Edit and Static controls. YouTube. Recuperado de https://youtu.be/9JMQkUOhW1s 
+
+The Pentamollis Project. [01/05/23]. Windows GUI Programming with C/C++ (Win32API) | Part -4 |Button Control and Demo Application. YouTube. Recuperado de https://youtu.be/o2NkH5xxDQs 
+
+The Pentamollis Project. [01/05/23]. Windows GUI Programming with C/C++ (Win32API) | Part -5 |Working with Images (Bitmaps). YouTube. Recuperado de https://youtu.be/PTjlGiCvYZU 
+
+The Pentamollis Project. [01/05/23]. Windows GUI Programming with C/C++ (Win32API) | Part -6 |The Message box Dialog. YouTube. Recuperado de https://youtu.be/R7RvaQR-mm0 
+

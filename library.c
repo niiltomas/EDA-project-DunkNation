@@ -433,8 +433,6 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
             break;
 
         case 5:
-            //mostar publicaciones
-            mostrar_publicaciones_usuario(user);
 
 
             break;
@@ -686,7 +684,47 @@ void mostrar_publicaciones_usuario(const User* usuario) {
         printf("No hay publicaciones.\n");
     }
 }
+void inicializar(Lista* lista) {
+    lista->inicio = NULL;
+    lista->fin = NULL;
+}
+void insertar(Lista* lista, int dato) {
+    Nodo* nuevoNodo = (Nodo*)malloc(sizeof(Nodo));
+    nuevoNodo->dato = dato;
+    nuevoNodo->siguiente = NULL;
 
+    if (lista->inicio == NULL) {
+        lista->inicio = nuevoNodo;
+        lista->fin = nuevoNodo;
+    } else {
+        lista->fin->siguiente = nuevoNodo;
+        lista->fin = nuevoNodo;
+    }
+}
+void mostrar(Lista* lista) {
+    Nodo* actual = lista->inicio;
+
+    while (actual != NULL) {
+        printf("%d ", actual->dato);
+        actual = actual->siguiente;
+    }
+    printf("\n");
+}
+void liberar(Lista* lista) {
+    Nodo* actual = lista->inicio;
+    Nodo* siguiente = NULL;
+
+    while (actual != NULL) {
+        siguiente = actual->siguiente;
+        free(actual);
+        actual = siguiente;
+    }
+
+    lista->inicio = NULL;
+    lista->fin = NULL;
+}
+
+////////////////////////////////////////////////////
 
 // Función para cargar usuarios desde un archivo CSV
 ListNode* cargarUsuariosDesdeCSV(const char* archivo) {

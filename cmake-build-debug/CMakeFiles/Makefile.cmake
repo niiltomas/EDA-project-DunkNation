@@ -87,7 +87,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "C:/Program Files/JetBrains/CLion 2022.3.1/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/Windows.cmake"
   "C:/Program Files/JetBrains/CLion 2022.3.1/bin/cmake/win/x64/share/cmake-3.24/Modules/Platform/WindowsPaths.cmake"
   "C:/Program Files/JetBrains/CLion 2022.3.1/bin/cmake/win/x64/share/cmake-3.24/Modules/ProcessorCount.cmake"
-  "C:/Users/anshp/CLionProjects/EDr/CMakeLists.txt"
+  "C:/Users/anshp/CLionProjects/EDA2e/CMakeLists.txt"
   "CMakeFiles/3.24.2/CMakeCCompiler.cmake"
   "CMakeFiles/3.24.2/CMakeRCCompiler.cmake"
   "CMakeFiles/3.24.2/CMakeSystem.cmake"

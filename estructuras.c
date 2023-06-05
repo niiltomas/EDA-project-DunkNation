@@ -76,3 +76,12 @@ typedef struct Queue {
     QueueNode* rear;
 } Queue;
 
+typedef struct Nodo {
+    int dato;
+    struct Nodo* siguiente;
+} Nodo;
+
+typedef struct {
+    Nodo* inicio;
+    Nodo* fin;
+} Lista;

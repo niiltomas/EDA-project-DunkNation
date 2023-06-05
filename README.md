@@ -163,7 +163,15 @@ Esta subsección debe incluir al menos un diagrama de la arquitectura del sistem
 
 ### Manejo de errores [maximo 250 palabras]
 
-Esta subsección debe describir cómo se manejaron los errores en el proyecto y su razonamiento.
+Durante el desarrollo de la red social Dunk Nation, nos hemos encontrado con errores que han afectado la evolución del proyecto. A continuación expondremos esos errores así como los razonamientos para solucionarlos.
+El primer error que nos encontramos estuvo relacionado con la apertura del fichero de usuarios (archivo_users.csv), donde el fichero no se abría. Para solucionarlo borramos la siguiente línea del código que lo estaba causando: #include “archivo_users.csv”. 
+
+En la misma línea, tuvimos otro problema relacionado con este fichero, y consistia en que a veces leía los usuarios correctamente y otras veces no. A primera vista pensamos que estaba causado por algún error de fragmentación en la memoria, ya que estábamos utilizando una interfaz gráfica. Así pues, después de darle muchas vueltas, nos decantamos por cambiar la función que leía los datos; pasamos de escanear los datos con fscanf() a fgets() y entonces solucionamos el error.
+
+El segundo error que nos encontramos, fue la imposibilidad de implementar una imagen como logo de la red social. El código compilaba bien, pero la imagen no se mostraba. A día de hoy, aún no lo hemos conseguido resolver, a continuación adjuntamos el logo que teníamos pensado implementar:
+
+Figura 2: Logo Dunk Nation [15/06/23]()
+
 
 ### Diseño de modelo de datos [maximo 250 palabras]
 

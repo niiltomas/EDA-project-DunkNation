@@ -27,6 +27,7 @@ void print_user_list(ListNode*);
 int read_users_file(User*, ListNode**);
 void agregarPublicacion(User* usuario, Publicacion* publicacion);
 Publicacion* crearPublicacion(const char* contenido);
+void mostrar_publicaciones_usuario(const User* usuario);
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -431,6 +432,14 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
             printf("Publicacion realizada con exito.\n");
             break;
 
+        case 5:
+            //mostar publicaciones
+            mostrar_publicaciones_usuario(user);
+
+
+            break;
+
+
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
@@ -438,15 +447,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
             return DefWindowProcW(hwnd,msg,wp,lp);
     }
 }
-///
-LRESULT CALLBACK s(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
-{
-    switch(msg)
-    {
-        case 1:
-    }
 
-}
 void registerDialogClass(HINSTANCE hInst)///Mejor no tocar XD
 {
     WNDCLASSW dialog={0};
@@ -475,6 +476,7 @@ void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
 
     ///boton para publicar publicaciones"
     CreateWindowW(L"Button",L"Publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)4,NULL,NULL);
+    CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,180, 300,30,hDlg,(HMENU)4,NULL,NULL);
 
 }
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
@@ -646,6 +648,21 @@ void revisarTimeline(User* usuario) {
         printf("%s\n", usuario->timeline[i].contenido);
     }
 }
+
+void mostrar_publicaciones_usuario(const User* usuario) {
+    printf("Usuario: %s\n", usuario->username);
+    printf("Publicaciones:\n");
+
+    if (usuario->numPublicaciones > 0) {
+        for (int i = 0; i < usuario->numPublicaciones; i++) {
+            printf("- %s\n", usuario->timeline[i].contenido);
+        }
+    } else {
+        printf("No hay publicaciones.\n");
+    }
+}
+
+
 // Función para cargar usuarios desde un archivo CSV
 ListNode* cargarUsuariosDesdeCSV(const char* archivo) {
     FILE* file = fopen(archivo, "r");

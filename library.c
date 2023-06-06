@@ -28,6 +28,7 @@ int read_users_file(User*, ListNode**);
 void agregarPublicacion(User* usuario, Publicacion* publicacion);
 Publicacion* crearPublicacion(const char* contenido);
 void mostrar_publicaciones_usuario(const User* usuario);
+void revisarTimeline(User* usuario);
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -430,10 +431,12 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
             agregarPublicacion(user, publicacion);
 
             printf("Publicacion realizada con exito.\n");
+            // Mostrar el timeline del usuario
+
+
             break;
 
         case 5:
-
 
             break;
 
@@ -473,8 +476,8 @@ void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
     CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)2,NULL,NULL);
 
     ///boton para publicar publicaciones"
-    CreateWindowW(L"Button",L"Publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)4,NULL,NULL);
-    CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,180, 300,30,hDlg,(HMENU)5,NULL,NULL);
+    CreateWindowW(L"Button",L"Publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,120, 300,30,hDlg,(HMENU)4,NULL,NULL);
+    CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,160, 300,30,hDlg,(HMENU)5,NULL,NULL);
 
 }
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.

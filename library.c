@@ -115,7 +115,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         printf("\n");
                         current = current->next;
                     }
-                    break;
+                    break;//
                 case NEW_PLAYER:///en esta parte hay donde se escanea la parte del new player (la entrada es por consola)
                     MessageBox(hwnd, "click aceptar, then enter name age password email and city(separated by space)", "New player", MB_OK);
                     scanf("%s %d %d %s %s", user->username, &user->age, &user->password,user->email, user->city);

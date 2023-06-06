@@ -25,10 +25,14 @@ void displayDialog(HWND);
 void printuser(ListNode*);
 void print_user_list(ListNode*);
 int read_users_file(User*, ListNode**);
-void agregarPublicacion(User* usuario, Publicacion* publicacion);
-Publicacion* crearPublicacion(const char* contenido);
-void mostrar_publicaciones_usuario(const User* usuario);
-
+void agregarPublicacion(User*, Publicacion*);
+Publicacion* crearPublicacion(const char*);
+void mostrar_publicaciones_usuario(const User*);
+void revisarTimeline(User*);
+void revisarTimeline1(User* usuario);
+void mostrarPublicacioness(User*);
+void mostrarPublicaciones(User*);
+void guardarPublicacioness(User*, const char*);
 HMENU hMenu;
 HWND hLogo,hEdit;
 HBITMAP hLogoImage,hGenerateImage;
@@ -39,12 +43,12 @@ ListNode* current;
 ListNode* searchUser(char* , int, ListNode* );
 ListNode* searchUser2(char*, ListNode* );
 
-///no tocar nada de aqui, ya que es la configuracion de la ventana principal
+///configuracion de la ventana principal
 ///es la equivalencia al main "normal" pero es el main utilizado para abrir una ventana
 /// : ##################################################################################################
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow) {
     WNDCLASSW wc={0};
-    wc.hbrBackground= (HBRUSH) COLOR_WINDOW;
+    wc.hbrBackground= (HBRUSH) (COLOR_WINDOW-1);
     wc.hCursor = LoadCursor (NULL,IDC_ARROW);
     wc.hInstance=hInst;
     wc.lpszClassName = L"myWindowClass";
@@ -169,11 +173,9 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         printf("Usuario encontrado:\n");
                         printuser(foundUser);
                         displayDialog(hwnd);
-
                     } else {
                         printf("Usuario no encontrado.\n");
                     }
-
 
                     ///Para operar con un usuario primero tenemos que buscar por el nombre de usuario a la persona, para ello,
                     /// la tarea es implementar un algoritmo de búsqueda que recorra la lista de usuarios hasta encontrarlo
@@ -190,10 +192,9 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     //                        printf("Usuario no encontrado:\n");
                     //                    }
                     break;
-
-
             }
-            ;
+
+            break;
         case WM_CREATE: ///moment en el què la finestra s'ha creat i tot seguit hi afegim els menus etc. a la finestra
             AddMenus(hwnd);
             AddControls(hwnd);
@@ -235,13 +236,17 @@ void AddControls(HWND hwnd) {
 FriendRequestQueue friendRequestsQueue = { NULL, NULL };
 FriendRequestQueue sentRequestsQueue = { NULL, NULL };
 
+
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
     User* user= malloc(sizeof(User));
+    user->timeline;
+    user->numPublicaciones+=0;
     ListNode* current = userList;
     ListNode* foundUser = NULL;
     char username[20];
     char contenido[MAX_CARACTERES];
+    Publicacion* publicacion = (Publicacion*)malloc(sizeof(Publicacion));
     switch(msg)
     {
         case WM_COMMAND:
@@ -413,31 +418,29 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     }
                     break;
 
+                case 4:
+
+                    printf("Ingresa el contenido de la publicacion: ");
+                    fgets(publicacion->contenido, MAX_CARACTERES, stdin);
+                    // Eliminar el salto de línea al final del contenido
+                    publicacion->contenido[strcspn(publicacion->contenido, "\n")] = '\0';
+
+                    // Agregar la publicación al timeline del usuario
+                    agregarPublicacion(user, publicacion);
+
+                    printf("Publicacion realizada con exito.\n");
+
+                    // Mostrar todas las publicaciones del usuario
+                    break;
+
+
+
+                case 5:
+
+                    mostrarPublicaciones(user);
+                    break;
             }
-
-        case 4:
-
-            printf("Ingresa el contenido de la publicacion: ");
-            fgets(contenido, MAX_CARACTERES, stdin);
-
-            // Eliminar el salto de línea al final del contenido
-            contenido[strcspn(contenido, "\n")] = '\0';
-
-            // Crear la publicación
-            Publicacion* publicacion = crearPublicacion(contenido);
-
-            // Agregar la publicación al timeline del usuario
-            agregarPublicacion(user, publicacion);
-
-            printf("Publicacion realizada con exito.\n");
             break;
-
-        case 5:
-
-
-            break;
-
-
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
@@ -515,6 +518,61 @@ void printuser(ListNode*User){///función de impresión de usuarios
     //    }
 }
 
+// Función para realizar una publicación
+void realizarPublicacion(User* usuario, const char* contenido) {
+    if (strlen(contenido) <= MAX_CARACTERES) {
+        Publicacion* nuevaPublicacion = (Publicacion*)malloc(sizeof(Publicacion));
+        strcpy(nuevaPublicacion->contenido, contenido);
+
+        // Añadir la nueva publicación al timeline del usuario
+        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones + 1) * sizeof(Publicacion));
+        usuario->timeline[usuario->numPublicaciones] = *nuevaPublicacion;
+        usuario->numPublicaciones++;
+
+        printf("Publicación realizada con éxito.\n");
+    } else {
+        printf("La publicación excede el límite de caracteres permitidos (%d).\n", MAX_CARACTERES);
+    }
+}
+
+// Función para eliminar una publicación del timeline
+void eliminarPublicacion(User* usuario, int indice) {
+    if (indice >= 0 && indice < usuario->numPublicaciones) {
+        // Liberar la memoria de la publicación a eliminar
+        free(usuario->timeline[indice].contenido);
+
+        // Desplazar las publicaciones restantes para llenar el espacio vacío
+        for (int i = indice; i < usuario->numPublicaciones - 1; i++) {
+            usuario->timeline[i] = usuario->timeline[i + 1];
+        }
+
+        // Redimensionar el timeline para reflejar la eliminación
+        usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones - 1) * sizeof(Publicacion));
+        usuario->numPublicaciones--;
+
+        printf("Publicación eliminada con éxito.\n");
+    } else {
+        printf("Índice de publicación inválido.\n");
+    }
+}
+
+// Función para revisar el timeline de un usuario
+void revisarTimeline(User* usuario) {
+    printf("Timeline de %s:\n", usuario->username);
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        printf("- %s\n", usuario->timeline[i].contenido);
+    }
+}
+
+// Función para liberar la memoria del timeline
+void liberarTimeline(User* usuario) {
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        free(usuario->timeline[i].contenido);
+    }
+    free(usuario->timeline);
+    usuario->timeline = NULL;
+    usuario->numPublicaciones = 0;
+}
 
 int calcularHash(char* palabra) {
     int hash = 0;
@@ -572,10 +630,10 @@ void print_user_list(ListNode* llista) {
 }
 int read_users_file(User* user, ListNode** llista) {
     int max_usuarios = 20;
-    FILE* fp = fopen("archivo_users.csv", "r"); ///abrimos el fichero
-    if (fp == NULL) { ///comprobamos que se haya abierto correctamente
+    FILE* fp = fopen("archivo_users.csv", "r");
+    if (fp == NULL) {
         printf("Error al abrir el archivo\n");
-        return 0; ///si no devolvemos 0
+        return 0;
     }
 
     char linea[MAX_CHAR];
@@ -664,8 +722,16 @@ void agregarPublicacion(User* usuario, Publicacion* publicacion) {
     usuario->timeline[usuario->numPublicaciones] = *publicacion;
     usuario->numPublicaciones++;
 }
+
+// Función para mostrar todas las publicaciones del usuario
+void mostrarPublicaciones(User* usuario) {
+    printf("Todas las publicaciones del usuario:\n");
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        printf("%d. %s\n", i + 1, usuario->timeline[i].contenido);
+    }
+}
 // Función para revisar el timeline de un usuario
-void revisarTimeline(User* usuario) {
+void revisarTimeline1(User* usuario) {
     printf("Timeline de %s:\n", usuario->username);
     for (int i = 0; i < usuario->numPublicaciones; i++) {
         printf("%s\n", usuario->timeline[i].contenido);
@@ -786,4 +852,18 @@ void liberarUsuarios(ListNode* listaUsuarios) {
         free(temp->user);
         free(temp);
     }
+}
+void guardarPublicacioness(User* usuario, const char* nombreArchivo) {
+    FILE* archivo = fopen(nombreArchivo, "a"); // Abrir el archivo en modo "agregar" (append)
+
+    if (archivo == NULL) {
+        printf("Error al abrir el archivo.\n");
+        return;
+    }
+
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        fprintf(archivo, "%s\n", usuario->timeline[i].contenido);
+    }
+
+    fclose(archivo);
 }

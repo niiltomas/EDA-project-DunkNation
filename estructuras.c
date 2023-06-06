@@ -5,7 +5,7 @@
 
 // Definición de la estructura de publicación
 typedef struct {
-    char contenido[MAX_CARACTERES + 1];
+    char contenido[MAX_CARACTERES];
 } Publicacion;
 
 //Estructura del usuario

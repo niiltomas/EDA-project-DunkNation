@@ -29,6 +29,8 @@ void agregarPublicacion(User* usuario, Publicacion* publicacion);
 Publicacion* crearPublicacion(const char* contenido);
 void mostrar_publicaciones_usuario(const User* usuario);
 void revisarTimeline(User* usuario);
+void procesarPublicacion(struct NodoDiccionario** diccionario, char* publicacion);
+void mostrarTop10(struct NodoDiccionario* diccionario);
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -206,7 +208,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
             return DefWindowProcW(hwnd,msg,wp,lp);
 
     }
-
 }
 
 
@@ -243,6 +244,8 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     ListNode* foundUser = NULL;
     char username[20];
     char contenido[MAX_CARACTERES];
+    struct NodoDiccionario* diccionario = NULL;
+
     switch(msg)
     {
         case WM_COMMAND:
@@ -416,30 +419,40 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 
             }
 
-        case 4:
+            case 4:
 
-            printf("Ingresa el contenido de la publicacion: ");
-            fgets(contenido, MAX_CARACTERES, stdin);
+                printf("Ingresa el contenido de la publicacion: ");
+                fgets(contenido, MAX_CARACTERES, stdin);
 
-            // Eliminar el salto de línea al final del contenido
-            contenido[strcspn(contenido, "\n")] = '\0';
+                // Eliminar el salto de línea al final del contenido
+                contenido[strcspn(contenido, "\n")] = '\0';
 
-            // Crear la publicación
-            Publicacion* publicacion = crearPublicacion(contenido);
+                // Crear la publicación
+                Publicacion* publicacion = crearPublicacion(contenido);
 
-            // Agregar la publicación al timeline del usuario
-            agregarPublicacion(user, publicacion);
+                // Agregar la publicación al timeline del usuario
+                agregarPublicacion(user, publicacion);
 
-            printf("Publicacion realizada con exito.\n");
-            // Mostrar el timeline del usuario
+                printf("Publicacion realizada con exito.\n");
+                // Mostrar el timeline del usuario
 
+                break;
 
-            break;
+            case 5:
 
-        case 5:
+                break;
 
-            break;
+            case 6:
 
+                // Procesar las publicaciones de los usuarios
+                procesarPublicacion(&diccionario, "Hola mundo Hola mundo Hola");
+                procesarPublicacion(&diccionario, "Esto es una prueba prueba prueba");
+                procesarPublicacion(&diccionario, "Hola Hola Hola");
+
+                // Mostrar el top 10 de palabras más usadas
+                mostrarTop10(diccionario);
+
+                break;
 
         case WM_CLOSE:
             DestroyWindow(hwnd);
@@ -449,8 +462,8 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     }
 }
 
-void registerDialogClass(HINSTANCE hInst)///Mejor no tocar XD
-{
+void registerDialogClass(HINSTANCE hInst){///Mejor no tocar XD
+
     WNDCLASSW dialog={0};
     dialog.hbrBackground= (HBRUSH) COLOR_WINDOW;
     dialog.hCursor = LoadCursor (NULL,IDC_ARROW);
@@ -461,8 +474,9 @@ void registerDialogClass(HINSTANCE hInst)///Mejor no tocar XD
     RegisterClassW(&dialog);
 
 }
-void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
-{
+
+void displayDialog(HWND hwnd){///aqui es donde tienes que poner los botones
+
     /// posicion (x,y) en la ventana (en pixeles) i dimensiones (x,y)
     ///ventana emergente login
     HWND hDlg= CreateWindowW(L"login",L"LOGIN",WS_VISIBLE | WS_OVERLAPPEDWINDOW,400,400,500,300,hwnd,0,0,0);
@@ -470,16 +484,17 @@ void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
     CreateWindowW(L"Button",L"Close",WS_VISIBLE|WS_CHILD,190,200,100,40,hDlg,(HMENU)1,NULL,NULL);
 
     ///boton para enviar una solicitud de amistad"
-    CreateWindowW(L"Button",L" Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)3,NULL,NULL);
+    CreateWindowW(L"Button",L" Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,10, 300,30,hDlg,(HMENU)3,NULL,NULL);
 
     ///boton para ver solicitudes pendientes de aceptar"
-    CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)2,NULL,NULL);
+    CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,50, 300,30,hDlg,(HMENU)2,NULL,NULL);
 
     ///boton para publicar publicaciones"
-    CreateWindowW(L"Button",L"Publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,120, 300,30,hDlg,(HMENU)4,NULL,NULL);
-    CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,160, 300,30,hDlg,(HMENU)5,NULL,NULL);
-
+    CreateWindowW(L"Button",L"Publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,90, 300,30,hDlg,(HMENU)4,NULL,NULL);
+    CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)5,NULL,NULL);
+    CreateWindowW(L"Button",L"Palabras clave",WS_VISIBLE | WS_CHILD |WS_BORDER,20,170, 300,30,hDlg,(HMENU)5,NULL,NULL);
 }
+
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
 ///El algoritmo utilizado es sequencial, ya que los usuarios no estan ordenados, por lo que va a recorrer toda la lista de usuarios hasta encontrarlo
     ListNode* current = userList;
@@ -506,7 +521,6 @@ ListNode *searchUser2(char *username, ListNode *userList) {///función que busca
     return NULL;///Devuelve NULL si no encontró el usuario
 }
 
-
 void printuser(ListNode*User){///función de impresión de usuarios
     printf(" - Nombre de usuario: %s\n", User->user->username);
     printf(" - Edad: %d\n", User->user->age);
@@ -516,46 +530,6 @@ void printuser(ListNode*User){///función de impresión de usuarios
     ///for (int i = 0; i < MAX_PREFERENCES; i++) {
     //        printf("- %s\n", User->user->preferences[i]);
     //    }
-}
-
-
-int calcularHash(char* palabra) {
-    int hash = 0;
-    int i = 0;
-
-    while (palabra[i] != '\0') {
-        hash += palabra[i];
-        i++;
-    }
-
-    return hash % TABLE_SIZE;
-}
-
-void inicializarTabla(HashTable* tabla) {
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        tabla->tabla[i] = NULL;
-    }
-}
-
-void insertarPalabra(HashTable* tabla, char* palabra) {
-    int indice = calcularHash(palabra);
-
-    Node* nodo = tabla->tabla[indice];
-
-    while (nodo != NULL) {
-        if (strcmp(nodo->palabra, palabra) == 0) {
-            nodo->conteo++;
-            return;
-        }
-
-        nodo = nodo->siguiente;
-    }
-
-    Node* nuevoNodo = (Node*)malloc(sizeof(Node));
-    strcpy(nuevoNodo->palabra, palabra);
-    nuevoNodo->conteo = 1;
-    nuevoNodo->siguiente = tabla->tabla[indice];
-    tabla->tabla[indice] = nuevoNodo;
 }
 
 void print_user_list(ListNode* llista) {
@@ -573,6 +547,7 @@ void print_user_list(ListNode* llista) {
         currentNode = currentNode->next;
     }
 }
+
 int read_users_file(User* user, ListNode** llista) {
     int max_usuarios = 20;
     FILE* fp = fopen("archivo_users.csv", "r"); ///abrimos el fichero
@@ -652,8 +627,10 @@ int read_users_file(User* user, ListNode** llista) {
     fclose(fp); ///cerramos el fichero
     return i; ///devolvemos el numero de usuarios leídos
 }
+
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
+
 // Función para crear una nueva publicación
 Publicacion* crearPublicacion(const char* contenido) {
     Publicacion* publicacion = (Publicacion*)malloc(sizeof(Publicacion));
@@ -661,12 +638,14 @@ Publicacion* crearPublicacion(const char* contenido) {
     publicacion->contenido[MAX_CARACTERES] = '\0';
     return publicacion;
 }
+
 // Función para agregar una publicación al timeline del usuario
 void agregarPublicacion(User* usuario, Publicacion* publicacion) {
     usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones + 1) * sizeof(Publicacion));
     usuario->timeline[usuario->numPublicaciones] = *publicacion;
     usuario->numPublicaciones++;
 }
+
 // Función para revisar el timeline de un usuario
 void revisarTimeline(User* usuario) {
     printf("Timeline de %s:\n", usuario->username);
@@ -687,10 +666,12 @@ void mostrar_publicaciones_usuario(const User* usuario) {
         printf("No hay publicaciones.\n");
     }
 }
+
 void inicializar(Lista* lista) {
     lista->inicio = NULL;
     lista->fin = NULL;
 }
+
 void insertar(Lista* lista, int dato) {
     Nodo* nuevoNodo = (Nodo*)malloc(sizeof(Nodo));
     nuevoNodo->dato = dato;
@@ -704,6 +685,7 @@ void insertar(Lista* lista, int dato) {
         lista->fin = nuevoNodo;
     }
 }
+
 void mostrar(Lista* lista) {
     Nodo* actual = lista->inicio;
 
@@ -713,6 +695,7 @@ void mostrar(Lista* lista) {
     }
     printf("\n");
 }
+
 void liberar(Lista* lista) {
     Nodo* actual = lista->inicio;
     Nodo* siguiente = NULL;
@@ -774,11 +757,13 @@ ListNode* cargarUsuariosDesdeCSV(const char* archivo) {
     fclose(file);
     return listaUsuarios;
 }
+
 // Función para enviar una solicitud de amistad
 void enviarSolicitud(User* remitente, User* destinatario) {
     // Aquí puedes implementar la lógica para enviar la solicitud
     printf("Solicitud enviada: %s -> %s\n", remitente->username, destinatario->username);
 }
+
 // Función para liberar la memoria de la lista de usuarios
 void liberarUsuarios(ListNode* listaUsuarios) {
     ListNode* temp;
@@ -788,5 +773,84 @@ void liberarUsuarios(ListNode* listaUsuarios) {
         free(temp->user->timeline);
         free(temp->user);
         free(temp);
+    }
+}
+
+
+typedef struct NodoDiccionario NodoDiccionario;
+
+NodoDiccionario* crearNodo(char* palabra) {
+    NodoDiccionario* nodo = (NodoDiccionario*)malloc(sizeof(NodoDiccionario));
+    strcpy(nodo->palabra, palabra);
+    nodo->conteo = 0;
+    nodo->siguiente = NULL;
+    return nodo;
+}
+
+void procesarPublicacion(NodoDiccionario** diccionario, char* publicacion) {
+    char* palabra = strtok(publicacion, " ");
+
+    while (palabra != NULL) {
+        NodoDiccionario* nodo = *diccionario;
+        NodoDiccionario* nodoAnterior = NULL;
+        int encontrado = 0;
+
+        while (nodo != NULL) {
+            if (strcmp(nodo->palabra, palabra) == 0) {
+                nodo->conteo++;
+                encontrado = 1;
+                break;
+            }
+
+            nodoAnterior = nodo;
+            nodo = nodo->siguiente;
+        }
+
+        if (!encontrado) {
+            NodoDiccionario* nuevoNodo = crearNodo(palabra);
+
+            if (nodoAnterior == NULL) {
+                *diccionario = nuevoNodo;
+            } else {
+                nodoAnterior->siguiente = nuevoNodo;
+            }
+        }
+
+        palabra = strtok(NULL, " ");
+    }
+}
+
+void mostrarTop10(NodoDiccionario* diccionario) {
+    // Crear un arreglo para almacenar las palabras
+    char palabras[10][MAX_LENGTH];
+    int conteos[10] = {0};
+
+    // Recorrer el diccionario y guardar las 10 palabras más usadas
+    NodoDiccionario* nodo = diccionario;
+
+    while (nodo != NULL) {
+        for (int i = 0; i < 10; i++) {
+            if (nodo->conteo > conteos[i]) {
+                // Desplazar las palabras y conteos hacia abajo
+                for (int j = 9; j > i; j--) {
+                    strcpy(palabras[j], palabras[j - 1]);
+                    conteos[j] = conteos[j - 1];
+                }
+
+                // Insertar la nueva palabra y conteo en la posición adecuada
+                strcpy(palabras[i], nodo->palabra);
+                conteos[i] = nodo->conteo;
+                break;
+            }
+        }
+
+        nodo = nodo->siguiente;
+    }
+
+    // Mostrar las palabras más usadas
+    printf("Top 10 palabras más usadas:\n");
+
+    for (int i = 0; i < 10; i++) {
+        printf("%d. %s (%d veces)\n", i + 1, palabras[i], conteos[i]);
     }
 }

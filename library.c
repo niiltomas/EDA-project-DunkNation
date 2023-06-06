@@ -503,6 +503,7 @@ void displayDialog(HWND hwnd){///aqui es donde tienes que poner los botones
     CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,180, 300,30,hDlg,(HMENU)5,NULL,NULL);
 
 }
+
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
 ///El algoritmo utilizado es sequencial, ya que los usuarios no estan ordenados, por lo que va a recorrer toda la lista de usuarios hasta encontrarlo
     ListNode* current = userList;
@@ -541,7 +542,6 @@ void printuser(ListNode*User){///función de impresión de usuarios
 }
 
 // Función para realizar una publicación
-
 
 
 
@@ -601,6 +601,7 @@ void print_user_list(ListNode* llista) {
         currentNode = currentNode->next;
     }
 }
+
 int read_users_file(User* user, ListNode** llista) {
     int max_usuarios = 20;
     FILE* fp = fopen("archivo_users.csv", "r");

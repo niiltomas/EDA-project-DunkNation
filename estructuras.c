@@ -6,6 +6,7 @@
 // Definición de la estructura de publicación
 typedef struct {
     char contenido[MAX_CARACTERES];
+    struct Publicacion* siguiente_publi;
 } Publicacion;
 
 //Estructura del usuario
@@ -28,6 +29,10 @@ typedef struct ListNode {
     User* user;
     struct ListNode* next;
 } ListNode;
+
+
+
+
 
 // Nodo de la cola
 /*typedef struct QueueNode {

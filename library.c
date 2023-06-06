@@ -337,95 +337,94 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 
                 case 3:
                     MessageBox(hwnd, "Haz clic en Aceptar y luego ingresa el nombre de usuario al que deseas enviar una solicitud", "Enviar solicitud de amistad", MB_OK);
-                                        scanf("%s", username);  // Escanea el nombre de usuario
-                                        foundUser = searchUser2(username, userList);  // Busca el usuario en la lista
-                                       if (foundUser != NULL) {
-                                          // Usuario encontrado, muestra los datos y abre la ventana emergente
-                                           printf("Usuario encontrado:\n");
-                                           printuser(foundUser);
+                    scanf("%s", username);  // Escanea el nombre de usuario
+                    foundUser = searchUser2(username, userList);  // Busca el usuario en la lista
+                    if (foundUser != NULL) {
+                        // Usuario encontrado, muestra los datos y abre la ventana emergente
+                        printf("Usuario encontrado:\n");
+                        printuser(foundUser);
 
-                                       // Mostrar un mensaje de confirmación
-                                           MessageBox(hwnd, "Solicitud de amistad enviada", "Confirmación", MB_OK | MB_ICONINFORMATION);
-                                           FriendRequest newRequest;
-                                           newRequest.sender = user; // El usuario actual es el remitente
-                                           newRequest.receiver = foundUser->user; // El usuario encontrado es el receptor
+                        // Mostrar un mensaje de confirmación
+                        MessageBox(hwnd, "Solicitud de amistad enviada", "Confirmación", MB_OK | MB_ICONINFORMATION);
+                        FriendRequest newRequest;
+                        newRequest.sender = user; // El usuario actual es el remitente
+                        newRequest.receiver = foundUser->user; // El usuario encontrado es el receptor
 
-                                            // Crea un nuevo nodo de solicitud de amistad
-                                            FriendRequestNode* newRequestNode = malloc(sizeof(FriendRequestNode));
-                                            //newRequestNode->request = newRequest;
-                                            newRequestNode->sender = user;
-                                            newRequestNode->receiver = foundUser->user;
-                                            newRequestNode->next = NULL;
-                                            newRequestNode->request = malloc(sizeof(FriendRequest));
-                                            // Asignar los campos de la solicitud de amistad
-                                            newRequestNode->request->sender = user;
-                                            newRequestNode->request->receiver = foundUser->user;
+                        // Crea un nuevo nodo de solicitud de amistad
+                        FriendRequestNode* newRequestNode = malloc(sizeof(FriendRequestNode));
+                        //newRequestNode->request = newRequest;
+                        newRequestNode->sender = user;
+                        newRequestNode->receiver = foundUser->user;
+                        newRequestNode->next = NULL;
+                        newRequestNode->request = malloc(sizeof(FriendRequest));
+                        // Asignar los campos de la solicitud de amistad
+                        newRequestNode->request->sender = user;
+                        newRequestNode->request->receiver = foundUser->user;
 
-                                            // Agrega la solicitud a la cola de solicitudes enviadas
-                                            if (sentRequestsQueue.rear != NULL) {
-                                                sentRequestsQueue.rear->next = newRequestNode;
-                                                sentRequestsQueue.rear = newRequestNode;
-                                           } else {
-                                                sentRequestsQueue.front = newRequestNode;
-                                                sentRequestsQueue.rear = newRequestNode;
-                                            }
-                                        } else {
-                                            // Usuario no encontrado, muestra un mensaje de error
-                                            MessageBox(hwnd, "Usuario no encontrado", "Error", MB_OK | MB_ICONERROR);
-                                            break;
-                                        }
-
-
-                                        // mostrar solicitudes enviadas
-                                        MessageBox(hwnd, "Haz clic en Aceptar y luego ingresa el nombre de usuario al que deseas enviar una solicitud", "Enviar solicitud de amistad", MB_OK);
-                                       scanf("%s", username);  // Escanea el nombre de usuario
-                                        foundUser = searchUser2(username, userList);  // Busca el usuario en la lista
-                                        if (foundUser != NULL) {
-                                            // Usuario encontrado, muestra los datos y abre la ventana emergente
-                                           printf("Usuario encontrado:\n");
-                                            printuser(foundUser);
-
-                                            // Mostrar un mensaje de confirmación
-                                            MessageBox(hwnd, "Solicitud de amistad enviada", "Confirmación", MB_OK | MB_ICONINFORMATION);
-                                            FriendRequest newRequest;
-                                            newRequest.sender = user; // El usuario actual es el remitente
-                                            newRequest.receiver = foundUser->user; // El usuario encontrado es el receptor
-
-                                            // Crea un nuevo nodo de solicitud de amistad
-                    //                        // Crea un nuevo nodo de solicitud de amistad
-                                            FriendRequestNode* newRequestNode = malloc(sizeof(FriendRequestNode));
-                                            newRequestNode->sender = user;
-                                            newRequestNode->receiver = foundUser->user;
-                                            newRequestNode->next = NULL;
-                                            newRequestNode->request = malloc(sizeof(FriendRequest));
-                                            // Asignar los campos de la solicitud de amistad
-                                            newRequestNode->request->sender = user;
-                                            newRequestNode->request->receiver = foundUser->user;
+                        // Agrega la solicitud a la cola de solicitudes enviadas
+                        if (sentRequestsQueue.rear != NULL) {
+                            sentRequestsQueue.rear->next = newRequestNode;
+                            sentRequestsQueue.rear = newRequestNode;
+                        } else {
+                            sentRequestsQueue.front = newRequestNode;
+                            sentRequestsQueue.rear = newRequestNode;
+                        }
+                    } else {
+                        // Usuario no encontrado, muestra un mensaje de error
+                        MessageBox(hwnd, "Usuario no encontrado", "Error", MB_OK | MB_ICONERROR);
+                        break;
+                    }
 
 
-                                            // Agrega la solicitud a la cola de solicitudes enviadas
-                                            if (sentRequestsQueue.rear != NULL) {
-                                                sentRequestsQueue.rear->next = newRequestNode;
-                                                sentRequestsQueue.rear = newRequestNode;
-                                            } else {
-                                                sentRequestsQueue.front = newRequestNode;
-                                                sentRequestsQueue.rear = newRequestNode;
-                                            }
-                                        } else {
-                                            // Usuario no encontrado, muestra un mensaje de error
-                                            MessageBox(hwnd, "Usuario no encontrado", "Error", MB_OK | MB_ICONERROR);
-                                            break;
-                                        }
+                    // mostrar solicitudes enviadas
+                    MessageBox(hwnd, "Haz clic en Aceptar y luego ingresa el nombre de usuario al que deseas enviar una solicitud", "Enviar solicitud de amistad", MB_OK);
+                    scanf("%s", username);  // Escanea el nombre de usuario
+                    foundUser = searchUser2(username, userList);  // Busca el usuario en la lista
+                    if (foundUser != NULL) {
+                        // Usuario encontrado, muestra los datos y abre la ventana emergente
+                        printf("Usuario encontrado:\n");
+                        printuser(foundUser);
+
+                        // Mostrar un mensaje de confirmación
+                        MessageBox(hwnd, "Solicitud de amistad enviada", "Confirmación", MB_OK | MB_ICONINFORMATION);
+                        FriendRequest newRequest;
+                        newRequest.sender = user; // El usuario actual es el remitente
+                        newRequest.receiver = foundUser->user; // El usuario encontrado es el receptor
+
+                        // Crea un nuevo nodo de solicitud de amistad
+                        // Crea un nuevo nodo de solicitud de amistad
+                        FriendRequestNode* newRequestNode = malloc(sizeof(FriendRequestNode));
+                        newRequestNode->sender = user;
+                        newRequestNode->receiver = foundUser->user;
+                        newRequestNode->next = NULL;
+                        newRequestNode->request = malloc(sizeof(FriendRequest));
+                        // Asignar los campos de la solicitud de amistad
+                        newRequestNode->request->sender = user;
+                        newRequestNode->request->receiver = foundUser->user;
 
 
-                                        // mostrar solicitudes enviadas
-                                        printf("Solicitudes de amistad enviadas:\n");
-                                        FriendRequestNode* CurrentNode = sentRequestsQueue.front;
-                                        while (CurrentNode != NULL) {
-                                            printf("Para: %s\n", currentNode->request->receiver->username);
-                                            currentNode = currentNode->next;
-                                        }
-                                        break;
+                        // Agrega la solicitud a la cola de solicitudes enviadas
+                        if (sentRequestsQueue.rear != NULL) {
+                            sentRequestsQueue.rear->next = newRequestNode;
+                            sentRequestsQueue.rear = newRequestNode;
+                        } else {
+                            sentRequestsQueue.front = newRequestNode;
+                            sentRequestsQueue.rear = newRequestNode;
+                        }
+                    } else {
+                        // Usuario no encontrado, muestra un mensaje de error
+                        MessageBox(hwnd, "Usuario no encontrado", "Error", MB_OK | MB_ICONERROR);
+                        break;
+                    }
+
+                    // mostrar solicitudes enviadas
+                    printf("Solicitudes de amistad enviadas:\n");
+                    FriendRequestNode* CurrentNode = sentRequestsQueue.front;
+                    while (CurrentNode != NULL) {
+                        printf("Para: %s\n", currentNode->request->receiver->username);
+                        currentNode = currentNode->next;
+                    }
+                    break;
 
 
                 case 4:
@@ -451,7 +450,6 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 
                     // Mostrar todas las publicaciones del usuario
                     mostrarPublicaciones(user);
-
 
 
                     break;

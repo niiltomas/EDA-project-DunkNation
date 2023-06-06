@@ -33,6 +33,8 @@ void revisarTimeline1(User* usuario);
 void mostrarPublicacioness(User*);
 void mostrarPublicaciones(User*);
 void guardarPublicacioness(User*, const char*);
+
+
 HMENU hMenu;
 HWND hLogo,hEdit;
 HBITMAP hLogoImage,hGenerateImage;
@@ -469,8 +471,8 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     }
 }
 
-void registerDialogClass(HINSTANCE hInst)///Mejor no tocar XD
-{
+void registerDialogClass(HINSTANCE hInst){///Mejor no tocar XD
+
     WNDCLASSW dialog={0};
     dialog.hbrBackground= (HBRUSH) COLOR_WINDOW;
     dialog.hCursor = LoadCursor (NULL,IDC_ARROW);
@@ -481,8 +483,9 @@ void registerDialogClass(HINSTANCE hInst)///Mejor no tocar XD
     RegisterClassW(&dialog);
 
 }
-void displayDialog(HWND hwnd)///aqui es donde tienes que poner los botones
-{
+
+void displayDialog(HWND hwnd){///aqui es donde tienes que poner los botones
+
     /// posicion (x,y) en la ventana (en pixeles) i dimensiones (x,y)
     ///ventana emergente login
     HWND hDlg= CreateWindowW(L"login",L"LOGIN",WS_VISIBLE | WS_OVERLAPPEDWINDOW,400,400,500,300,hwnd,0,0,0);
@@ -525,7 +528,6 @@ ListNode *searchUser2(char *username, ListNode *userList) {///función que busca
     }
     return NULL;///Devuelve NULL si no encontró el usuario
 }
-
 
 void printuser(ListNode*User){///función de impresión de usuarios
     printf(" - Nombre de usuario: %s\n", User->user->username);
@@ -678,8 +680,10 @@ int read_users_file(User* user, ListNode** llista) {
     fclose(fp); ///cerramos el fichero
     return i; ///devolvemos el numero de usuarios leídos
 }
+
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
+
 // Función para crear una nueva publicación
 Publicacion* crearPublicacion(const char* contenido) {
     Publicacion* publicacion = (Publicacion*)malloc(sizeof(Publicacion));
@@ -687,6 +691,7 @@ Publicacion* crearPublicacion(const char* contenido) {
     publicacion->contenido[MAX_CARACTERES] = '\0';
     return publicacion;
 }
+
 // Función para agregar una publicación al timeline del usuario
 void agregarPublicacion(User* usuario, Publicacion* publicacion) {
     if (usuario->timeline == NULL) {
@@ -701,6 +706,14 @@ void agregarPublicacion(User* usuario, Publicacion* publicacion) {
     usuario->numPublicaciones++;
 }
 
+// Función para revisar el timeline de un usuario
+void revisarTimeline(User* usuario) {
+    printf("Timeline de %s:\n", usuario->username);
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        printf("%s\n", usuario->timeline[i].contenido);
+    }
+}
+
 // Función para mostrar todas las publicaciones del usuario
 void mostrarPublicaciones(User* usuario) {
     printf("Todas las publicaciones del usuario:\n");
@@ -713,10 +726,24 @@ void mostrarPublicaciones(User* usuario) {
     }
 }
 
+void mostrar_publicaciones_usuario(const User* usuario) {
+    printf("Usuario: %s\n", usuario->username);
+    printf("Publicaciones:\n");
+
+    if (usuario->numPublicaciones > 0) {
+        for (int i = 0; i < usuario->numPublicaciones; i++) {
+            printf("- %s\n", usuario->timeline[i].contenido);
+        }
+    } else {
+        printf("No hay publicaciones.\n");
+    }
+}
+
 void inicializar(Lista* lista) {
     lista->inicio = NULL;
     lista->fin = NULL;
 }
+
 void insertar(Lista* lista, int dato) {
     Nodo* nuevoNodo = (Nodo*)malloc(sizeof(Nodo));
     nuevoNodo->dato = dato;
@@ -730,6 +757,7 @@ void insertar(Lista* lista, int dato) {
         lista->fin = nuevoNodo;
     }
 }
+
 void mostrar(Lista* lista) {
     Nodo* actual = lista->inicio;
 
@@ -739,6 +767,7 @@ void mostrar(Lista* lista) {
     }
     printf("\n");
 }
+
 void liberar(Lista* lista) {
     Nodo* actual = lista->inicio;
     Nodo* siguiente = NULL;
@@ -800,9 +829,21 @@ ListNode* cargarUsuariosDesdeCSV(const char* archivo) {
     fclose(file);
     return listaUsuarios;
 }
+
 // Función para enviar una solicitud de amistad
 void enviarSolicitud(User* remitente, User* destinatario) {
     // Aquí puedes implementar la lógica para enviar la solicitud
     printf("Solicitud enviada: %s -> %s\n", remitente->username, destinatario->username);
 }
 
+// Función para liberar la memoria de la lista de usuarios
+void liberarUsuarios(ListNode* listaUsuarios) {
+    ListNode* temp;
+    while (listaUsuarios != NULL) {
+        temp = listaUsuarios;
+        listaUsuarios = listaUsuarios->next;
+        free(temp->user->timeline);
+        free(temp->user);
+        free(temp);
+    }
+}

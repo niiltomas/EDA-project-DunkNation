@@ -25,14 +25,13 @@ void displayDialog(HWND);
 void printuser(ListNode*);
 void print_user_list(ListNode*);
 int read_users_file(User*, ListNode**);
-void agregarPublicacion(User*, Publicacion*);
-Publicacion* crearPublicacion(const char*);
-void mostrar_publicaciones_usuario(const User*);
-void revisarTimeline(User*);
-void revisarTimeline1(User* usuario);
-void mostrarPublicacioness(User*);
-void mostrarPublicaciones(User*);
-void guardarPublicacioness(User*, const char*);
+void agregarPublicacion(User* usuario, Publicacion* publicacion);
+Publicacion* crearPublicacion(const char* contenido);
+void mostrar_publicaciones_usuario(const User* usuario);
+void revisarTimeline(User* usuario);
+void procesarPublicacion(struct NodoDiccionario** diccionario, char* publicacion);
+void mostrarTop10(struct NodoDiccionario* diccionario);
+
 HMENU hMenu;
 HWND hLogo,hEdit;
 HBITMAP hLogoImage,hGenerateImage;
@@ -43,12 +42,12 @@ ListNode* current;
 ListNode* searchUser(char* , int, ListNode* );
 ListNode* searchUser2(char*, ListNode* );
 
-///configuracion de la ventana principal
+///no tocar nada de aqui, ya que es la configuracion de la ventana principal
 ///es la equivalencia al main "normal" pero es el main utilizado para abrir una ventana
 /// : ##################################################################################################
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow) {
     WNDCLASSW wc={0};
-    wc.hbrBackground= (HBRUSH) (COLOR_WINDOW-1);
+    wc.hbrBackground= (HBRUSH) COLOR_WINDOW;
     wc.hCursor = LoadCursor (NULL,IDC_ARROW);
     wc.hInstance=hInst;
     wc.lpszClassName = L"myWindowClass";
@@ -173,9 +172,11 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         printf("Usuario encontrado:\n");
                         printuser(foundUser);
                         displayDialog(hwnd);
+
                     } else {
                         printf("Usuario no encontrado.\n");
                     }
+
 
                     ///Para operar con un usuario primero tenemos que buscar por el nombre de usuario a la persona, para ello,
                     /// la tarea es implementar un algoritmo de búsqueda que recorra la lista de usuarios hasta encontrarlo
@@ -192,9 +193,10 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     //                        printf("Usuario no encontrado:\n");
                     //                    }
                     break;
-            }
 
-            break;
+
+            }
+            ;
         case WM_CREATE: ///moment en el què la finestra s'ha creat i tot seguit hi afegim els menus etc. a la finestra
             AddMenus(hwnd);
             AddControls(hwnd);
@@ -236,12 +238,9 @@ void AddControls(HWND hwnd) {
 FriendRequestQueue friendRequestsQueue = { NULL, NULL };
 FriendRequestQueue sentRequestsQueue = { NULL, NULL };
 
-
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
     User* user= malloc(sizeof(User));
-    user->timeline;
-    user->numPublicaciones+=0;
     ListNode* current = userList;
     ListNode* foundUser = NULL;
     char username[20];
@@ -420,27 +419,27 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 
                 case 4:
 
-                    printf("Ingresa el contenido de la publicacion: ");
-                    fgets(publicacion->contenido, MAX_CARACTERES, stdin);
-                    // Eliminar el salto de línea al final del contenido
-                    publicacion->contenido[strcspn(publicacion->contenido, "\n")] = '\0';
+            printf("Ingresa el contenido de la publicacion: ");
+            fgets(contenido, MAX_CARACTERES, stdin);
 
-                    // Agregar la publicación al timeline del usuario
-                    agregarPublicacion(user, publicacion);
+            // Eliminar el salto de línea al final del contenido
+            contenido[strcspn(contenido, "\n")] = '\0';
 
-                    printf("Publicacion realizada con exito.\n");
+            // Crear la publicación
+            Publicacion* publicacion = crearPublicacion(contenido);
 
-                    // Mostrar todas las publicaciones del usuario
-                    break;
+            // Agregar la publicación al timeline del usuario
+            agregarPublicacion(user, publicacion);
 
-
-
-                case 5:
-
-                    mostrarPublicaciones(user);
-                    break;
-            }
+            printf("Publicacion realizada con exito.\n");
             break;
+
+        case 5:
+
+
+            break;
+
+
         case WM_CLOSE:
             DestroyWindow(hwnd);
             break;
@@ -630,10 +629,10 @@ void print_user_list(ListNode* llista) {
 }
 int read_users_file(User* user, ListNode** llista) {
     int max_usuarios = 20;
-    FILE* fp = fopen("archivo_users.csv", "r");
-    if (fp == NULL) {
+    FILE* fp = fopen("archivo_users.csv", "r"); ///abrimos el fichero
+    if (fp == NULL) { ///comprobamos que se haya abierto correctamente
         printf("Error al abrir el archivo\n");
-        return 0;
+        return 0; ///si no devolvemos 0
     }
 
     char linea[MAX_CHAR];
@@ -722,16 +721,8 @@ void agregarPublicacion(User* usuario, Publicacion* publicacion) {
     usuario->timeline[usuario->numPublicaciones] = *publicacion;
     usuario->numPublicaciones++;
 }
-
-// Función para mostrar todas las publicaciones del usuario
-void mostrarPublicaciones(User* usuario) {
-    printf("Todas las publicaciones del usuario:\n");
-    for (int i = 0; i < usuario->numPublicaciones; i++) {
-        printf("%d. %s\n", i + 1, usuario->timeline[i].contenido);
-    }
-}
 // Función para revisar el timeline de un usuario
-void revisarTimeline1(User* usuario) {
+void revisarTimeline(User* usuario) {
     printf("Timeline de %s:\n", usuario->username);
     for (int i = 0; i < usuario->numPublicaciones; i++) {
         printf("%s\n", usuario->timeline[i].contenido);
@@ -851,6 +842,85 @@ void liberarUsuarios(ListNode* listaUsuarios) {
         free(temp->user->timeline);
         free(temp->user);
         free(temp);
+    }
+}
+
+
+typedef struct NodoDiccionario NodoDiccionario;
+
+NodoDiccionario* crearNodo(char* palabra) {
+    NodoDiccionario* nodo = (NodoDiccionario*)malloc(sizeof(NodoDiccionario));
+    strcpy(nodo->palabra, palabra);
+    nodo->conteo = 0;
+    nodo->siguiente = NULL;
+    return nodo;
+}
+
+void procesarPublicacion(NodoDiccionario** diccionario, char* publicacion) {
+    char* palabra = strtok(publicacion, " ");
+
+    while (palabra != NULL) {
+        NodoDiccionario* nodo = *diccionario;
+        NodoDiccionario* nodoAnterior = NULL;
+        int encontrado = 0;
+
+        while (nodo != NULL) {
+            if (strcmp(nodo->palabra, palabra) == 0) {
+                nodo->conteo++;
+                encontrado = 1;
+                break;
+            }
+
+            nodoAnterior = nodo;
+            nodo = nodo->siguiente;
+        }
+
+        if (!encontrado) {
+            NodoDiccionario* nuevoNodo = crearNodo(palabra);
+
+            if (nodoAnterior == NULL) {
+                *diccionario = nuevoNodo;
+            } else {
+                nodoAnterior->siguiente = nuevoNodo;
+            }
+        }
+
+        palabra = strtok(NULL, " ");
+    }
+}
+
+void mostrarTop10(NodoDiccionario* diccionario) {
+    // Crear un arreglo para almacenar las palabras
+    char palabras[10][MAX_LENGTH];
+    int conteos[10] = {0};
+
+    // Recorrer el diccionario y guardar las 10 palabras más usadas
+    NodoDiccionario* nodo = diccionario;
+
+    while (nodo != NULL) {
+        for (int i = 0; i < 10; i++) {
+            if (nodo->conteo > conteos[i]) {
+                // Desplazar las palabras y conteos hacia abajo
+                for (int j = 9; j > i; j--) {
+                    strcpy(palabras[j], palabras[j - 1]);
+                    conteos[j] = conteos[j - 1];
+                }
+
+                // Insertar la nueva palabra y conteo en la posición adecuada
+                strcpy(palabras[i], nodo->palabra);
+                conteos[i] = nodo->conteo;
+                break;
+            }
+        }
+
+        nodo = nodo->siguiente;
+    }
+
+    // Mostrar las palabras más usadas
+    printf("Top 10 palabras más usadas:\n");
+
+    for (int i = 0; i < 10; i++) {
+        printf("%d. %s (%d veces)\n", i + 1, palabras[i], conteos[i]);
     }
 }
 void guardarPublicacioness(User* usuario, const char* nombreArchivo) {

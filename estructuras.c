@@ -85,3 +85,9 @@ typedef struct {
     Nodo* inicio;
     Nodo* fin;
 } Lista;
+
+struct NodoDiccionario {
+    char palabra[MAX_LENGTH];
+    int conteo;
+    struct NodoDiccionario* siguiente;
+};

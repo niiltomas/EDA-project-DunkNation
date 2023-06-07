@@ -25,14 +25,12 @@ void displayDialog(HWND);
 void printuser(ListNode*);
 void print_user_list(ListNode*);
 int read_users_file(User*, ListNode**);
-void agregarPublicacion(User*, Publicacion*);
+
+
 Publicacion* crearPublicacion(const char*);
-void mostrar_publicaciones_usuario(const User*);
-void revisarTimeline(User*);
-void revisarTimeline1(User* usuario);
-void mostrarPublicacioness(User*);
 void mostrarPublicaciones(User*);
-void guardarPublicacioness(User*, const char*);
+void agregarPublicacion(User*,Publicacion*);
+
 
 void initializeQueue(QueueF* queue);
 int isQueueEmpty(QueueF* queue);
@@ -40,7 +38,6 @@ int isQueueFull(QueueF* queue);
 void enqueue(QueueF* queue, User user);
 User dequeue(QueueF* queue);
 void displayFriendList(User* friends, int count);
-
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -90,13 +87,15 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
     User usuaris[22];
     ListNode* llista = NULL;
     int numUsers;
+    usuaris->timeline = NULL;
+    usuaris->numPublicaciones = 0;
     switch(msg)
     {
         case WM_COMMAND: ///ÉS EL MISSATGE
             switch(wp)
             {
 
-                case FILE_MENU_EXIT:
+                case FILE_MENU_EXIT: ///case para cerrar la ventana principal del main
                     aux= MessageBoxW(hwnd,L"Estas segur que vols sortir?",L"EXIT",MB_YESNO|MB_ICONEXCLAMATION);
                     if (aux==IDYES)
                     {
@@ -104,12 +103,12 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     }
                     break;
 
-                case ARCHIVO_USERS:///leer archivo que contiene 20 los datos de 20 usuarios
+                case ARCHIVO_USERS:///leer archivo que contiene los datos de 20 usuarios
                     printf("hola");
-
                     numUsers = read_users_file(usuaris, &llista);
                     printf("Se leyeron %d usuarios\n", numUsers);
                     print_user_list(llista);
+                    ///a partir de aqui liberamos la memoria
                     ListNode* currentNode = llista;
                     while (currentNode != NULL) {
                         llista = currentNode->next;
@@ -118,7 +117,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         currentNode = llista;
                     }
                     break;
-                case GENERATE_BUTTON:///sitio donde se tendrá que poner el codigo de mostrar todos los usuarios
+                case GENERATE_BUTTON:///codigo que muestra todos los usuarios
                     // Recorrer la lista de usuarios e imprimir sus datos
                     current = userList;////
                     while (current != NULL) {
@@ -130,19 +129,17 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                 case NEW_PLAYER:///en esta parte hay donde se escanea la parte del new player (la entrada es por consola)
                     MessageBox(hwnd, "click aceptar, then enter name age password email and city(separated by space)", "New player", MB_OK);
                     scanf("%s %d %d %s %s", user->username, &user->age, &user->password,user->email, user->city);
-                    MessageBox(hwnd, "click aceptar, then enter preferences separated by spaces", "New player", MB_OK);
-                    for (int i = 0; i < MAX_PREFERENCES; i++) {
-                        scanf("%s", user->preferences[i]);
-                    }
+                    MessageBox(hwnd, "click aceptar, then enter your first favourite player and the second (separeted by space) ", "New player", MB_OK);
+                    scanf("%s %s", user->j1,user->j2);
                     ///prints para comprobar
                     printf("Username: %s\n", user->username);
                     printf("Age: %d\n", user->age);
                     printf("Password: %d\n", user->password);
                     printf("Email: %s\n", user->email);
                     printf("City: %s\n", user->city);
-                    for (int i = 0; i < MAX_PREFERENCES; i++) {
-                        printf("- %s\n", user->preferences[i]);
-                    }
+                    printf("Jugador 1: %s\n", user->j1);
+                    printf("Jugador 2: %s\n", user->j2);
+
 
                     ListNode* newNode = malloc(sizeof(ListNode));  /// Crear un nuevo nodo para el usuario
                     newNode->user = user;
@@ -157,57 +154,21 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                         current->next = newNode;
                     }
                     break;
-                case 222:
-                    ///diccionario
-                    break;
+
                 case LOGIN: ///parte donde se escanea los parametros del user
-                    printf("1 para login de usuario existente, 2 para login de archivo: ");
-                    int opcio;
-                    scanf("%d", &opcio);
-
-                    if (opcio == 1) {
-                        printf("Introduce nombre de usuario y contrasenya: ");
-                        scanf("\n%s %d", username, &password);
-                        foundUser = searchUser(username, password, userList);
-                    } else if (opcio == 2) {
-
-                        read_users_file(usuaris, &llista);
-                        printf("Se leyeron %d usuarios\n", numUsers);
-                        print_user_list(llista);
-                        printf("Introduce nombre de usuario y contrasenya: ");
-                        scanf("\n%s %d", username, &password);
-                        foundUser = searchUser(username, password, llista);
-                    } else {
-                        printf("Opcion invalida.\n");
-                        break;
-                    }
-
+                    MessageBox(hwnd, "click aceptar, then enter username and password(separated by space)", "LOGIN", MB_OK);
+                    printf("Introduce nombre de usuario y contrasenya: ");
+                    scanf("\n%s %d", username, &password);
+                    foundUser = searchUser(username, password, userList);
                     if (foundUser != NULL) {
                         printf("Usuario encontrado:\n");
                         printuser(foundUser);
                         displayDialog(hwnd);
-
-                    } else {
+                    }
+                    else {
                         printf("Usuario no encontrado.\n");
                     }
-
-
-                    ///Para operar con un usuario primero tenemos que buscar por el nombre de usuario a la persona, para ello,
-                    /// la tarea es implementar un algoritmo de búsqueda que recorra la lista de usuarios hasta encontrarlo
-                    /// y luego mostrar el submenú para ese usuario. Si no se encuentra el usuario, mostrar un mensaje de error.
-                    ///MessageBox(hwnd, "click aceptar, then enter username and a numerical password (separated by space)", "login", MB_OK);
-                    //                    scanf("%s %d", username, &password);///escaneamos el nombre de usuario y password
-                    //                    foundUser = searchUser(username,password, userList); ///recorremos los usuarios inscritos
-                    //                    if (foundUser != NULL) {
-                    //                        printf("Usuario encontrado:\n");
-                    //                        printuser(foundUser);///función que imprime los datos del user
-                    //                        displayDialog(hwnd);///se abre la ventana emergente del usuario donde hay la gestión de las solicitudes de amistad
-                    //                    }
-                    //                    else {
-                    //                        printf("Usuario no encontrado:\n");
-                    //                    }
                     break;
-
 
             }
 
@@ -238,15 +199,16 @@ void AddControls(HWND hwnd) {
     ///botones del main
     ///primer parametro indica si es un boton (interactuable) o fijo, el segungo el nombre a imprimir al boton, el siguiente bordes, visible,... ,
     ///los cuatro siguientes hacen referencia a las dimensiones en pixeles (x,y) (tercer,cuarto paramtro) y localización de los botones (x,y) (primero,segundo).
-    /// los ultimos parametros nos van a dirigir a las funciones correspondientes que se encuentran en el menu principal
-    CreateWindowW(L"Button",L"LOGIN",WS_VISIBLE |WS_CHILD|WS_BORDER,100,50,98,38,hwnd,(HMENU)LOGIN,0,0);
-    CreateWindowW(L"Button",L"NEW PLAYER",WS_VISIBLE |WS_CHILD|WS_BORDER ,250,50,98,38,hwnd,(HMENU)NEW_PLAYER,0,0);
-    CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,98,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
-    CreateWindowW(L"Button",L"USER_FILE",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,98,38,hwnd,(HMENU)ARCHIVO_USERS,0,0);
-    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,248,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
-    CreateWindowW(L"Button",L"diccionario",WS_VISIBLE |WS_CHILD|WS_BORDER,100,260,248,38,hwnd,(HMENU)222,0,0);
+    /// LOS PARAMETROS QUE ACOMPAÑAN AL (HMENU) NOS LLAVARAN A LOS DIFERENTES CASES
+    CreateWindowW(L"Button",L"LOGIN",WS_VISIBLE |WS_CHILD|WS_BORDER,100,50,108,38,hwnd,(HMENU)LOGIN,0,0);
+    CreateWindowW(L"Button",L"NEW PLAYER",WS_VISIBLE |WS_CHILD|WS_BORDER ,250,50,128,38,hwnd,(HMENU)NEW_PLAYER,0,0);
+    CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,108,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
+    CreateWindowW(L"Button",L"PRINT USER_FILE",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,128,38,hwnd,(HMENU)ARCHIVO_USERS,0,0);
+    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,278,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
+    ///este fragmento de código es un intento fallido de insertar una imagen en la pagina principal
     hLogo=CreateWindowW(L"Static",NULL,WS_VISIBLE |WS_CHILD|SS_BITMAP,0,0,38,38,hwnd,0,0,0);
     SendMessageW(hLogo,STM_SETIMAGE,IMAGE_BITMAP,(LPARAM)hLogoImage);
+    ///
 }
 
 
@@ -264,15 +226,8 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     ListNode* current = userList;
     ListNode* foundUser = NULL;
 
-    Queue friendRequests;
-    initializeQueue(&friendRequests);
-    User currentUser;
-
-
     char username[20];
-    char contenido[MAX_CARACTERES];
-    Publicacion* publicacion=malloc(sizeof(Publicacion));
-    publicacion->siguiente_publi=NULL;
+
     switch(msg)
     {
         case WM_COMMAND:
@@ -282,7 +237,6 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                 case 1:
                     DestroyWindow(hwnd);
                     break;
-
                 case 2:
                     // Mostrar las solicitudes pendientes
                     printf("Solicitudes de amistad pendientes:\n");
@@ -306,9 +260,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                             printf("Email: %s\n", requestNode->request->sender->email);
                             printf("Ciudad: %s\n", requestNode->request->sender->city);
                             printf("Preferencias:\n");
-                            for (int i = 0; i < MAX_PREFERENCES; i++) {
-                                printf("- %s\n", requestNode->request->sender->preferences[i]);
-                            }
+
                             // Preguntar al usuario si desea aceptar o denegar la solicitud
                             printf("Aceptar (A) / Denegar (D): ");
                             char response;
@@ -446,33 +398,41 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     break;*/
 
 
-                case 4:
-                    // Solicitar al usuario el contenido de la publicación
-                    printf("Ingresa el contenido de la publicacion: ");
-                    getchar(); // Limpiar el buffer del teclado
-                    fgets(contenido, MAX_CARACTERES, stdin);
-                    contenido[strcspn(contenido, "\n")] = '\0';
+                case 4:///Anshpreet aqui tiene que ir tu parte de diccionarios la línea de free(user->timeline); te borrará los datos, así que tu codigo tiene que ir entremedio
+                    printf("--- Publica  ---\n");
 
-                    // Crear una nueva publicación y asignarle el contenido
-                    publicacion = (Publicacion*)malloc(sizeof(Publicacion));
-                    strncpy(publicacion->contenido, contenido, MAX_CARACTERES);
-                    crearPublicacion(publicacion->contenido);
+                    for (int i = 0; i < 11; i++) {
+                        char contenido[MAX_CARACTERES];
 
-                    // Agregar la publicación al timeline del usuario
-                    agregarPublicacion(user, publicacion);
+                        printf("Ingresa el contenido de la publicacion %d: ", i + 1);
+                        fgets(contenido, MAX_CARACTERES, stdin);
 
-                    printf("Publicacion realizada con exito.\n");
+                        // Eliminar el salto de línea al final del contenido
+                        contenido[strcspn(contenido, "\n")] = '\0';
+
+                        // Crear la publicación
+                        Publicacion* publicacion = (Publicacion*)malloc(sizeof(Publicacion));
+                        strncpy(publicacion->contenido, contenido, MAX_CARACTERES);
+                        publicacion->contenido[MAX_CARACTERES - 1] = '\0';
+
+                        // Agregar la publicación al timeline del usuario
+                        agregarPublicacion(user, publicacion);
+
+                        printf("Publicacion realizada con exito.\n");
+                    }
 
                     // Mostrar todas las publicaciones del usuario
                     mostrarPublicaciones(user);
+                    ///inicio diccionario (Tabla Hash)
+                    ///ten en cuenta que el diccionario tiene que leer las palabras, entonces devolverá el top 3 de palabras que mas salgan
 
 
-                    break;
 
 
 
-                case 5:
-                    mostrarPublicaciones(user);
+                    ///fin diccionario (Tabla Hash)
+                    // Liberar memoria
+                    free(user->timeline);
                     break;
             }
             break;
@@ -484,36 +444,37 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     }
 }
 
-void registerDialogClass(HINSTANCE hInst){///Mejor no tocar XD
+
+void registerDialogClass(HINSTANCE hInst){///Configuración de la ventana emergente del submenu
 
     WNDCLASSW dialog={0};
-    dialog.hbrBackground= (HBRUSH) COLOR_WINDOW;
-    dialog.hCursor = LoadCursor (NULL,IDC_ARROW);
+    dialog.hbrBackground= (HBRUSH) (COLOR_WINDOW-1); ///Para cambiar el color
+    dialog.hCursor = LoadCursor (NULL,IDC_ARROW);///caracteristicas del cursor
     dialog.hInstance=hInst;
-    dialog.lpszClassName = L"login";
+    dialog.lpszClassName = L"login"; ///Nombre de la ventana
     dialog.lpfnWndProc = DialogProcedure;
 
     RegisterClassW(&dialog);
 
 }
 
-void displayDialog(HWND hwnd){///aqui es donde tienes que poner los botones
+void displayDialog(HWND hwnd){///configuracion de los botones del submenu del usuario
 
     /// posicion (x,y) en la ventana (en pixeles) i dimensiones (x,y)
     ///ventana emergente login
     HWND hDlg= CreateWindowW(L"login",L"LOGIN",WS_VISIBLE | WS_OVERLAPPEDWINDOW,400,400,500,300,hwnd,0,0,0);
-    ///botón cerrar
+    ///botón cerrar para cerrar la ventana de usuario login
     CreateWindowW(L"Button",L"Close",WS_VISIBLE|WS_CHILD,190,200,100,40,hDlg,(HMENU)1,NULL,NULL);
-
-    ///boton para enviar una solicitud de amistad"
-    CreateWindowW(L"Button",L" Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)3,NULL,NULL);
 
     ///boton para ver solicitudes pendientes de aceptar"
     CreateWindowW(L"Button",L"Solicitudes pendientes",WS_VISIBLE | WS_CHILD |WS_BORDER,20,70, 300,30,hDlg,(HMENU)2,NULL,NULL);
 
+    ///boton para enviar una solicitud de amistad"
+    CreateWindowW(L"Button",L" Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)3,NULL,NULL);
+
     ///boton para publicar publicaciones"
-    CreateWindowW(L"Button",L"Publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)4,NULL,NULL);
-    CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,180, 300,30,hDlg,(HMENU)5,NULL,NULL);
+    CreateWindowW(L"Button",L"Diccionario con publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)4,NULL,NULL);
+
 
 }
 
@@ -543,18 +504,6 @@ ListNode *searchUser2(char *username, ListNode *userList) {///función que busca
     return NULL;///Devuelve NULL si no encontró el usuario
 }
 
-void printuser(ListNode*User){///función de impresión de usuarios
-    printf(" - Nombre de usuario: %s\n", User->user->username);
-    printf(" - Edad: %d\n", User->user->age);
-    printf(" - Password: %d\n", User->user->password);
-    printf(" - Correo electronico: %s\n", User->user->email);
-    printf(" - Ciudad: %s\n", User->user->city);
-    ///for (int i = 0; i < MAX_PREFERENCES; i++) {
-    //        printf("- %s\n", User->user->preferences[i]);
-    //    }
-}
-
-// Función para realizar una publicación
 
 
 
@@ -599,7 +548,8 @@ void insertarPalabra(HashTable* tabla, char* palabra) {
     nuevoNodo->siguiente = tabla->tabla[indice];
     tabla->tabla[indice] = nuevoNodo;
 }
-
+///**************************************** Inicio declaracion de funciones de imprimir usuarios de una lista, imprimir usuarios,  leer archivo de usuarios,*************
+///****************************************agregar_publicacion y mostrar publicación************************************************************************************
 void print_user_list(ListNode* llista) {
     printf("Lista de usuarios:\n");
 
@@ -613,11 +563,23 @@ void print_user_list(ListNode* llista) {
         printf("City: %s\n", user->city);
         printf("jugador 1: %s\n", user->j1);
         printf("jugador 2: %s\n", user->j2);
+        printf("Posicion favorita: %s\n", user->posicion);
 
         currentNode = currentNode->next;
     }
 }
 
+void printuser(ListNode*User){///función de impresión de usuarios
+    printf(" - Nombre de usuario: %s\n", User->user->username);
+    printf(" - Edad: %d\n", User->user->age);
+    printf(" - Password: %d\n", User->user->password);
+    printf(" - Correo electronico: %s\n", User->user->email);
+    printf(" - Ciudad: %s\n", User->user->city);
+    printf(" - Jugador 1: %s\n", User->user->j1);
+    printf(" - Jugador 2: %s\n", User->user->j2);
+
+
+}
 int read_users_file(User* user, ListNode** llista) {
     int max_usuarios = 20;
     FILE* fp = fopen("archivo_users.csv", "r");
@@ -658,6 +620,8 @@ int read_users_file(User* user, ListNode** llista) {
         token = strtok(NULL, ",");
         strncpy(newUser->j2, token, MAX_CHAR);// lee los datos del email
         token = strtok(NULL, ",");
+        strncpy(newUser->posicion, token, MAX_CHAR);// lee los datos del email
+        token = strtok(NULL, ",");
 
         ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));// Crear un nuevo nodo de lista
         if (newNode == NULL) {
@@ -674,7 +638,7 @@ int read_users_file(User* user, ListNode** llista) {
 
         i++;
     }
-// Ordenar la lista por orden alfabético utilizando el nombre (ordenamiento burbuja)
+     /// Ordenar la lista por orden alfabético utilizando el nombre (ordenamiento burbuja)
     ///declaramos las variables y listas enlazadas que utilizaremos, además de inicalizarlas
     int swapped;
     ListNode* ptr1;
@@ -704,64 +668,22 @@ int read_users_file(User* user, ListNode** llista) {
     return i; ///devolvemos el numero de usuarios leídos
 }
 
-//////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////
-
-// Función para crear una nueva publicación
-Publicacion* crearPublicacion(const char* contenido) {
-    Publicacion* publicacion = (Publicacion*)malloc(sizeof(Publicacion));
-    strncpy(publicacion->contenido, contenido, MAX_CARACTERES);
-    publicacion->contenido[MAX_CARACTERES] = '\0';
-    return publicacion;
-}
-
-// Función para agregar una publicación al timeline del usuario
+//aqui es donde se controla y se guardan las publicaciones. Estas se almacenan aqui usuario->timeline[i].contenido
 void agregarPublicacion(User* usuario, Publicacion* publicacion) {
-    if (usuario->timeline == NULL) {
-        usuario->timeline = publicacion;
-    } else {
-        while (usuario->timeline->siguiente_publi != NULL) {
-            usuario->timeline = (Publicacion*)usuario->timeline->siguiente_publi;
-        }
-       ///publicacion->siguiente_publi =(struct Publicacion*) publicacion;
-       usuario->timeline->siguiente_publi=(struct Publicacion*)publicacion;
-       ///publicacion->siguiente_publi=(struct Publicacion*)usuario->timeline;
-    }
+    usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones + 1) * sizeof(Publicacion));
+    usuario->timeline[usuario->numPublicaciones] = *publicacion;
     usuario->numPublicaciones++;
-}
-
-// Función para revisar el timeline de un usuario
-void revisarTimeline(User* usuario) {
-    printf("Timeline de %s:\n", usuario->username);
-    for (int i = 0; i < usuario->numPublicaciones; i++) {
-        printf("%s\n", usuario->timeline[i].contenido);
-    }
 }
 
 // Función para mostrar todas las publicaciones del usuario
 void mostrarPublicaciones(User* usuario) {
-    printf("Todas las publicaciones del usuario:\n");
-    Publicacion* publicacion = usuario->timeline;
-    int i = 1;
-    while (usuario->timeline != NULL) {
-        printf("%d. %s\n", i, usuario->timeline->contenido);
-        usuario->timeline = (Publicacion*)usuario->timeline->siguiente_publi;
-        i++;
+    printf("\nTodas las publicaciones del usuario:\n");
+    for (int i = 0; i < usuario->numPublicaciones; i++) {
+        printf("%d. %s\n", i + 1, usuario->timeline[i].contenido);
     }
 }
 
-void mostrar_publicaciones_usuario(const User* usuario) {
-    printf("Usuario: %s\n", usuario->username);
-    printf("Publicaciones:\n");
 
-    if (usuario->numPublicaciones > 0) {
-        for (int i = 0; i < usuario->numPublicaciones; i++) {
-            printf("- %s\n", usuario->timeline[i].contenido);
-        }
-    } else {
-        printf("No hay publicaciones.\n");
-    }
-}
 
 void inicializar(Lista* lista) {
     lista->inicio = NULL;

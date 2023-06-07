@@ -1,20 +1,20 @@
-nil,18,1234,niltomasplans@gmail.com,barcelona,Damian Lillard ,LeBron James
-Anshpreet,18,1234,ashpreet@gmail.com,girona, James Harden,Thomas Heurtel
-Sophia,22,1234,sophiajohnson@gmail.com,LosAngeles,Devin Booker,Nigel Williams-Goss
-Ella,29,1234,ellasmith@gmail.com,Chicago,Anthony Davis,Dzanan Musa
-Alexander,27,1234,alexanderlee@gmail.com,Miami, Kawhi Leonard,Sergio Llull
-Victoria,24,1234,victoriawang@gmail.com,SanFrancisco, Luka Doncic,Damian Lillard
-Henry,33,1234,henrybrown@gmail.com,Austin,Stephen Curry, James Harden
-Charlotte,28,1234,charlottegarcia@gmail.com,Dallas, Kevin Durant, Devin Booker
-Joseph,30,1234,josephrodriguez@gmail.com,Phoenix, Giannis Antetokounmpo,Anthony Davis
-Isabella,25,1234,isabellahernandez@gmail.com,Seattle, LeBron James, Kawhi Leonard
-Michael,31,1234,michaelsanchez@gmail.com,Boston,Thomas Heurtel,Hugo Gonzalez
-Mia,21,1234,miahall@gmail.com,Philadelphia,Nigel Williams-Goss,Egor Demin
-David,36,1234,davidmartinez@gmail.com,Houston,Dzanan Musa,Mario Hezonja
-Emily,26,1234,emilydavis@gmail.com,Detroit,Sergio Llull,Guerschon Yabusele
-Danial,23,1234,danial@gmail.com,Portland,Hugo Gonzalez,"Vincent Poirier"
-Olivia,32,1234,oliviamartin@gmail.com,SanDiego,Egor Demin,Cristiano Ronoldo
-James,19,1234,jameswilson@gmail.com,Atlanta,Mario Hezonja, Kevin Durant
-Emma,34,1234,emmaclark@gmail.com,Denver,Guerschon Yabusele,Dzanan Musa
-Benjamin,20,1234,benjaminlee@gmail.com,WashingtonDC,"Vincent Poirier",Sergio Llull
-Alexander,27,1234,alexanderlee@gmail.com,Miami,Cristiano Ronoldo,Hugo Gonzalez
+nil,18,1234,niltomasplans@gmail.com,barcelona,Damian Lillard ,LeBron James,base
+Anshpreet,18,1234,ashpreet@gmail.com,girona, James Harden,Thomas Heurtel,base
+Sophia,22,1234,sophiajohnson@gmail.com,LosAngeles,Devin Booker,Nigel Williams-Goss,base
+Ella,29,1234,ellasmith@gmail.com,Chicago,Anthony Davis,Dzanan Musa,base
+Alexander,27,1234,alexanderlee@gmail.com,Miami, Kawhi Leonard,Sergio Llull,base
+Victoria,24,1234,victoriawang@gmail.com,SanFrancisco, Luka Doncic,Damian Lillard,pivote
+Henry,33,1234,henrybrown@gmail.com,Austin,Stephen Curry, James Harden,pivote
+Charlotte,28,1234,charlottegarcia@gmail.com,Dallas, Kevin Durant, Devin Booker,pivote
+Joseph,30,1234,josephrodriguez@gmail.com,Phoenix, Giannis Antetokounmpo,Anthony Davis,pivote
+Isabella,25,1234,isabellahernandez@gmail.com,Seattle, LeBron James, Kawhi Leonard,pivote
+Michael,31,1234,michaelsanchez@gmail.com,Boston,Thomas Heurtel,Hugo Gonzalez,alero
+Mia,21,1234,miahall@gmail.com,Philadelphia,Nigel Williams-Goss,Egor Demin,alero
+David,36,1234,davidmartinez@gmail.com,Houston,Dzanan Musa,Mario Hezonja,alero
+Emily,26,1234,emilydavis@gmail.com,Detroit,Sergio Llull,Guerschon Yabusele,alero
+Danial,23,1234,danial@gmail.com,Portland,Hugo Gonzalez,"Vincent Poirier",alero
+Olivia,32,1234,oliviamartin@gmail.com,SanDiego,Egor Demin,Cristiano Ronoldo,escolta
+James,19,1234,jameswilson@gmail.com,Atlanta,Mario Hezonja, Kevin Durant,escolta
+Emma,34,1234,emmaclark@gmail.com,Denver,Guerschon Yabusele,Dzanan Musa,escolta
+Benjamin,20,1234,benjaminlee@gmail.com,WashingtonDC,"Vincent Poirier",Sergio Llull,escolta
+Alexander,27,1234,alexanderlee@gmail.com,Miami,Cristiano Ronoldo,Hugo Gonzalez,escolta

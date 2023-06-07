@@ -14,12 +14,12 @@ typedef struct {
 typedef struct {
     char username[50];
     int age;
+    int password;
     char email[50];
     char city[50];
     char j1[50];
     char j2[50];
-    char preferences[MAX_PREFERENCES][50];
-    int password;
+    char posicion[50];
     Publicacion* timeline;
     int numPublicaciones;
     struct User** friends;

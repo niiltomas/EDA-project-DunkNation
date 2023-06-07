@@ -376,7 +376,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     }
                     break;
 
-                    // mostrar solicitudes enviadas
+                    /// mostrar solicitudes enviadas
                     /*MessageBox(hwnd, "Haz clic en Aceptar y luego ingresa el nombre de usuario al que deseas enviar una solicitud", "Enviar solicitud de amistad", MB_OK);
                     scanf("%s", username);  // Escanea el nombre de usuario
                     foundUser = searchUser2(username, userList);  // Busca el usuario en la lista

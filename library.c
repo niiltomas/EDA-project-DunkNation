@@ -372,12 +372,12 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     } else {
                         // Usuario no encontrado, muestra un mensaje de error
                         MessageBox(hwnd, "Usuario no encontrado", "Error", MB_OK | MB_ICONERROR);
-                        break;
-                    }
 
+                    }
+                    break;
 
                     // mostrar solicitudes enviadas
-                    MessageBox(hwnd, "Haz clic en Aceptar y luego ingresa el nombre de usuario al que deseas enviar una solicitud", "Enviar solicitud de amistad", MB_OK);
+                    /*MessageBox(hwnd, "Haz clic en Aceptar y luego ingresa el nombre de usuario al que deseas enviar una solicitud", "Enviar solicitud de amistad", MB_OK);
                     scanf("%s", username);  // Escanea el nombre de usuario
                     foundUser = searchUser2(username, userList);  // Busca el usuario en la lista
                     if (foundUser != NULL) {
@@ -424,7 +424,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                         printf("Para: %s\n", currentNode->request->receiver->username);
                         currentNode = currentNode->next;
                     }
-                    break;
+                    break;*/
 
 
                 case 4:

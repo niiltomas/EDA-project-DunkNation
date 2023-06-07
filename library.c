@@ -34,6 +34,13 @@ void mostrarPublicacioness(User*);
 void mostrarPublicaciones(User*);
 void guardarPublicacioness(User*, const char*);
 
+void initializeQueue(QueueF* queue);
+int isQueueEmpty(QueueF* queue);
+int isQueueFull(QueueF* queue);
+void enqueue(QueueF* queue, User user);
+User dequeue(QueueF* queue);
+void displayFriendList(User* friends, int count);
+
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -257,6 +264,10 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     ListNode* current = userList;
     ListNode* foundUser = NULL;
 
+    Queue friendRequests;
+    initializeQueue(&friendRequests);
+    User currentUser;
+
 
     char username[20];
     char contenido[MAX_CARACTERES];
@@ -271,6 +282,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                 case 1:
                     DestroyWindow(hwnd);
                     break;
+
                 case 2:
                     // Mostrar las solicitudes pendientes
                     printf("Solicitudes de amistad pendientes:\n");
@@ -504,6 +516,7 @@ void displayDialog(HWND hwnd){///aqui es donde tienes que poner los botones
     CreateWindowW(L"Button",L"mostrar timeline",WS_VISIBLE | WS_CHILD |WS_BORDER,20,180, 300,30,hDlg,(HMENU)5,NULL,NULL);
 
 }
+
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.
 ///El algoritmo utilizado es sequencial, ya que los usuarios no estan ordenados, por lo que va a recorrer toda la lista de usuarios hasta encontrarlo
     ListNode* current = userList;
@@ -529,7 +542,6 @@ ListNode *searchUser2(char *username, ListNode *userList) {///función que busca
     }
     return NULL;///Devuelve NULL si no encontró el usuario
 }
-
 
 void printuser(ListNode*User){///función de impresión de usuarios
     printf(" - Nombre de usuario: %s\n", User->user->username);
@@ -605,6 +617,7 @@ void print_user_list(ListNode* llista) {
         currentNode = currentNode->next;
     }
 }
+
 int read_users_file(User* user, ListNode** llista) {
     int max_usuarios = 20;
     FILE* fp = fopen("archivo_users.csv", "r");
@@ -690,8 +703,10 @@ int read_users_file(User* user, ListNode** llista) {
     fclose(fp); ///cerramos el fichero
     return i; ///devolvemos el numero de usuarios leídos
 }
+
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
+
 // Función para crear una nueva publicación
 Publicacion* crearPublicacion(const char* contenido) {
     Publicacion* publicacion = (Publicacion*)malloc(sizeof(Publicacion));
@@ -699,6 +714,7 @@ Publicacion* crearPublicacion(const char* contenido) {
     publicacion->contenido[MAX_CARACTERES] = '\0';
     return publicacion;
 }
+
 // Función para agregar una publicación al timeline del usuario
 void agregarPublicacion(User* usuario, Publicacion* publicacion) {
     if (usuario->timeline == NULL) {
@@ -793,6 +809,61 @@ void liberar(Lista* lista) {
 ////////////////////////////////////////////////////
 
 
+
+////////////////////////////////////////////////////////
+void initializeQueue(QueueF* queue) {
+    queue->front = 0;
+    queue->rear = -1;
+    queue->count = 0;
+}
+
+int isQueueEmpty(QueueF* queue) {
+    return (queue->count == 0);
+}
+
+int isQueueFull(QueueF* queue) {
+    return (queue->count == MAX_FRIENDS);
+}
+
+void enqueue(QueueF* queue, User user) {
+    if (isQueueFull(queue)) {
+        printf("La cola de solicitudes de amistad está llena.\n");
+        return;
+    }
+
+    queue->rear = (queue->rear + 1) % MAX_FRIENDS;
+    queue->friendList[queue->rear] = user;
+    queue->count++;
+}
+
+User dequeue(QueueF* queue) {
+    User emptyUser;
+    strcpy(emptyUser.username, "");
+
+    if (isQueueEmpty(queue)) {
+        printf("La cola de solicitudes de amistad está vacía.\n");
+        return emptyUser;
+    }
+
+    User user = queue->friendList[queue->front];
+    queue->front = (queue->front + 1) % MAX_FRIENDS;
+    queue->count--;
+
+    return user;
+}
+
+void displayFriendList(User* friends, int count) {
+    if (count == 0) {
+        printf("No tienes amigos en tu lista aún.\n");
+        return;
+    }
+
+    printf("Lista de amigos aceptados:\n");
+    for (int i = 0; i < count; i++) {
+        printf("- %s\n", friends[i].username);
+    }
+}
+////////////////////////////////////////////////////////
 
 // Función para enviar una solicitud de amistad
 void enviarSolicitud(User* remitente, User* destinatario) {

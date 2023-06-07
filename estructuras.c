@@ -2,6 +2,7 @@
 #define MAX_CARACTERES 120
 #define MAX_LENGTH 1000
 #define TABLE_SIZE 100
+#define MAX_FRIENDS 50
 
 // Definición de la estructura de publicación
 typedef struct {
@@ -33,14 +34,13 @@ typedef struct ListNode {
 } ListNode;
 
 
+typedef struct {
+    User friendList[MAX_FRIENDS];
+    int front;
+    int rear;
+    int count;
+} QueueF;
 
-
-
-// Nodo de la cola
-/*typedef struct QueueNode {
-    User user;
-    struct QueueNode* next;
-} QueueNode;*/
 
 typedef struct Node {
     char palabra[MAX_LENGTH];

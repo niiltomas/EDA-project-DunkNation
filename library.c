@@ -682,7 +682,7 @@ void mostrarPublicaciones(User* usuario) {
         printf("%d. %s\n", i + 1, usuario->timeline[i].contenido);
     }
 }
-
+///***************  FIN   **********************************************************************************************************
 
 
 void inicializar(Lista* lista) {

@@ -15,6 +15,8 @@ typedef struct {
     int age;
     char email[50];
     char city[50];
+    char j1[50];
+    char j2[50];
     char preferences[MAX_PREFERENCES][50];
     int password;
     Publicacion* timeline;

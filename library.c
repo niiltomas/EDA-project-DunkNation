@@ -18,6 +18,7 @@
 LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 
 ///para incluir una función en el codigo antes se tiene que llamar aqui
+//////////////////////////////////////////////
 void AddMenus(HWND);
 void AddControls(HWND);
 void registerDialogClass(HINSTANCE);
@@ -25,19 +26,18 @@ void displayDialog(HWND);
 void printuser(ListNode*);
 void print_user_list(ListNode*);
 int read_users_file(User*, ListNode**);
-
-
+//////////////////////////////////////////////
 Publicacion* crearPublicacion(const char*);
 void mostrarPublicaciones(User*);
 void agregarPublicacion(User*,Publicacion*);
-
-
+//////////////////////////////////////////////
 void initializeQueue(QueueF* queue);
 int isQueueEmpty(QueueF* queue);
 int isQueueFull(QueueF* queue);
 void enqueue(QueueF* queue, User user);
 User dequeue(QueueF* queue);
 void displayFriendList(User* friends, int count);
+//////////////////////////////////////////////
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -347,7 +347,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     }
                     break;
 
-                    /// mostrar solicitudes enviadas
+                    // mostrar solicitudes enviadas
                     /*MessageBox(hwnd, "Haz clic en Aceptar y luego ingresa el nombre de usuario al que deseas enviar una solicitud", "Enviar solicitud de amistad", MB_OK);
                     scanf("%s", username);  // Escanea el nombre de usuario
                     foundUser = searchUser2(username, userList);  // Busca el usuario en la lista
@@ -548,8 +548,9 @@ void insertarPalabra(HashTable* tabla, char* palabra) {
     nuevoNodo->siguiente = tabla->tabla[indice];
     tabla->tabla[indice] = nuevoNodo;
 }
+
 ///**************************************** Inicio declaracion de funciones de imprimir usuarios de una lista, imprimir usuarios,  leer archivo de usuarios,*************
-///****************************************agregar_publicacion y mostrar publicación************************************************************************************
+///**************************************************  agregar_publicacion y mostrar publicación   **********************************************************************
 void print_user_list(ListNode* llista) {
     printf("Lista de usuarios:\n");
 
@@ -682,7 +683,7 @@ void mostrarPublicaciones(User* usuario) {
         printf("%d. %s\n", i + 1, usuario->timeline[i].contenido);
     }
 }
-///***************  FIN   **********************************************************************************************************
+///**********************************************************************    FIN    ************************************************************************************
 
 
 void inicializar(Lista* lista) {

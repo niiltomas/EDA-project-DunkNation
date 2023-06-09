@@ -31,7 +31,7 @@ Publicacion* crearPublicacion(const char*);
 void mostrarPublicaciones(User*);
 void agregarPublicacion(User*,Publicacion*);
 //////////////////////////////////////////////
-void removeFriendRequestNode(FriendRequestNode*, FriendRequestQueue*);
+void eliminar_solicitud_amistad(FriendRequestNode*, FriendRequestQueue*);
 
 void initializeQueue(QueueF* queue);
 int isQueueEmpty(QueueF* queue);
@@ -247,25 +247,27 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     printf("Solicitudes de amistad recibidas:\n");
                     FriendRequestNode* currentNode =friendRequestsQueue.front;
                     while (currentNode != NULL) {
-                        printf("De: %s\n", currentNode->request->sender->username);
-                        printf("Aceptar solicitud? (s/n): ");
+                        if (strcmp(currentNode->request->receiver->username, currentUser->username) == 0) {///comparem si els noms són els mateixos,
+                            /// ja que a la llista on es guarden les solicituds estan totes barrejades, aleshores si coincideix el nom del receptor amb el nom d'usuari es permet de gestionar la solicitud
+                            ///si no no
+                            printf("De: %s\n", currentNode->request->sender->username);///imprimimos por pantalla el emisor de la solicitud de amistad
+                            printf("Aceptar solicitud? (s/n): ");
 
-                        char si_o_no;///variable per a guardar si o no
-                        scanf(" %c", &si_o_no); ///escaneamos la respuesta del receptor sobre si quiere aceptar la solicitud o no
-                        ///puede introducir 's' o 'S'
+                            char si_o_no;///variable per a guardar si o no
+                            scanf(" %c",&si_o_no); ///escaneamos la respuesta del receptor sobre si quiere aceptar la solicitud o no
+                            ///puede introducir 's' o 'S'
+                            if (si_o_no == 's' || si_o_no == 'S') {
+                                printf("Solicitud aceptada.\n");
 
-                        if (si_o_no == 's' || si_o_no == 'S') {
-                            printf("Solicitud aceptada.\n");
-
-                            removeFriendRequestNode(currentNode, &friendRequestsQueue);
-
-                            if(currentNode->next==NULL)break; ///si no hay siguiente, que salga
-                            FriendRequestNode* nextNode = currentNode->next; ///entonces
-                            currentNode = nextNode;
-                            printf("la seguent solicitud es: %s",currentNode->request->sender->username);
-                        } else {
-                            printf("Solicitud rechazada.\n");
-                            currentNode = currentNode->next;
+                                eliminar_solicitud_amistad(currentNode, &friendRequestsQueue);///eliminamos la solicitud una vez ya se ha aceptado
+                            } else {///el usuario ha rechazado la solicitud
+                                printf("Solicitud rechazada.\n");
+                            }
+                            if (currentNode->next == NULL)break; ///si no hay siguiente, que salga
+                            currentNode= currentNode->next; ///entonces
+                        }else{
+                            printf("Esta solicitud no es para ti \n");
+                            currentNode = currentNode->next;///el usuario en question pasa a ser el siguiente
                         }
 
                         }
@@ -284,14 +286,12 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     if (foundUser != NULL) {
                         // Crear la solicitud de amistad
                         FriendRequest* request = malloc(sizeof(FriendRequest));
-                        ///request->sender = user;
                         request->sender = currentUser;
                         request->receiver = foundUser->user;
 
                         // Crear el nodo de la solicitud de amistad
                         FriendRequestNode* requestNode = malloc(sizeof(FriendRequestNode));
                         requestNode->request = request;
-                        ///request->sender = user;
                         request->sender = currentUser;
                         requestNode->receiver = foundUser->user;
                         requestNode->next = NULL;
@@ -721,24 +721,31 @@ void liberarUsuarios(ListNode* listaUsuarios) {
     }
 }
 
-void removeFriendRequestNode(FriendRequestNode* node, FriendRequestQueue* queue) {
-    if (queue->front == node) {
-        queue->front = node->next;
-        if (queue->rear == node) {
-            queue->rear = NULL;
+///esta funcion elimina la solicitud de amistad
+void eliminar_solicitud_amistad(FriendRequestNode* solicitud, FriendRequestQueue* cola) {
+    if (cola->front ==
+        solicitud) { ///primero y antetodo comprobamos si la solicitud que queremos eliminar es el primer de la cola
+        cola->front = solicitud->next; ///actualitzem el front per a que passi al seguent
+        if (cola->rear == solicitud) {/// Si el node que s'ha d'eliminar és l'últim, actualitzem el punter a NULL
+            cola->rear = NULL;
         }
     } else {
-        FriendRequestNode* current = queue->front;
-        while (current != NULL && current->next != node) {
+        ///si no es el primer busquem el node anterior
+        FriendRequestNode *current = cola->front;
+        while (current != NULL && current->next != solicitud) {
             current = current->next;
         }
+        ///al trobar-lo actualitzem la seguent solicitud amb el punter next
         if (current != NULL) {
-            current->next = node->next;
-            if (queue->rear == node) {
-                queue->rear = current;
+            current->next = solicitud->next;
+            if (cola->rear ==
+                solicitud) {/// si la solicitud a eliminar és la última a eliminar, atualitzem el punter rear a la sol. anterior
+                if (cola->rear == solicitud) {
+                    cola->rear = current;
+                }
             }
         }
+        free(solicitud->request);
+        free(solicitud);///alliberem la memòria
     }
-    free(node->request);
-    free(node);
 }

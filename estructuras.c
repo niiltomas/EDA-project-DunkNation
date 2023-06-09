@@ -3,6 +3,8 @@
 #define MAX_LENGTH 1000
 #define TABLE_SIZE 100
 #define MAX_FRIENDS 50
+#define MAX_WORDS 1000
+#define MAX_WORD_LENGTH 100
 
 // Definición de la estructura de publicación
 typedef struct {
@@ -88,13 +90,14 @@ typedef struct Nodo {
     struct Nodo* siguiente;
 } Nodo;
 
-typedef struct {
-    Nodo* inicio;
-    Nodo* fin;
-} Lista;
 
-struct NodoDiccionario {
+typedef struct Node2 {
     char palabra[MAX_LENGTH];
     int conteo;
-    struct NodoDiccionario* siguiente;
-};
+    struct Node2* siguiente;
+} Node2;
+
+typedef struct {
+    Node2* inicio;
+    Node2* fin;
+} Lista;

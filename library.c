@@ -1,20 +1,19 @@
-#include "library.h"
 #include <stdio.h>
 #include <windows.h>
 #include <stddef.h>
 #include <wchar.h>
 #include <stdlib.h>
 #include "estructuras.c"
+#include "library.h"
 
 
 #define FILE_MENU_EXIT 3
 #define GENERATE_BUTTON 5
 #define LOGIN 6
 #define NEW_PLAYER 7
-#define MAX_PREFERENCES 2
 #define ARCHIVO_USERS 8
-#define SORTUSERS 9
 #define MAX_CHAR 100
+
 LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 
 ///para incluir una función en el codigo antes se tiene que llamar aqui
@@ -31,15 +30,16 @@ Publicacion* crearPublicacion(const char*);
 void mostrarPublicaciones(User*);
 void agregarPublicacion(User*,Publicacion*);
 //////////////////////////////////////////////
-void eliminar_solicitud_amistad(FriendRequestNode*, FriendRequestQueue*);
-
-void initializeQueue(QueueF* queue);
-int isQueueEmpty(QueueF* queue);
-int isQueueFull(QueueF* queue);
-void enqueue(QueueF* queue, User user);
-User dequeue(QueueF* queue);
-void displayFriendList(User* friends, int count);
+void inicializarDiccionario();
+Node* buscarPalabra(char* palabra);
+void insertarPalabra(char* palabra);
+int compararConteo(const void* a, const void* b);
+void mostrarPalabrasFrecuentes();
+void procesarPublicacion(char* contenido);
 //////////////////////////////////////////////
+void eliminar_solicitud_amistad(FriendRequestNode*, FriendRequestQueue*);
+//////////////////////////////////////////////
+
 User* currentUser = NULL;
 
 HMENU hMenu;
@@ -220,7 +220,6 @@ void AddControls(HWND hwnd) {
 FriendRequestQueue friendRequestsQueue = { NULL, NULL };
 FriendRequestQueue sentRequestsQueue = { NULL, NULL };
 
-
 LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 {
     User* user= malloc(sizeof(User));
@@ -231,6 +230,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     ListNode* foundUser = NULL;
 
     char username[20];
+
 
     switch(msg)
     {
@@ -313,42 +313,35 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                 }
 
 
-                case 4:///Anshpreet aqui tiene que ir tu parte de diccionarios la línea de free(user->timeline); te borrará los datos, así que tu codigo tiene que ir entremedio
+                case 4:{
                     printf("--- Publica  ---\n");
 
+                    inicializarDiccionario();
+
+                    char publicacion[MAX_LENGTH];
+                    printf("Ingrese 10 publicaciones:\n");
+
                     for (int i = 0; i < 11; i++) {
-                        char contenido[MAX_CARACTERES];
+                        printf("Publicacion %d: ", i + 1);
+                        fgets(publicacion, sizeof(publicacion), stdin);
 
-                        printf("Ingresa el contenido de la publicacion %d: ", i + 1);
-                        fgets(contenido, MAX_CARACTERES, stdin);
+                        // Eliminar el carácter de nueva línea si está presente
+                        char* newline = strchr(publicacion, '\n');
+                        if (newline != NULL) {
+                            *newline = '\0';
+                        }
 
-                        // Eliminar el salto de línea al final del contenido
-                        contenido[strcspn(contenido, "\n")] = '\0';
-
-                        // Crear la publicación
-                        Publicacion* publicacion = (Publicacion*)malloc(sizeof(Publicacion));
-                        strncpy(publicacion->contenido, contenido, MAX_CARACTERES);
-                        publicacion->contenido[MAX_CARACTERES - 1] = '\0';
-
-                        // Agregar la publicación al timeline del usuario
-                        agregarPublicacion(user, publicacion);
-
-                        printf("Publicacion realizada con exito.\n");
+                        procesarPublicacion(publicacion);
                     }
 
-                    // Mostrar todas las publicaciones del usuario
-                    mostrarPublicaciones(user);
-                    ///inicio diccionario (Tabla Hash)
-                    ///ten en cuenta que el diccionario tiene que leer las palabras, entonces devolverá el top 3 de palabras que mas salgan
-
-
-
-
-
-                    ///fin diccionario (Tabla Hash)
+                    // Mostrar las palabras más frecuentes
+                    mostrarPalabrasFrecuentes();
                     // Liberar memoria
                     free(user->timeline);
+
                     break;
+                }
+
             }
             break;
         case WM_CLOSE:
@@ -388,7 +381,7 @@ void displayDialog(HWND hwnd){///configuracion de los botones del submenu del us
     CreateWindowW(L"Button",L" Enviar solicitud de amistad",WS_VISIBLE | WS_CHILD |WS_BORDER,20,20, 300,30,hDlg,(HMENU)3,NULL,NULL);
 
     ///boton para publicar publicaciones"
-    CreateWindowW(L"Button",L"Diccionario con publicación",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)4,NULL,NULL);
+    CreateWindowW(L"Button",L"Publicar (con diccionario)",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)4,NULL,NULL);
 
 
 }
@@ -419,50 +412,6 @@ ListNode *searchUser2(char *username, ListNode *userList) {///función que busca
     return NULL;///Devuelve NULL si no encontró el usuario
 }
 
-
-
-
-
-
-
-int calcularHash(char* palabra) {
-    int hash = 0;
-    int i = 0;
-
-    while (palabra[i] != '\0') {
-        hash += palabra[i];
-        i++;
-    }
-
-    return hash % TABLE_SIZE;
-}
-
-void inicializarTabla(HashTable* tabla) {
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        tabla->tabla[i] = NULL;
-    }
-}
-
-void insertarPalabra(HashTable* tabla, char* palabra) {
-    int indice = calcularHash(palabra);
-
-    Node* nodo = tabla->tabla[indice];
-
-    while (nodo != NULL) {
-        if (strcmp(nodo->palabra, palabra) == 0) {
-            nodo->conteo++;
-            return;
-        }
-
-        nodo = nodo->siguiente;
-    }
-
-    Node* nuevoNodo = (Node*)malloc(sizeof(Node));
-    strcpy(nuevoNodo->palabra, palabra);
-    nuevoNodo->conteo = 1;
-    nuevoNodo->siguiente = tabla->tabla[indice];
-    tabla->tabla[indice] = nuevoNodo;
-}
 
 ///**************************************** Inicio declaracion de funciones de imprimir usuarios de una lista, imprimir usuarios,  leer archivo de usuarios,*************
 ///**************************************************  agregar_publicacion y mostrar publicación   **********************************************************************
@@ -496,6 +445,7 @@ void printuser(ListNode*User){///función de impresión de usuarios
 
 
 }
+
 int read_users_file(User* user, ListNode** llista) {
     int max_usuarios = 20;
     FILE* fp = fopen("archivo_users.csv", "r");
@@ -601,127 +551,97 @@ void mostrarPublicaciones(User* usuario) {
 ///**********************************************************************    FIN    ************************************************************************************
 
 
-void inicializar(Lista* lista) {
-    lista->inicio = NULL;
-    lista->fin = NULL;
+/////////////////////////////////////////////////////////
+Lista* diccionario;
+
+// Función para inicializar el diccionario
+void inicializarDiccionario() {
+    diccionario = malloc(sizeof(Lista));
+    diccionario->inicio = NULL;
+    diccionario->fin = NULL;
 }
 
-void insertar(Lista* lista, int dato) {
-    Nodo* nuevoNodo = (Nodo*)malloc(sizeof(Nodo));
-    nuevoNodo->dato = dato;
-    nuevoNodo->siguiente = NULL;
+// Función para buscar una palabra en el diccionario
+Node* buscarPalabra(char* palabra) {
+    Node* nodoActual = diccionario->inicio;
+    while (nodoActual != NULL) {
+        if (strcmp(nodoActual->palabra, palabra) == 0) {
+            return nodoActual;
+        }
+        nodoActual = nodoActual->siguiente;
+    }
+    return NULL;
+}
 
-    if (lista->inicio == NULL) {
-        lista->inicio = nuevoNodo;
-        lista->fin = nuevoNodo;
+// Función para insertar una palabra en el diccionario
+void insertarPalabra(char* palabra) {
+    Node* nodoExistente = buscarPalabra(palabra);
+    if (nodoExistente != NULL) {
+        nodoExistente->conteo++;
     } else {
-        lista->fin->siguiente = nuevoNodo;
-        lista->fin = nuevoNodo;
+        Node* nuevoNodo = malloc(sizeof(Node));
+        strcpy(nuevoNodo->palabra, palabra);
+        nuevoNodo->conteo = 1;
+        nuevoNodo->siguiente = NULL;
+
+        if (diccionario->inicio == NULL) {
+            diccionario->inicio = nuevoNodo;
+            diccionario->fin = nuevoNodo;
+        } else {
+            diccionario->fin->siguiente = nuevoNodo;
+            diccionario->fin = nuevoNodo;
+        }
     }
 }
 
-void mostrar(Lista* lista) {
-    Nodo* actual = lista->inicio;
-
-    while (actual != NULL) {
-        printf("%d ", actual->dato);
-        actual = actual->siguiente;
-    }
-    printf("\n");
+// Función de comparación para ordenar las palabras por conteo
+int compararConteo(const void* a, const void* b) {
+    Node* nodoA = *(Node**)a;
+    Node* nodoB = *(Node**)b;
+    return nodoB->conteo - nodoA->conteo;
 }
 
-void liberar(Lista* lista) {
-    Nodo* actual = lista->inicio;
-    Nodo* siguiente = NULL;
-
-    while (actual != NULL) {
-        siguiente = actual->siguiente;
-        free(actual);
-        actual = siguiente;
+// Función para mostrar las palabras más frecuentes
+void mostrarPalabrasFrecuentes() {
+    int numPalabras = 0;
+    Node* nodoActual = diccionario->inicio;
+    while (nodoActual != NULL) {
+        numPalabras++;
+        nodoActual = nodoActual->siguiente;
     }
 
-    lista->inicio = NULL;
-    lista->fin = NULL;
-}
-
-////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////
-void initializeQueue(QueueF* queue) {
-    queue->front = 0;
-    queue->rear = -1;
-    queue->count = 0;
-}
-
-int isQueueEmpty(QueueF* queue) {
-    return (queue->count == 0);
-}
-
-int isQueueFull(QueueF* queue) {
-    return (queue->count == MAX_FRIENDS);
-}
-
-void enqueue(QueueF* queue, User user) {
-    if (isQueueFull(queue)) {
-        printf("La cola de solicitudes de amistad está llena.\n");
-        return;
+    Node** arregloPalabras = malloc(numPalabras * sizeof(Node*));
+    nodoActual = diccionario->inicio;
+    int i = 0;
+    while (nodoActual != NULL) {
+        arregloPalabras[i] = nodoActual;
+        nodoActual = nodoActual->siguiente;
+        i++;
     }
 
-    queue->rear = (queue->rear + 1) % MAX_FRIENDS;
-    queue->friendList[queue->rear] = user;
-    queue->count++;
-}
+    qsort(arregloPalabras, numPalabras, sizeof(Node*), compararConteo);
 
-User dequeue(QueueF* queue) {
-    User emptyUser;
-    strcpy(emptyUser.username, "");
-
-    if (isQueueEmpty(queue)) {
-        printf("La cola de solicitudes de amistad está vacía.\n");
-        return emptyUser;
+    int numMostradas = numPalabras > 10 ? 10 : numPalabras;
+    printf("Las 10 palabras mas frecuentes son:\n");
+    for (i = 0; i < numMostradas; i++) {
+        printf("%s: %d\n", arregloPalabras[i]->palabra, arregloPalabras[i]->conteo);
     }
 
-    User user = queue->friendList[queue->front];
-    queue->front = (queue->front + 1) % MAX_FRIENDS;
-    queue->count--;
-
-    return user;
+    free(arregloPalabras);
 }
 
-void displayFriendList(User* friends, int count) {
-    if (count == 0) {
-        printf("No tienes amigos en tu lista aún.\n");
-        return;
-    }
-
-    printf("Lista de amigos aceptados:\n");
-    for (int i = 0; i < count; i++) {
-        printf("- %s\n", friends[i].username);
-    }
-}
-////////////////////////////////////////////////////////
-
-// Función para enviar una solicitud de amistad
-void enviarSolicitud(User* remitente, User* destinatario) {
-    // Aquí puedes implementar la lógica para enviar la solicitud
-    printf("Solicitud enviada: %s -> %s\n", remitente->username, destinatario->username);
-}
-
-// Función para liberar la memoria de la lista de usuarios
-void liberarUsuarios(ListNode* listaUsuarios) {
-    ListNode* temp;
-    while (listaUsuarios != NULL) {
-        temp = listaUsuarios;
-        listaUsuarios = listaUsuarios->next;
-        free(temp->user->timeline);
-        free(temp->user);
-        free(temp);
+// Ejemplo de función para procesar una publicación y contar las palabras
+void procesarPublicacion(char* contenido) {
+    char* token = strtok(contenido, " ");
+    while (token != NULL) {
+        insertarPalabra(token);
+        token = strtok(NULL, " ");
     }
 }
 
-///esta funcion elimina la solicitud de amistad
+/////////////////////////////////////////////////////////
+
+//esta funcion elimina la solicitud de amistad
 void eliminar_solicitud_amistad(FriendRequestNode* solicitud, FriendRequestQueue* cola) {
     if (cola->front ==
         solicitud) { ///primero y antetodo comprobamos si la solicitud que queremos eliminar es el primer de la cola

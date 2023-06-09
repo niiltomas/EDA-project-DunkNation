@@ -31,6 +31,8 @@ Publicacion* crearPublicacion(const char*);
 void mostrarPublicaciones(User*);
 void agregarPublicacion(User*,Publicacion*);
 //////////////////////////////////////////////
+void removeFriendRequestNode(FriendRequestNode*, FriendRequestQueue*);
+
 void initializeQueue(QueueF* queue);
 int isQueueEmpty(QueueF* queue);
 int isQueueFull(QueueF* queue);
@@ -38,6 +40,7 @@ void enqueue(QueueF* queue, User user);
 User dequeue(QueueF* queue);
 void displayFriendList(User* friends, int count);
 //////////////////////////////////////////////
+User* currentUser = NULL;
 
 HMENU hMenu;
 HWND hLogo,hEdit;
@@ -163,6 +166,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     if (foundUser != NULL) {
                         printf("Usuario encontrado:\n");
                         printuser(foundUser);
+                        currentUser = foundUser->user;
                         displayDialog(hwnd);
                     }
                     else {
@@ -226,7 +230,6 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     ListNode* current = userList;
     ListNode* foundUser = NULL;
 
-
     char username[20];
 
     switch(msg)
@@ -242,29 +245,54 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                 case 2:{
                     // Ver solicitudes de amistad recibidas
                     printf("Solicitudes de amistad recibidas:\n");
-                    FriendRequestNode* currentNode = friendRequestsQueue.front;
+                    FriendRequestNode* currentNode =friendRequestsQueue.front;
                     while (currentNode != NULL) {
                         printf("De: %s\n", currentNode->request->sender->username);
-                        currentNode = currentNode->next;
-                    }
+                        printf("Aceptar solicitud? (s/n): ");
+
+                        char si_o_no;///variable per a guardar si o no
+                        scanf(" %c", &si_o_no); ///escaneamos la respuesta del receptor sobre si quiere aceptar la solicitud o no
+                        ///puede introducir 's' o 'S'
+
+                        if (si_o_no == 's' || si_o_no == 'S') {
+                            printf("Solicitud aceptada.\n");
+
+                            removeFriendRequestNode(currentNode, &friendRequestsQueue);
+
+                            if(currentNode->next==NULL)break; ///si no hay siguiente, que salga
+                            FriendRequestNode* nextNode = currentNode->next; ///entonces
+                            currentNode = nextNode;
+                            printf("la seguent solicitud es: %s",currentNode->request->sender->username);
+                        } else {
+                            printf("Solicitud rechazada.\n");
+                            currentNode = currentNode->next;
+                        }
+
+                        }
                     break;
-                }
+                    }
 
                 case 3:{
                     // Enviar solicitud de amistad
                     printf("Introduce el nombre de usuario al que quieres enviar la solicitud: ");
                     scanf("%s", username);
+                    if (strcmp(currentUser->username,username) == 0) {
+                        printf("No puedes enviar una solicitud de amistad a ti mismo.\n");
+                        break;
+                    }
                     foundUser = searchUser2(username, userList);
                     if (foundUser != NULL) {
                         // Crear la solicitud de amistad
                         FriendRequest* request = malloc(sizeof(FriendRequest));
-                        request->sender = user;
+                        ///request->sender = user;
+                        request->sender = currentUser;
                         request->receiver = foundUser->user;
 
                         // Crear el nodo de la solicitud de amistad
                         FriendRequestNode* requestNode = malloc(sizeof(FriendRequestNode));
                         requestNode->request = request;
-                        requestNode->sender = user;
+                        ///request->sender = user;
+                        request->sender = currentUser;
                         requestNode->receiver = foundUser->user;
                         requestNode->next = NULL;
 
@@ -691,4 +719,26 @@ void liberarUsuarios(ListNode* listaUsuarios) {
         free(temp->user);
         free(temp);
     }
+}
+
+void removeFriendRequestNode(FriendRequestNode* node, FriendRequestQueue* queue) {
+    if (queue->front == node) {
+        queue->front = node->next;
+        if (queue->rear == node) {
+            queue->rear = NULL;
+        }
+    } else {
+        FriendRequestNode* current = queue->front;
+        while (current != NULL && current->next != node) {
+            current = current->next;
+        }
+        if (current != NULL) {
+            current->next = node->next;
+            if (queue->rear == node) {
+                queue->rear = current;
+            }
+        }
+    }
+    free(node->request);
+    free(node);
 }

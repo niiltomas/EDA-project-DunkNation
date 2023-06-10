@@ -29,7 +29,7 @@ Los objetivos alcanzados hasta el momento han sido: un sistema de registro y log
 ### Objetios obligatorios cumplidos
 
 
-LISTA
+LISTA:
 
 - Descripción general: Para implementar la lista enlazada, hemos utilizado diferentes variables con el objetivo de almacenar los diferentes usuarios y sus datos. Dentro de la lista ListNode, se han incluido una variable puntero llamada user de tipo estructura del usuario, User y un puntero llamado next que apunta a la siguiente posición de la lista (llamada recursiva a la ListNode). Esta última variable permite acceder al siguiente usuario de la lista y añadir usuarios de una forma más sencilla. El comportamiento esperado de la lista es poder añadir y guardar usuarios.
 Una de las mejoras que permitiría un acceso más eficiente a los nodos almacenados, podría ser una lista doblemente enlazada (en la que se tendría que añadir una variable puntero apuntando al usuario anterior).
@@ -149,7 +149,7 @@ El segundo error que nos encontramos, fue la imposibilidad de implementar una im
 
 ### Diseño de modelo de datos [maximo 250 palabras]
 
-![Figura 3: Diagrama de datos [05/06/23]](https://github.com/niiltomas/EDA2/blob/e1bfa0864e4c1642ab1949c7cb0d86aa9bc370d6/DIAGRAMA%20DE%20DATOS.png)
+![Figura 3: Diagrama de datos [05/06/23]](https://github.com/niiltomas/EDA2/blob/0d9fb3faeab103ee184d269cf52be65274f68a84/Diagrama%20definitivo%20de%20datos%20Dunk%20Nation.png)
 
 Empezando por el inicio, podemos o bien hacer un nuevo registro o registrar 20 usuarios. Después hacemos un login, y si el nombre de usuario y contraseña son correctos podremos entrar al submenú del usuario. Dentro del menú podremos decidir si bien cerramos la sesión, enviamos una solicitud de amistad a otro usuario que esté registrado (si el nombre es correcto, si no nos direccionará al submenú). Además también tendremos otro botón para gestionar las solicitudes recibidas (si para añadir amigo o no para no serlo) y finalmente un botón para crear una publicación, y escribir el lugar del encuentro en el que vamos a jugar a baloncesto. Y este es el funcionamiento de nuestra red social.
 

@@ -52,10 +52,10 @@ RM = "C:\Program Files\JetBrains\CLion 2022.3.1\bin\cmake\win\x64\bin\cmake.exe"
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\anshp\CLionProjects\EDA2e
+CMAKE_SOURCE_DIR = C:\Users\anshp\CLionProjects\EDA2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\anshp\CLionProjects\EDA2e\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\anshp\CLionProjects\EDA2\cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/EDA2.dir/depend.make
@@ -69,32 +69,32 @@ include CMakeFiles/EDA2.dir/progress.make
 include CMakeFiles/EDA2.dir/flags.make
 
 CMakeFiles/EDA2.dir/library.c.obj: CMakeFiles/EDA2.dir/flags.make
-CMakeFiles/EDA2.dir/library.c.obj: C:/Users/anshp/CLionProjects/EDA2e/library.c
+CMakeFiles/EDA2.dir/library.c.obj: C:/Users/anshp/CLionProjects/EDA2/library.c
 CMakeFiles/EDA2.dir/library.c.obj: CMakeFiles/EDA2.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\anshp\CLionProjects\EDA2e\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/EDA2.dir/library.c.obj"
-	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/EDA2.dir/library.c.obj -MF CMakeFiles\EDA2.dir\library.c.obj.d -o CMakeFiles\EDA2.dir\library.c.obj -c C:\Users\anshp\CLionProjects\EDA2e\library.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\anshp\CLionProjects\EDA2\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/EDA2.dir/library.c.obj"
+	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/EDA2.dir/library.c.obj -MF CMakeFiles\EDA2.dir\library.c.obj.d -o CMakeFiles\EDA2.dir\library.c.obj -c C:\Users\anshp\CLionProjects\EDA2\library.c
 
 CMakeFiles/EDA2.dir/library.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/EDA2.dir/library.c.i"
-	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\anshp\CLionProjects\EDA2e\library.c > CMakeFiles\EDA2.dir\library.c.i
+	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\anshp\CLionProjects\EDA2\library.c > CMakeFiles\EDA2.dir\library.c.i
 
 CMakeFiles/EDA2.dir/library.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/EDA2.dir/library.c.s"
-	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\anshp\CLionProjects\EDA2e\library.c -o CMakeFiles\EDA2.dir\library.c.s
+	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\anshp\CLionProjects\EDA2\library.c -o CMakeFiles\EDA2.dir\library.c.s
 
 CMakeFiles/EDA2.dir/estructuras.c.obj: CMakeFiles/EDA2.dir/flags.make
-CMakeFiles/EDA2.dir/estructuras.c.obj: C:/Users/anshp/CLionProjects/EDA2e/estructuras.c
+CMakeFiles/EDA2.dir/estructuras.c.obj: C:/Users/anshp/CLionProjects/EDA2/estructuras.c
 CMakeFiles/EDA2.dir/estructuras.c.obj: CMakeFiles/EDA2.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\anshp\CLionProjects\EDA2e\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/EDA2.dir/estructuras.c.obj"
-	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/EDA2.dir/estructuras.c.obj -MF CMakeFiles\EDA2.dir\estructuras.c.obj.d -o CMakeFiles\EDA2.dir\estructuras.c.obj -c C:\Users\anshp\CLionProjects\EDA2e\estructuras.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\anshp\CLionProjects\EDA2\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/EDA2.dir/estructuras.c.obj"
+	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/EDA2.dir/estructuras.c.obj -MF CMakeFiles\EDA2.dir\estructuras.c.obj.d -o CMakeFiles\EDA2.dir\estructuras.c.obj -c C:\Users\anshp\CLionProjects\EDA2\estructuras.c
 
 CMakeFiles/EDA2.dir/estructuras.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/EDA2.dir/estructuras.c.i"
-	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\anshp\CLionProjects\EDA2e\estructuras.c > CMakeFiles\EDA2.dir\estructuras.c.i
+	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\anshp\CLionProjects\EDA2\estructuras.c > CMakeFiles\EDA2.dir\estructuras.c.i
 
 CMakeFiles/EDA2.dir/estructuras.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/EDA2.dir/estructuras.c.s"
-	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\anshp\CLionProjects\EDA2e\estructuras.c -o CMakeFiles\EDA2.dir\estructuras.c.s
+	C:\PROGRA~2\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\anshp\CLionProjects\EDA2\estructuras.c -o CMakeFiles\EDA2.dir\estructuras.c.s
 
 # Object files for target EDA2
 EDA2_OBJECTS = \
@@ -108,7 +108,7 @@ libEDA2.a: CMakeFiles/EDA2.dir/library.c.obj
 libEDA2.a: CMakeFiles/EDA2.dir/estructuras.c.obj
 libEDA2.a: CMakeFiles/EDA2.dir/build.make
 libEDA2.a: CMakeFiles/EDA2.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\anshp\CLionProjects\EDA2e\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C static library libEDA2.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\anshp\CLionProjects\EDA2\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C static library libEDA2.a"
 	$(CMAKE_COMMAND) -P CMakeFiles\EDA2.dir\cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\EDA2.dir\link.txt --verbose=$(VERBOSE)
 
@@ -121,6 +121,6 @@ CMakeFiles/EDA2.dir/clean:
 .PHONY : CMakeFiles/EDA2.dir/clean
 
 CMakeFiles/EDA2.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\anshp\CLionProjects\EDA2e C:\Users\anshp\CLionProjects\EDA2e C:\Users\anshp\CLionProjects\EDA2e\cmake-build-debug C:\Users\anshp\CLionProjects\EDA2e\cmake-build-debug C:\Users\anshp\CLionProjects\EDA2e\cmake-build-debug\CMakeFiles\EDA2.dir\DependInfo.cmake --color=$(COLOR)
+	$(CMAKE_COMMAND) -E cmake_depends "MinGW Makefiles" C:\Users\anshp\CLionProjects\EDA2 C:\Users\anshp\CLionProjects\EDA2 C:\Users\anshp\CLionProjects\EDA2\cmake-build-debug C:\Users\anshp\CLionProjects\EDA2\cmake-build-debug C:\Users\anshp\CLionProjects\EDA2\cmake-build-debug\CMakeFiles\EDA2.dir\DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/EDA2.dir/depend
 

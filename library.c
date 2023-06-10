@@ -20,43 +20,43 @@ LRESULT CALLBACK WindowProcedure(HWND,UINT,WPARAM,LPARAM);
 
 ///para incluir una función en el codigo antes se tiene que llamar aqui
 //////////////////////////////////////////////
-void AddMenus(HWND);
-void AddControls(HWND);
-void registerDialogClass(HINSTANCE);
-void displayDialog(HWND);
-void printuser(ListNode*);
-void print_user_list(ListNode*);
-int read_users_file(User*, ListNode**);
+void AddMenus(HWND);///funcion para añadir los menus
+void AddControls(HWND);///funcion para añadir los controles
+void registerDialogClass(HINSTANCE);///funcion para registrar la clase del dialog
+void displayDialog(HWND);///funcion para mostrar el dialog
+void printuser(ListNode*);///funcion para imprimir los datos de un usuario
+void print_user_list(ListNode*);///funcion para imprimir la lista de usuarios
+int read_users_file(User*, ListNode**);///funcion para leer el archivo de usuarios
 //////////////////////////////////////////////
 Publicacion* crearPublicacion(const char*);
 void mostrarPublicaciones(User*);
 void agregarPublicacion(User*,Publicacion*);
 //////////////////////////////////////////////
-void inicializarDiccionario();
-Node* buscarPalabra(char* palabra);
-void insertarPalabra(char* palabra);
-int compararConteo(const void* a, const void* b);
-void mostrarPalabrasFrecuentes();
-void procesarPublicacion(char* contenido);
+void inicializarDiccionario();///funcion para inicializar el diccionario
+Node* buscarPalabra(char* palabra);///funcion para buscar una palabra en el diccionario
+void insertarPalabra(char* palabra);///funcion para insertar una palabra en el diccionario
+int compararConteo(const void* a, const void* b);///funcion para comparar el conteo de dos palabras
+void mostrarPalabrasFrecuentes();///funcion para mostrar las palabras frecuentes
+void procesarPublicacion(char* contenido);///funcion para procesar una publicacion
 //////////////////////////////////////////////
-void eliminar_solicitud_amistad(FriendRequestNode*, FriendRequestQueue*);
+void eliminar_solicitud_amistad(FriendRequestNode*, FriendRequestQueue*);///funcion para eliminar una solicitud de amistad
 //////////////////////////////////////////////
 
-// Función para inicializar la pila
+/// Función para inicializar la pila
 void initializeStack(Stack*);
 
-// Función para comprobar si la pila está vacía
+///Función para comprobar si la pila está vacía
 bool isEmpty(Stack*);
 
 
-// Función para empujar un elemento a la pila
+///Función para empujar un elemento a la pila
 void push(Stack* ,char);
 
-// Función para sacar un elemento de la pila
+/// Función para sacar un elemento de la pila
 char pop(Stack*);
 
 
-// Función para comprobar si la dirección de correo electrónico tiene solo un símbolo "@"
+///Función para comprobar si la dirección de correo electrónico tiene solo un símbolo "@"
 bool validateEmail(char*);
 
 
@@ -78,7 +78,7 @@ ListNode* searchUser2(char*, ListNode* );
 ///configuracion de la ventana principal
 ///es la equivalencia al main "normal" pero es el main utilizado para abrir una ventana
 /// : ##################################################################################################
-int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow) {
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow) {///funcion principal
     WNDCLASSW wc={0};
     wc.hbrBackground= (HBRUSH) (COLOR_WINDOW-1);
     wc.hCursor = LoadCursor (NULL,IDC_ARROW);
@@ -101,7 +101,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst,LPSTR arg , int ncmdshow
 }
 
 ///#########################################################################
-LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
+LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {///funcion que se encarga de la ventana principal
     User* user = malloc(sizeof(User));
 
     ///ListNode* current = userList;
@@ -144,7 +144,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     }
                     break;
                 case GENERATE_BUTTON:///codigo que muestra todos los usuarios
-                    // Recorrer la lista de usuarios e imprimir sus datos
+                    ///Recorrer la lista de usuarios e imprimir sus datos
                     current = userList;////
                     while (current != NULL) {
                         printuser(current);///imprime los datos del usuario
@@ -229,7 +229,7 @@ void AddMenus(HWND hwnd) {///exit de arriba a la izquierda
 }
 
 
-void AddControls(HWND hwnd) {
+void AddControls(HWND hwnd) {///añade los botones y demas a la ventana principal
     ///botones del main
     ///primer parametro indica si es un boton (interactuable) o fijo, el segungo el nombre a imprimir al boton, el siguiente bordes, visible,... ,
     ///los cuatro siguientes hacen referencia a las dimensiones en pixeles (x,y) (tercer,cuarto paramtro) y localización de los botones (x,y) (primero,segundo).
@@ -247,10 +247,10 @@ void AddControls(HWND hwnd) {
 
 
 
-FriendRequestQueue friendRequestsQueue = { NULL, NULL };
-FriendRequestQueue sentRequestsQueue = { NULL, NULL };
+FriendRequestQueue friendRequestsQueue = { NULL, NULL };///cola de solicitudes de amistad
+FriendRequestQueue sentRequestsQueue = { NULL, NULL };///cola de solicitudes de amistad enviadas
 
-LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
+LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)///funcion que se encarga de la ventana de dialog
 {
     User* user= malloc(sizeof(User));
     user->timeline = NULL;
@@ -273,7 +273,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     break;
 
                 case 2:{
-                    // Ver solicitudes de amistad recibidas
+                    ///Ver solicitudes de amistad recibidas
                     printf("Solicitudes de amistad recibidas:\n");
                     FriendRequestNode* currentNode =friendRequestsQueue.front;
                     while (currentNode != NULL) {
@@ -305,7 +305,12 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     }
 
                 case 3:{
-                    // Enviar solicitud de amistad
+                    ///Enviar solicitud de amistad
+///Solicita al usuario que
+///ingrese el nombre de usuario de la persona a la que desea enviar la solicitud, verifique si el nombre de usuario no es el
+///igual que el nombre de usuario del usuario actual, busca al usuario en la lista de usuarios, crea un amigo
+///objeto de solicitud, crea un nodo de solicitud de amistad, agrega el nodo de solicitud de amistad a la solicitud de amistad
+///queue e imprime un mensaje que indica si la solicitud se envió correctamente o no.
                     printf("Introduce el nombre de usuario al que quieres enviar la solicitud: ");
                     scanf("%s", username);
                     if (strcmp(currentUser->username,username) == 0) {
@@ -344,6 +349,8 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
 
 
                 case 4:{
+/// usuario publique 10 publicaciones y luego muestre las más frecuentes
+///palabras usadas en esos mensajes con uso de tabla de hash
                     printf("--- Publica  ---\n");
 
                     inicializarDiccionario();
@@ -355,7 +362,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                         printf("Publicacion %d: ", i + 1);
                         fgets(publicacion, sizeof(publicacion), stdin);
 
-                        // Eliminar el carácter de nueva línea si está presente
+                        ///Eliminar el carácter de nueva línea si está presente
                         char* newline = strchr(publicacion, '\n');
                         if (newline != NULL) {
                             *newline = '\0';
@@ -364,9 +371,9 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                         procesarPublicacion(publicacion);
                     }
 
-                    // Mostrar las palabras más frecuentes
+                    ///Mostrar las palabras más frecuentes
                     mostrarPalabrasFrecuentes();
-                    // Liberar memoria
+                    ///Liberar memoria
                     free(user->timeline);
 
                     break;
@@ -445,7 +452,7 @@ ListNode *searchUser2(char *username, ListNode *userList) {///función que busca
 
 ///**************************************** Inicio declaracion de funciones de imprimir usuarios de una lista, imprimir usuarios,  leer archivo de usuarios,*************
 ///**************************************************  agregar_publicacion y mostrar publicación   **********************************************************************
-void print_user_list(ListNode* llista) {
+void print_user_list(ListNode* llista) {///función de impresión de usuarios
     printf("Lista de usuarios:\n");
 
     ListNode* currentNode = llista;
@@ -479,16 +486,16 @@ void printuser(ListNode*User){///función de impresión de usuarios
 int read_users_file(User* user, ListNode** llista) {
     int max_usuarios = 20;
     FILE* fp = fopen("archivo_users.csv", "r");
-    if (fp == NULL) {
+    if (fp == NULL) {///si no se puede abrir el archivo
         printf("Error al abrir el archivo\n");
         return 0;
     }
 
     char linea[MAX_CHAR];
     int i = 0;
-    while (fgets(linea, MAX_CHAR, fp) != NULL && i < max_usuarios) {
+    while (fgets(linea, MAX_CHAR, fp) != NULL && i < max_usuarios) {///lee el archivo de usuarios
         char* token;
-        token = strtok(linea, ",");
+        token = strtok(linea, ",");///separa los datos por comas
 
         User* newUser = (User*)malloc(sizeof(User)); ///creamos el nuevo usuario
         if (newUser == NULL) {
@@ -497,29 +504,29 @@ int read_users_file(User* user, ListNode** llista) {
             return 0;
         }
 
-        strncpy(newUser->username, token, MAX_CHAR);// lee los datos del nombre
+        strncpy(newUser->username, token, MAX_CHAR);///lee los datos del nombre
         token = strtok(NULL, ",");
 
-        newUser->age = atoi(token);// lee los datos de la edad
+        newUser->age = atoi(token);///lee los datos de la edad
         token = strtok(NULL, ",");
 
-        newUser->password = atoi(token);// lee los datos de la contraseña
+        newUser->password = atoi(token);///lee los datos de la contraseña
         token = strtok(NULL, ",");
 
-        strncpy(newUser->email, token, MAX_CHAR);// lee los datos del email
+        strncpy(newUser->email, token, MAX_CHAR);///lee los datos del email
         token = strtok(NULL, ",");
 
-        strncpy(newUser->city, token, MAX_CHAR);// lee los datos de la ciudad
+        strncpy(newUser->city, token, MAX_CHAR);///lee los datos de la ciudad
         token = strtok(NULL, ",");
 
-        strncpy(newUser->j1, token, MAX_CHAR);// lee los datos del email
+        strncpy(newUser->j1, token, MAX_CHAR);///lee los datos del email
         token = strtok(NULL, ",");
-        strncpy(newUser->j2, token, MAX_CHAR);// lee los datos del email
+        strncpy(newUser->j2, token, MAX_CHAR);///lee los datos del email
         token = strtok(NULL, ",");
-        strncpy(newUser->posicion, token, MAX_CHAR);// lee los datos del email
+        strncpy(newUser->posicion, token, MAX_CHAR);///lee los datos del email
         token = strtok(NULL, ",");
 
-        ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));// Crear un nuevo nodo de lista
+        ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));///Crear un nuevo nodo de lista
         if (newNode == NULL) {
             printf("Error al asignar memoria para el nuevo nodo de lista\n");
             free(newUser);
@@ -528,9 +535,9 @@ int read_users_file(User* user, ListNode** llista) {
         }
 
 
-        newNode->user = newUser;// Asignamos el usuario al nodo
-        newNode->next = *llista;// Asignamos el siguiente nodo al actual
-        *llista= newNode;// Actualizamos el puntero de la lista al nuevo nodo
+        newNode->user = newUser;///Asignamos el usuario al nodo
+        newNode->next = *llista;///Asignamos el siguiente nodo al actual
+        *llista= newNode;///Actualizamos el puntero de la lista al nuevo nodo
 
         i++;
     }
@@ -545,33 +552,33 @@ int read_users_file(User* user, ListNode** llista) {
         ptr1 = *llista;
 
         while (ptr1->next != lptr) {
-            // Comparar los nombres sin distinguir entre mayúsculas y minúsculas
+            ///Comparar los nombres sin distinguir entre mayúsculas y minúsculas
             if (strcasecmp(ptr1->user->username, ptr1->next->user->username) > 0) {
-                // Intercambiar los usuarios entre nodos para lograr el ordenamiento
+                ///Intercambiar los usuarios entre nodos para lograr el ordenamiento
                 User* temp = ptr1->user;
                 ptr1->user = ptr1->next->user;
                 ptr1->next->user = temp;
-                swapped = 1;  // Indicar que se realizó un intercambio
+                swapped = 1;  ///Indicar que se realizó un intercambio
             }
 
-            ptr1 = ptr1->next;  // Avanzar al siguiente nodo
+            ptr1 = ptr1->next;  ///Avanzar al siguiente nodo
         }
 
-        lptr = ptr1;  // Marcar el último nodo ordenado
-    } while (swapped);  // Repetir hasta que no se realicen intercambios
+        lptr = ptr1;  ///Marcar el último nodo ordenado
+    } while (swapped);  ///Repetir hasta que no se realicen intercambios
 
     fclose(fp); ///cerramos el fichero
     return i; ///devolvemos el numero de usuarios leídos
 }
 
-//aqui es donde se controla y se guardan las publicaciones. Estas se almacenan aqui usuario->timeline[i].contenido
+///aqui es donde se controla y se guardan las publicaciones. Estas se almacenan aqui usuario->timeline[i].contenido
 void agregarPublicacion(User* usuario, Publicacion* publicacion) {
     usuario->timeline = (Publicacion*)realloc(usuario->timeline, (usuario->numPublicaciones + 1) * sizeof(Publicacion));
-    usuario->timeline[usuario->numPublicaciones] = *publicacion;
+    usuario->timeline[usuario->numPublicaciones] = *publicacion;///guardamos la publicación en el timeline del usuario
     usuario->numPublicaciones++;
 }
 
-// Función para mostrar todas las publicaciones del usuario
+///Función para mostrar todas las publicaciones del usuario
 void mostrarPublicaciones(User* usuario) {
     printf("\nTodas las publicaciones del usuario:\n");
     for (int i = 0; i < usuario->numPublicaciones; i++) {
@@ -584,94 +591,95 @@ void mostrarPublicaciones(User* usuario) {
 /////////////////////////////////////////////////////////
 Lista* diccionario;
 
-// Función para inicializar el diccionario
-void inicializarDiccionario() {
-    diccionario = malloc(sizeof(Lista));
-    diccionario->inicio = NULL;
-    diccionario->fin = NULL;
+///Función para inicializar el diccionario
+void inicializarDiccionario() {///inicializamos el diccionario
+    diccionario = malloc(sizeof(Lista));///reservamos memoria para el diccionario
+    diccionario->inicio = NULL;///inicializamos el inicio
+    diccionario->fin = NULL;///inicializamos el fin del diccionario
 }
 
-// Función para buscar una palabra en el diccionario
+///Función para buscar una palabra en el diccionario
 Node* buscarPalabra(char* palabra) {
     Node* nodoActual = diccionario->inicio;
-    while (nodoActual != NULL) {
-        if (strcmp(nodoActual->palabra, palabra) == 0) {
+    while (nodoActual != NULL) {///recorremos el diccionario
+        if (strcmp(nodoActual->palabra, palabra) == 0) {///si encontramos la palabra, devolvemos el nodo
             return nodoActual;
         }
-        nodoActual = nodoActual->siguiente;
+        nodoActual = nodoActual->siguiente;///si no encontramos la palabra, avanzamos al siguiente nodo
     }
     return NULL;
 }
 
-// Función para insertar una palabra en el diccionario
+///Función para insertar una palabra en el diccionario
 void insertarPalabra(char* palabra) {
-    Node* nodoExistente = buscarPalabra(palabra);
-    if (nodoExistente != NULL) {
+    Node* nodoExistente = buscarPalabra(palabra);///buscamos la palabra en el diccionario
+    if (nodoExistente != NULL) {///si la palabra ya existe, aumentamos su conteo
         nodoExistente->conteo++;
     } else {
-        Node* nuevoNodo = malloc(sizeof(Node));
+        Node* nuevoNodo = malloc(sizeof(Node));///si la palabra no existe, la insertamos en el diccionario
         strcpy(nuevoNodo->palabra, palabra);
         nuevoNodo->conteo = 1;
         nuevoNodo->siguiente = NULL;
 
-        if (diccionario->inicio == NULL) {
+        if (diccionario->inicio == NULL) {///si el diccionario está vacío, el nuevo nodo será el inicio y el fin
             diccionario->inicio = nuevoNodo;
             diccionario->fin = nuevoNodo;
-        } else {
+        } else {///si el diccionario no está vacío, el nuevo nodo será el nuevo fin
             diccionario->fin->siguiente = nuevoNodo;
             diccionario->fin = nuevoNodo;
         }
     }
 }
 
-// Función de comparación para ordenar las palabras por conteo
+///Función de comparación para ordenar las palabras por conteo
 int compararConteo(const void* a, const void* b) {
     Node* nodoA = *(Node**)a;
     Node* nodoB = *(Node**)b;
     return nodoB->conteo - nodoA->conteo;
 }
 
-// Función para mostrar las palabras más frecuentes
+///Función para mostrar las palabras más frecuentes
 void mostrarPalabrasFrecuentes() {
-    int numPalabras = 0;
+    int numPalabras = 0;///inicializamos  numPalabras a 0, que se usará para contar
+                        ///el numero de palabras en el diccionario
     Node* nodoActual = diccionario->inicio;
-    while (nodoActual != NULL) {
+    while (nodoActual != NULL) { ///recorremos el diccionario
         numPalabras++;
-        nodoActual = nodoActual->siguiente;
+        nodoActual = nodoActual->siguiente;///avanzamos al siguiente nodo
     }
 
-    Node** arregloPalabras = malloc(numPalabras * sizeof(Node*));
+    Node** arregloPalabras = malloc(numPalabras * sizeof(Node*));///creamos un arreglo de nodos
     nodoActual = diccionario->inicio;
     int i = 0;
-    while (nodoActual != NULL) {
-        arregloPalabras[i] = nodoActual;
+    while (nodoActual != NULL) {///recorremos el diccionario
+        arregloPalabras[i] = nodoActual;///asignamos el nodo actual al arreglo
         nodoActual = nodoActual->siguiente;
         i++;
     }
 
-    qsort(arregloPalabras, numPalabras, sizeof(Node*), compararConteo);
+    qsort(arregloPalabras, numPalabras, sizeof(Node*), compararConteo);///ordenamos el arreglo de palabras
 
-    int numMostradas = numPalabras > 10 ? 10 : numPalabras;
-    printf("Las 10 palabras mas frecuentes son:\n");
+    int numMostradas = numPalabras > 10 ? 10 : numPalabras;///mostramos las 10 palabras mas frecuentes
+    printf("Las 10 palabras mas frecuentes son:\n");///recorremos el arreglo de palabras
     for (i = 0; i < numMostradas; i++) {
-        printf("%s: %d\n", arregloPalabras[i]->palabra, arregloPalabras[i]->conteo);
+        printf("%s: %d\n", arregloPalabras[i]->palabra, arregloPalabras[i]->conteo);///mostramos la palabra y su conteo
     }
 
-    free(arregloPalabras);
+    free(arregloPalabras);///liberamos el arreglo de palabras
 }
 
-// Ejemplo de función para procesar una publicación y contar las palabras
+/// función para procesar una publicación y contar las palabras
 void procesarPublicacion(char* contenido) {
     char* token = strtok(contenido, " ");
-    while (token != NULL) {
-        insertarPalabra(token);
+    while (token != NULL) {///recorremos la publicacion
+        insertarPalabra(token);///insertamos la palabra en el diccionario
         token = strtok(NULL, " ");
     }
 }
 
 /////////////////////////////////////////////////////////
 
-//esta funcion elimina la solicitud de amistad
+///esta funcion elimina la solicitud de amistad
 void eliminar_solicitud_amistad(FriendRequestNode* solicitud, FriendRequestQueue* cola) {
     if (cola->front ==
         solicitud) { ///primero y antetodo comprobamos si la solicitud que queremos eliminar es el primer de la cola
@@ -701,20 +709,19 @@ void eliminar_solicitud_amistad(FriendRequestNode* solicitud, FriendRequestQueue
 }
 
 ///comprovación con pila si EMAIL ES CORRECTO O NO
-// Definición de la estructura de la pila
 
 
-// Función para inicializar la pila
+///Función para inicializar la pila
 void initializeStack(Stack* stack) {
     stack->top = NULL;
 }
 
-// Función para comprobar si la pila está vacía
+///Función para comprobar si la pila está vacía
 bool isEmpty(Stack* stack) {
     return (stack->top == NULL);
 }
 
-// Función para empujar un elemento a la pila
+///Función para empujar un elemento a la pila
 void push(Stack* stack, char data) {
     NODE* newNode = (NODE*)malloc(sizeof(NODE));
     newNode->data = data;
@@ -722,7 +729,7 @@ void push(Stack* stack, char data) {
     stack->top = newNode;
 }
 
-// Función para sacar un elemento de la pila
+///Función para sacar un elemento de la pila
 char pop(Stack* stack) {
     if (isEmpty(stack)) {
         printf("La pila está vacía.\n");
@@ -736,12 +743,12 @@ char pop(Stack* stack) {
     return data;
 }
 
-// Función para comprobar si la dirección de correo electrónico tiene solo un símbolo "@"
+///Función para comprobar si la dirección de correo electrónico tiene solo un símbolo "@"
 bool validateEmail(char* email) {
     Stack stack;
     initializeStack(&stack);
 
-    // Recorre cada carácter de la cadena de correo electrónico
+    ///Recorre cada carácter de la cadena de correo electrónico
     for (int i = 0; email[i] != '\0'; i++) {
         if (email[i] == '@') {
             // Si encuentra un símbolo "@", lo empuja a la pila
@@ -749,7 +756,7 @@ bool validateEmail(char* email) {
         }
     }
 
-    // Comprueba si la pila tiene exactamente un símbolo "@"
+    ///Comprueba si la pila tiene exactamente un símbolo "@"
     if (isEmpty(&stack) || stack.top->next != NULL) {
         return false;
     } else {

@@ -31,7 +31,7 @@ Los objetivos alcanzados hasta el momento han sido: un sistema de registro y log
 ### Objetios obligatorios cumplidos
 
 
-LISTA
+LISTA:
 
 - Descripción general: Para implementar la lista enlazada, hemos utilizado diferentes variables con el objetivo de almacenar los diferentes usuarios y sus datos. Dentro de la lista ListNode, se han incluido una variable puntero llamada user de tipo estructura del usuario, User y un puntero llamado next que apunta a la siguiente posición de la lista (llamada recursiva a la ListNode). Esta última variable permite acceder al siguiente usuario de la lista y añadir usuarios de una forma más sencilla. El comportamiento esperado de la lista es poder añadir y guardar usuarios.
 Una de las mejoras que permitiría un acceso más eficiente a los nodos almacenados, podría ser una lista doblemente enlazada (en la que se tendría que añadir una variable puntero apuntando al usuario anterior).
@@ -51,11 +51,12 @@ COLA:
 
 
 PILA: 
-- Descripción general:Para implementación de la pila, hemos usado funciones como  initializeStack se encarga de inicializar la pila, estableciendo el puntero top en NULL para indicar que está vacía, Luego usamos a función isEmpty comprueba si la pila está vacía verificando si el puntero top es NULL. Devuelve true si la pila está vacía y false en caso contrario. Despues, la  función push se utiliza para agregar un elemento a la pila. Crea un nuevo nodo, asigna el valor del elemento y actualiza los punteros para que el nuevo nodo se convierta en el nuevo elemento superior de la pila.Posteriormente,la función pop se encarga de extraer y devolver el elemento superior de la pila. Verifica si la pila está vacía y, de ser así, muestra un mensaje de error. En caso contrario, guarda el valor del elemento, actualiza los punteros y libera la memoria del nodo eliminado antes de devolver el elemento guardado. Por ultimo,la función validateEmail se utiliza para validar una dirección de correo electrónico. Recibe un puntero a una cadena de caracteres que representa la dirección de correo electrónico. La función recorre cada carácter de la cadena y, si encuentra el símbolo "@", lo empuja a la pila. Al finalizar el recorrido, verifica si la pila está vacía o si contiene más de un símbolo "@". Si alguna de estas condiciones se cumple, la función devuelve false, lo que indica que la dirección de correo electrónico no es válida. En caso contrario, devuelve true, indicando que la dirección de correo electrónico es válida y contiene exactamente un símbolo "@".
+- Descripción general:En esta red social, hemos implementado una pila que va a  comprobar si el correo electrónico del usuario que se está registrando tiene el formato correcto o no, por lo que mirará que el email tenga un ”@”.
+Las funciones que hemos utilizado para esta implementación són las funciones básicas de las pilas; pop() para extraer un elemento y push() para insertar un nuevo elemento. Además se una función para iniciarla, initializeStack(), una para comprobar si está vacía (ya que solo queremos saber si hay una. En caso de haber más, pues saldrá un error de email incorrecto) y finalmente validateEmail() donde se busca a cada elemento “@”, se añade a la pila y se comprueba si solo hay un elemento. Las estructuras que utiliza es una lista enlazada NODE (para la pila) y otra llamada Stack donde maneja el top (nivel) de la pila. Aspectos a mejorar que se podrían tener en cuenta es el hecho de comprobar la posición de “@”, ya que teóricamente no puede ir en la primera posición de la dirección
 
-- Tiempo:90 minutos aproximadamente.
+- Tiempo:60 minutos aproximadamente.
 
-- Ubicación:713 a 767 y luego sus estructuras en el archivo estructuras.c
+- Ubicación: Las funciones para la implementación de la pila se encuentran en las líneas713 a 767 del archivo library.c y luego sus estructuras en el archivo estructuras.c
 
 
 ALGORITMO DE BÚSQUEDA: (Linear Search)
@@ -64,15 +65,17 @@ ALGORITMO DE BÚSQUEDA: (Linear Search)
 
 - Tiempo: El desarrollo de esta función nos llevó aproximadamente unos 60 minutos.
 
-- Ubicación: La función searchUser() se encuentra en la línea X en el archivo estructuras.c.
+- Ubicación: La función searchUser() se encuentra en la línea 479 en el archivo estructuras.c.
 
-ALGORITMO DE ORDENAMIENTO: (pendiente de hacer)
+ALGORITMO DE ORDENAMIENTO:
 
-- Descripción general:
+- Descripción general: para implementar el algoritmo de ordenamiento, desde el grupo hemos decidido que utilizamos el algoritmo BubbleSort con una complejidad de  O(n2). Ese lo aplicaremos a la lista de usuarios que vamos a imprimir por consola, en que se podrán apreciar los usuarios ordenados alfabéticamente. 
+Su implementación se encuentra dentro de la función de lectura de usuarios del archivo_users.csv, read_users_file(), después de haber escaneado los diferentes parámetros. 
+Así pues, para el desarrollo del algoritmo hemos utilizado un entero para indicar si se ha realizado el intercambio de usuarios. Además hemos utilizado dos punteros de ListNode, uno para comparar y otro para marcar el último nodo ordenado, que va a ser el que sea alfabéticamente mayor. Las estructuras de datos utilizadas son la lista enlazada ListNode y la estructura User. Una posible limitación es la complejidad cuadrática del algoritmo, pero aun así no tiene un efecto muy importante en el programa ya que el número de usuarios es bastante reducido por lo que no tiene un gran impacto en el tiempo de ejecución. Mejoras a tener en cuenta, uso del algoritmo QuickSort, con complejidad de O(nlog(n))
 
-- Tiempo:
+- Tiempo:el desarrollo de esta parte de la función del read_user_file nos llevó 40 minutos aproximadamente.
 
-- Ubicación:
+- Ubicación: La función read_users_file() se encuentra en la línea 479 del documento library.c. En el caso del archivo se encuentra en el archivo_users.csv
 
 
 DICCIONARIO : 
@@ -83,34 +86,26 @@ DICCIONARIO :
 
 
 
-LEER DATOS DE UN ARCHIVO EXTERNO CSV:
-
-- Explicado en apartado de Objetivos libres cumplidos, conjuntamente con el guardado de datos.
-
-PERSONALIZACIÓN DE LA RED SOCIAL:
-
-- Descripción general: Hemos personalizado nuestra red social de la siguiente manera. hemos implementado una funcionalidad de registro (New Player) que permite a los usuarios crear una cuenta y luego iniciar sesión. Para registrarse, el usuario debe proporcionar su nombre, edad, una contraseña y una dirección de correo electrónico válida. Además, se solicita al usuario que indique sus dos jugadores favoritos y su posición en el juego.Una vez completado el proceso de registro, el usuario puede iniciar sesión en la red social. Desde allí, pueden enviar y recibir solicitudes de amistad que se almacenan en una cola. Estas solicitudes de amistad se eliminan una vez que son aceptadas, mientras que permanecen en la cola si son rechazadas o no se toma ninguna acción. Por ultimo tiene la opcion de publicar contenido, el usario publica 10 publicaciones y luego puede ver las palabras mas usadas en ellas.
-- Tiempo:
-
-- Ubicación:
-
 
 ### Objetivos deseables alcanzados
 
 
 LEER DATOS DE UN ARCHIVO EXTERNO CSV:
 
-- Explicado en apartado de Objetivos libres cumplidos, conjuntamente con el guardado de datos.
+- Descripción general: Para implementar la funcionalidad de im de datos procedentes de un archivo .csv, primero hemos creado el archivo .csv con los siguientes datos de los usuarios: nombre, edad, contraseña, email, ciudad, jugador 1 y jugador 2 de básquet favorito y finalmente la posición de juego. Y por otra parte la función read_users_file(). 
+Las variables utilizadas para esta función són: max_usuarios; número de iteraciones a realizar, fp; puntero a FILE que lo utilizamos para leer y abrir los datos del archivo, linea; array de carácteres utilizada para leer la línea de datos a cada iteración y finalmente  i; índice para llevar la cuenta de los usuarios leídos. Las estructuras de datos utilizadas han sido: user conteniendo los datos de los usuarios, y lo utilizamos para almacenar los datos de cada usuario leído del archivo.Y ListNode, lista enlazada utilizada para crear la lista enlazada de los 20 usuarios.El algoritmo utilizado para esta función es un algoritmo de lectura y construcción de lista enlazada, y esperamos que lea cada línea del archivo, y asigne los diferentes datos separados por comas, a los diferentes parámetros de cada nodo de la ListNode. El principal problema de la función, es si los datos leídos no son del tipo que se espera que sean, por ejemplo si espera un int, y en vez hay un string de carácteres, por lo que llevaría a resultados incorrectos a lo largo de la ejecución. Un aspecto que se podría mejorar, es utilizar estructuras de datos más eficientes para almacenar los usuarios, por ejemplo árboles o tablas hash, en lugar de una lista enlazada.
+
+
+Tiempo: El desarrollo de este conjunto de código nos llevó aproximadamente 4 horas.
+
+
+Ubicación: La función read_users_file() se encuentra en la línea 479 del documento library.c. En el caso del archivo se encuentra en el archivo_users.csv
 
 PERSONALIZACIÓN DE LA RED SOCIAL:
 
-- Descripción general:
+- Descripción general: Hemos personalizado nuestra red social de la siguiente manera. hemos implementado una funcionalidad de registro (New Player) que permite a los usuarios crear una cuenta y luego iniciar sesión. Para registrarse, el usuario debe proporcionar su nombre, edad, una contraseña y una dirección de correo electrónico válida. Además, se solicita al usuario que indique sus dos jugadores favoritos y su posición en el juego.Una vez completado el proceso de registro, el usuario puede iniciar sesión en la red social. Desde allí, pueden enviar y recibir solicitudes de amistad que se almacenan en una cola. Estas solicitudes de amistad se eliminan una vez que son aceptadas, mientras que permanecen en la cola si son rechazadas o no se toma ninguna acción. Por ultimo tiene la opcion de publicar contenido, el usario publica 10 publicaciones y luego puede ver las palabras mas usadas en ellas.
 
-- Tiempo:
-
-- Ubicación:
-
-
+- Tiempo: La personalización de la red social, no podemos medir de una forma exacta el tiempo que le hemos invertido, ya que a lo largo del proyecto nos hemos ido adaptando a los errores y problemas con los que nos encontramos. Por lo que hemos hecho ajuster para podernos adaptarnos a las diferentes situaciones.
 
 
 ### Objetivos libres cumplidos
@@ -124,25 +119,15 @@ INTERFAZ DE USUARIO:
 - Ubicación: La interfaz se encuentra en el archivo library.c, en la línea 42 del código.
 
 
-IMPLEMENTACIÓN DE FUNCIONALIDADES DE LECTURA Y GUARDADO DE DATOS DESDE UN ARCHIVO.CSV:
-
-- Descripción general: Para implementar la funcionalidad de lectura de datos procedentes de un archivo .csv, primero hemos creado el archivo .csv con los siguientes datos de los usuarios: nombre, edad, contraseña, email, ciudad, equipo y jugador de básquet favorito y finalmente la posición de juego. Y por otra parte la función read_users_file(). 
-Las variables utilizadas para esta función són: max_usuarios; número de iteraciones a realizar, fp; puntero a FILE que lo utilizamos para leer y abrir los datos del archivo, linea; array de carácteres utilizada para leer la línea de datos a cada iteración y finalmente  i; índice para llevar la cuenta de los usuarios leídos. Las estructuras de datos utilizadas han sido: user conteniendo los datos de los usuarios, y lo utilizamos para almacenar los datos de cada usuario leído del archivo.Y ListNode, lista enlazada utilizada para crear la lista enlazada de los 20 usuarios.El algoritmo utilizado para esta función es un algoritmo de lectura y construcción de lista enlazada, y esperamos que lea cada línea del archivo, y asigne los diferentes datos separados por comas, a los diferentes parámetros de cada nodo de la ListNode. El principal problema de la función, es si los datos leídos no son del tipo que se espera que sean, por ejemplo si espera un int, y en vez hay un string de carácteres, por lo que llevaría a resultados incorrectos a lo largo de la ejecución. Un aspecto que se podría mejorar, es utilizar estructuras de datos más eficientes para almacenar los usuarios, por ejemplo árboles o tablas hash, en lugar de una lista enlazada.
-
-- Tiempo: El desarrollo de este conjunto de código nos llevó aproximadamente 4 horas.
-
-- Ubicación: La función read_users_file() se encuentra en la línea X del documento library.c. En el caso del archivo se encuentra en el archivo_users.csv
-
 
 ## **SOLUCIÓN** [maximo 1500 palabras]
 
-Esta sección debe profundizar en la solución desarrollada para este proyecto.
 
 ### Arquitectura del sistema [maximo 750 palabras]
 
 La arquitectura de nuestra red social, se basa en una arquitectura de tres capas, compuesta por la capa de creación de la ventana de la interfaz, la capa de interacción de la interfaz con el/los usuario/s y la capa de datos y funciones que permite el correcto funcionamiento de la interacción. Para ayudar a la comprensión del funcionamiento, a continuación se adjunta un diagrama del funcionamiento general de la interfaz:
 
-![Figura 1: Diagrama interfaz gráfica de Dunk Nation [04/06/23]](https://github.com/niiltomas/EDA2/blob/0763fc1c0a5e66e6652519bc115237aaae3f387d/Captura%20de%20pantalla%202023-06-05%20110034.png)
+![Figura 1: Diagrama interfaz gráfica de Dunk Nation [04/06/23]](https://github.com/niiltomas/EDA2/blob/5a52c90547c6b925116d78cde04b0925d995e512/diagrama%20definitivo%20arquitectura%20Dunk%20Nation.png)
 
 El primer bloque, se caracteriza por crear la interfaz y su configuración. En primer lugar, hemos definido la estructura WNDCLASSW para registrar la clase de ventana, donde habrá información sobre el color de fondo (COLOR_WINDOW), el cursor (IDC_ARROW) o la instancia del programa hInst, entre otras funciones. A continuación con CreateWindowW creamos la interfaz con dimensiones (500,500)px  y nombre DUNK NATION. Cabe destacar que para inicializar esta ventana hemos utilizado la función de Windows WINAPI llamada WinMain(), donde va a ser la equivalencia al main() sin capa gráfica.
 
@@ -166,7 +151,7 @@ El segundo error que nos encontramos, fue la imposibilidad de implementar una im
 
 ### Diseño de modelo de datos [maximo 250 palabras]
 
-![Figura 3: Diagrama de datos [05/06/23]](https://github.com/niiltomas/EDA2/blob/e1bfa0864e4c1642ab1949c7cb0d86aa9bc370d6/DIAGRAMA%20DE%20DATOS.png)
+![Figura 3: Diagrama de datos [05/06/23]](https://github.com/niiltomas/EDA2/blob/0d9fb3faeab103ee184d269cf52be65274f68a84/Diagrama%20definitivo%20de%20datos%20Dunk%20Nation.png)
 
 Empezando por el inicio, podemos o bien hacer un nuevo registro o registrar 20 usuarios. Después hacemos un login, y si el nombre de usuario y contraseña son correctos podremos entrar al submenú del usuario. Dentro del menú podremos decidir si bien cerramos la sesión, enviamos una solicitud de amistad a otro usuario que esté registrado (si el nombre es correcto, si no nos direccionará al submenú). Además también tendremos otro botón para gestionar las solicitudes recibidas (si para añadir amigo o no para no serlo) y finalmente un botón para crear una publicación, y escribir el lugar del encuentro en el que vamos a jugar a baloncesto. Y este es el funcionamiento de nuestra red social.
 

@@ -125,7 +125,7 @@ INTERFAZ DE USUARIO:
 
 La arquitectura de nuestra red social, se basa en una arquitectura de tres capas, compuesta por la capa de creación de la ventana de la interfaz, la capa de interacción de la interfaz con el/los usuario/s y la capa de datos y funciones que permite el correcto funcionamiento de la interacción. Para ayudar a la comprensión del funcionamiento, a continuación se adjunta un diagrama del funcionamiento general de la interfaz:
 
-![Figura 1: Diagrama interfaz gráfica de Dunk Nation [04/06/23]](https://github.com/niiltomas/EDA2/blob/0763fc1c0a5e66e6652519bc115237aaae3f387d/Captura%20de%20pantalla%202023-06-05%20110034.png)
+![Figura 1: Diagrama interfaz gráfica de Dunk Nation [04/06/23]](https://github.com/niiltomas/EDA2/blob/5a52c90547c6b925116d78cde04b0925d995e512/diagrama%20definitivo%20arquitectura%20Dunk%20Nation.png)
 
 El primer bloque, se caracteriza por crear la interfaz y su configuración. En primer lugar, hemos definido la estructura WNDCLASSW para registrar la clase de ventana, donde habrá información sobre el color de fondo (COLOR_WINDOW), el cursor (IDC_ARROW) o la instancia del programa hInst, entre otras funciones. A continuación con CreateWindowW creamos la interfaz con dimensiones (500,500)px  y nombre DUNK NATION. Cabe destacar que para inicializar esta ventana hemos utilizado la función de Windows WINAPI llamada WinMain(), donde va a ser la equivalencia al main() sin capa gráfica.
 

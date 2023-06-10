@@ -101,3 +101,13 @@ typedef struct {
     Node2* inicio;
     Node2* fin;
 } Lista;
+
+///PILA
+typedef struct {
+    char data;
+    struct NODE* next;
+} NODE;
+
+typedef struct {
+    NODE* top;
+} Stack;

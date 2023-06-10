@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "estructuras.c"
 #include "library.h"
+#include <stdbool.h>
+
 
 
 #define FILE_MENU_EXIT 3
@@ -40,6 +42,27 @@ void procesarPublicacion(char* contenido);
 void eliminar_solicitud_amistad(FriendRequestNode*, FriendRequestQueue*);
 //////////////////////////////////////////////
 
+// Función para inicializar la pila
+void initializeStack(Stack*);
+
+// Función para comprobar si la pila está vacía
+bool isEmpty(Stack*);
+
+
+// Función para empujar un elemento a la pila
+void push(Stack* ,char);
+
+// Función para sacar un elemento de la pila
+char pop(Stack*);
+
+
+// Función para comprobar si la dirección de correo electrónico tiene solo un símbolo "@"
+bool validateEmail(char*);
+
+
+
+
+////*****************************************
 User* currentUser = NULL;
 
 HMENU hMenu;
@@ -132,34 +155,39 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                 case NEW_PLAYER:///en esta parte hay donde se escanea la parte del new player (la entrada es por consola)
                     MessageBox(hwnd, "click aceptar, then enter name age password email and city(separated by space)", "New player", MB_OK);
                     scanf("%s %d %d %s %s", user->username, &user->age, &user->password,user->email, user->city);
-                    MessageBox(hwnd, "click aceptar, then enter your first favourite player and the second (separeted by space) ", "New player", MB_OK);
-                    scanf("%s %s", user->j1,user->j2);
-                    ///prints para comprobar
-                    printf("Username: %s\n", user->username);
-                    printf("Age: %d\n", user->age);
-                    printf("Password: %d\n", user->password);
-                    printf("Email: %s\n", user->email);
-                    printf("City: %s\n", user->city);
-                    printf("Jugador 1: %s\n", user->j1);
-                    printf("Jugador 2: %s\n", user->j2);
+                    MessageBox(hwnd, "click aceptar, then enter your first favourite player and the second (separeted by space) and position", "New player", MB_OK);
+                    scanf("%s %s %s", user->j1,user->j2,user->posicion);
+                    if (validateEmail(user->email)) {
+                        printf("La dirección de correo electrónico es válida.\n");
+                        printf("Username: %s\n", user->username);
+                        printf("Age: %d\n", user->age);
+                        printf("Password: %d\n", user->password);
+                        printf("Email: %s\n", user->email);
+                        printf("City: %s\n", user->city);
+                        printf("Jugador 1: %s\n", user->j1);
+                        printf("Jugador 2: %s\n", user->j2);
+                        printf("Posicion: %s\n", user->posicion);
 
-
-                    ListNode* newNode = malloc(sizeof(ListNode));  /// Crear un nuevo nodo para el usuario
-                    newNode->user = user;
-                    newNode->next = NULL;
-                    if (userList == NULL) { /// Agregar el nuevo nodo a la lista
-                        userList = newNode; /// La lista está vacía, el nuevo nodo es el primer nodo
-                    } else {
-                        current = userList;
-                        while (current->next != NULL) { /// La lista no está vacía, agregar el nuevo nodo al final
-                            current = current->next;
+                        ListNode* newNode = malloc(sizeof(ListNode));  /// Crear un nuevo nodo para el usuario
+                        newNode->user = user;
+                        newNode->next = NULL;
+                        if (userList == NULL) { /// Agregar el nuevo nodo a la lista
+                            userList = newNode; /// La lista está vacía, el nuevo nodo es el primer nodo
+                        } else {
+                            current = userList;
+                            while (current->next != NULL) { /// La lista no está vacía, agregar el nuevo nodo al final
+                                current = current->next;
+                            }
+                            current->next = newNode;
                         }
-                        current->next = newNode;
+                    } else {
+                        printf("La dirección de correo electrónico no es válida.\n");
                     }
+                    ///prints para comprobar
                     break;
 
                 case LOGIN: ///parte donde se escanea los parametros del user
-                    MessageBox(hwnd, "click aceptar, then enter username and password(separated by space)", "LOGIN", MB_OK);
+                    MessageBox(hwnd, "click aceptar, then enter username and a numerical password(separated by space)", "LOGIN", MB_OK);
                     printf("Introduce nombre de usuario y contrasenya: ");
                     scanf("\n%s %d", username, &password);
                     foundUser = searchUser(username, password, userList);
@@ -172,6 +200,8 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                     else {
                         printf("Usuario no encontrado.\n");
                     }
+
+
                     break;
 
             }
@@ -225,7 +255,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
     User* user= malloc(sizeof(User));
     user->timeline = NULL;
     user->numPublicaciones = 0;
-    //    user->timeline=NULL;
+
     ListNode* current = userList;
     ListNode* foundUser = NULL;
 
@@ -669,3 +699,61 @@ void eliminar_solicitud_amistad(FriendRequestNode* solicitud, FriendRequestQueue
         free(solicitud);///alliberem la memòria
     }
 }
+
+///comprovación con pila si EMAIL ES CORRECTO O NO
+// Definición de la estructura de la pila
+
+
+// Función para inicializar la pila
+void initializeStack(Stack* stack) {
+    stack->top = NULL;
+}
+
+// Función para comprobar si la pila está vacía
+bool isEmpty(Stack* stack) {
+    return (stack->top == NULL);
+}
+
+// Función para empujar un elemento a la pila
+void push(Stack* stack, char data) {
+    NODE* newNode = (NODE*)malloc(sizeof(NODE));
+    newNode->data = data;
+    newNode->next = stack->top;
+    stack->top = newNode;
+}
+
+// Función para sacar un elemento de la pila
+char pop(Stack* stack) {
+    if (isEmpty(stack)) {
+        printf("La pila está vacía.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    NODE* temp = stack->top;
+    char data = temp->data;
+    stack->top = temp->next;
+    free(temp);
+    return data;
+}
+
+// Función para comprobar si la dirección de correo electrónico tiene solo un símbolo "@"
+bool validateEmail(char* email) {
+    Stack stack;
+    initializeStack(&stack);
+
+    // Recorre cada carácter de la cadena de correo electrónico
+    for (int i = 0; email[i] != '\0'; i++) {
+        if (email[i] == '@') {
+            // Si encuentra un símbolo "@", lo empuja a la pila
+            push(&stack, email[i]);
+        }
+    }
+
+    // Comprueba si la pila tiene exactamente un símbolo "@"
+    if (isEmpty(&stack) || stack.top->next != NULL) {
+        return false;
+    } else {
+        return true;
+    }
+}
+

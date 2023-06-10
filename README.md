@@ -27,15 +27,7 @@ Los objetivos alcanzados hasta el momento han sido: un sistema de registro y log
 
 
 ### Objetios obligatorios cumplidos
-En esta sección se deben cubrir los objetivos alcanzados en el proyecto. Cada objetivo presentado en las siguientes subsecciones debe cubrir los siguientes elementos:
-- Descripción general: Describir cómo se ha implementado. Más allá de lo que se le proporcionó en el documento de orientación, indique las características principales de las estructuras de datos y los algoritmos implementados para lograr este objetivo y su comportamiento. Debería incluir:
-	- ¿Qué variables se utilizaron y con qué propósito?
-	- ¿Cuáles fueron las estructuras de datos elegidas para este objetivo? ¿Para que se utilizó?
-	- ¿Cuál fue el algoritmo elegido para este objetivo? ¿Cuál es su comportamiento esperado?
-	- ¿Qué limitaciones tiene el algoritmo? ¿Cómo pasó en su implementación?
-	- ¿Qué se puede mejorar?
-- Tiempo: Tiempo necesario para desarrollar este objetivo
-- Ubicación: a qué línea de código y en qué archivo se encuentra esta implementación.
+
 
 LISTA
 
@@ -95,7 +87,7 @@ LEER DATOS DE UN ARCHIVO EXTERNO CSV:
 
 PERSONALIZACIÓN DE LA RED SOCIAL:
 
-- Descripción general: 
+- Descripción general: Hemos personalizado nuestra red social de la siguiente manera. hemos implementado una funcionalidad de registro (New Player) que permite a los usuarios crear una cuenta y luego iniciar sesión. Para registrarse, el usuario debe proporcionar su nombre, edad, una contraseña y una dirección de correo electrónico válida. Además, se solicita al usuario que indique sus dos jugadores favoritos y su posición en el juego.Una vez completado el proceso de registro, el usuario puede iniciar sesión en la red social. Desde allí, pueden enviar y recibir solicitudes de amistad que se almacenan en una cola. Estas solicitudes de amistad se eliminan una vez que son aceptadas, mientras que permanecen en la cola si son rechazadas o no se toma ninguna acción. Por ultimo tiene la opcion de publicar contenido, el usario publica 10 publicaciones y luego puede ver las palabras mas usadas en ellas.
 - Tiempo:
 
 - Ubicación:

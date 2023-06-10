@@ -15,7 +15,9 @@ Integrantes del grupo:
 1. Introducción
 2. Objetivos del projecto
 3. Solución
-4. Referencias
+4. Enlace video de la presentacion
+5. Referencias
+
 
 ## **INTRODUCCION** [maximo 250 palabras]
 
@@ -177,6 +179,10 @@ El primer conjunto de datos utilizado, es un archivo de datos de 20 usuarios arc
 
 El segundo conjunto de datos utilizado, es el registro de un nuevo usuario (este paso se puede realizar varias veces con el fin de tener varios usuarios registrados a la plataforma) el cual se obtuvo mediante una introducción manual de los datos del usuario y se escaneó mediante la función scanf(). A continuación los guardamos en la lista enlazada de tipo ListNode llamada newNode almacenando así todos los usuarios con sus datos correspondientes.
 
+## **ENLACE VIDEO** 
+
+Teniamos problemas para subir el video a GitHub, por lo que lo hemos subido a Google Drive.
+https://drive.google.com/file/d/1En3SOwcYVIFPzVsgpC4UqS2GnnWc5FmU/view?usp=sharing
 
 ## **REFERENCIAS**
 MindMeister [4/06/23]. Recuperado de https://www.mindmeister.com/es

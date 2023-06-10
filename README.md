@@ -47,22 +47,21 @@ Una de las mejoras que permitiría un acceso más eficiente a los nodos almacena
 - Ubicación: La estructura ListNode se encuentra en la línea 23 en el archivo estructuras.c.
 
 
-COLA: (pendiente de terminar)
+COLA:
 
 - Descripción general:
 
-- Tiempo:
+- Tiempo: Nos llevo más menos una semana.
 
 - Ubicación:
 
 
-PILA: (no la hacemos, habrá que pensar qué hacemos)
+PILA: 
+- Descripción general:Para implementación de la pila, hemos usado funciones como  initializeStack se encarga de inicializar la pila, estableciendo el puntero top en NULL para indicar que está vacía, Luego usamos a función isEmpty comprueba si la pila está vacía verificando si el puntero top es NULL. Devuelve true si la pila está vacía y false en caso contrario. Despues, la  función push se utiliza para agregar un elemento a la pila. Crea un nuevo nodo, asigna el valor del elemento y actualiza los punteros para que el nuevo nodo se convierta en el nuevo elemento superior de la pila.Posteriormente,la función pop se encarga de extraer y devolver el elemento superior de la pila. Verifica si la pila está vacía y, de ser así, muestra un mensaje de error. En caso contrario, guarda el valor del elemento, actualiza los punteros y libera la memoria del nodo eliminado antes de devolver el elemento guardado. Por ultimo,la función validateEmail se utiliza para validar una dirección de correo electrónico. Recibe un puntero a una cadena de caracteres que representa la dirección de correo electrónico. La función recorre cada carácter de la cadena y, si encuentra el símbolo "@", lo empuja a la pila. Al finalizar el recorrido, verifica si la pila está vacía o si contiene más de un símbolo "@". Si alguna de estas condiciones se cumple, la función devuelve false, lo que indica que la dirección de correo electrónico no es válida. En caso contrario, devuelve true, indicando que la dirección de correo electrónico es válida y contiene exactamente un símbolo "@".
 
-- Descripción general:
+- Tiempo:90 minutos aproximadamente.
 
-- Tiempo:
-
-- Ubicación:
+- Ubicación:713 a 767 y luego sus estructuras en el archivo estructuras.c
 
 
 ALGORITMO DE BÚSQUEDA: (Linear Search)
@@ -82,13 +81,11 @@ ALGORITMO DE ORDENAMIENTO: (pendiente de hacer)
 - Ubicación:
 
 
-DICCIONARIO O TABLA HASH: 
+DICCIONARIO : 
 
-- Descripción general:
-
-- Tiempo:
-
-- Ubicación:
+- Descripción general:Para implementar el  diccionario de palabras, se han desarrollado varias funciones. En primer lugar, se utiliza la función "inicializarDiccionario()" para establecer y reservar memoria, estableciendo los punteros de inicio y fin del diccionario como NULL. A continuación, se utiliza "insertarPalabra()" para agregar una palabra al diccionario. Esta función crea un nuevo nodo para la palabra y lo coloca al principio o al final del diccionario, según corresponda. "buscarPalabra()" busca una palabra en el diccionario y devuelve el nodo correspondiente si se encuentra. La función "eliminarPalabra()" elimina una palabra del diccionario si está presente. "destruirDiccionario()" se encarga de liberar la memoria asignada al diccionario y a sus nodos.
+- Tiempo: La implementación nos llevo   2 horas.
+- Ubicación:las funciones se encuntran en el archivo library.c en las 592 a 680 y luego su implemetación esta en case 4.
 
 
 
@@ -98,8 +95,7 @@ LEER DATOS DE UN ARCHIVO EXTERNO CSV:
 
 PERSONALIZACIÓN DE LA RED SOCIAL:
 
-- Descripción general:
-
+- Descripción general: 
 - Tiempo:
 
 - Ubicación:

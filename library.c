@@ -179,7 +179,7 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd,UINT msg,WPARAM wp,LPARAM lp) {
                                 current = current->next;
                             }
                             current->next = newNode;
-                        }
+                        }///
                     } else {
                         printf("La dirección de correo electrónico no es válida.\n");
                     }

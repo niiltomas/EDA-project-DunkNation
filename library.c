@@ -420,7 +420,7 @@ void displayDialog(HWND hwnd){///configuracion de los botones del submenu del us
     ///boton para publicar publicaciones"
     CreateWindowW(L"Button",L"Publicar (con diccionario)",WS_VISIBLE | WS_CHILD |WS_BORDER,20,130, 300,30,hDlg,(HMENU)4,NULL,NULL);
 
-
+///
 }
 
 ListNode* searchUser(char* username,int password, ListNode* userList) {///función que busca el usuario dentro de una lista donde hay todos los usuarios.

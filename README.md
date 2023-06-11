@@ -4,7 +4,7 @@
 Integrantes del grupo:
 
 
-- Nil Tomàs (u214575)
+- Nil Tomàs Plans (u214575)
 - Anshpreet Singh Kaur (u215093) 
 - Danial Imran Muhammad Begum (u215090)
 
@@ -43,11 +43,11 @@ Una de las mejoras que permitiría un acceso más eficiente a los nodos almacena
 
 COLA:
 
-- Descripción general:
+- Descripción general: Para la implementación de la cola hemos utilizado las variables friendRequestsQueue y sentRequestsQueue, de tipo FriendRequestQueue que son las utilizadas para almacenar las solicitudes de amistad. La primera es para las recibidas y la segunda para las enviadas. Las estructuras de datos que hemos utilizado son FriendRequestQueue; estructura para la  cola de solicitudes de amistad. Consiste en un puntero al primer y último nodo de la cola para encolar y desencolar. FriendRequestNode: Es la solicitud de la cola . Contiene un puntero a una estructura FriendRequest son las solicitudes de amistad, así como un puntero a la siguiente solicitud en la cola. La mejora que contemplamos es que no se pueda enviar más de una solicitud a la misma persona, ya que no tiene sentido y se está ocupando memoria de manera innecesaria. 
 
 - Tiempo: Nos llevo más menos una semana.
 
-- Ubicación:
+- Ubicación: La implementación de la cola se encuentra a partir de la línea 250-251 y 276-349 en el archivo library.c
 
 
 PILA: 

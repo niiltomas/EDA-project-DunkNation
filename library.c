@@ -234,11 +234,11 @@ void AddControls(HWND hwnd) {
     ///primer parametro indica si es un boton (interactuable) o fijo, el segungo el nombre a imprimir al boton, el siguiente bordes, visible,... ,
     ///los cuatro siguientes hacen referencia a las dimensiones en pixeles (x,y) (tercer,cuarto paramtro) y localización de los botones (x,y) (primero,segundo).
     /// LOS PARAMETROS QUE ACOMPAÑAN AL (HMENU) NOS LLAVARAN A LOS DIFERENTES CASES
-    CreateWindowW(L"Button",L"LOGIN",WS_VISIBLE |WS_CHILD|WS_BORDER,100,50,108,38,hwnd,(HMENU)LOGIN,0,0);
-    CreateWindowW(L"Button",L"NEW PLAYER",WS_VISIBLE |WS_CHILD|WS_BORDER ,250,50,128,38,hwnd,(HMENU)NEW_PLAYER,0,0);
-    CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,108,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);
-    CreateWindowW(L"Button",L"PRINT USER_FILE",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,128,38,hwnd,(HMENU)ARCHIVO_USERS,0,0);
-    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,278,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);
+    CreateWindowW(L"Button",L"LOGIN",WS_VISIBLE |WS_CHILD|WS_BORDER,100,50,108,38,hwnd,(HMENU)LOGIN,0,0); ///botón login
+    CreateWindowW(L"Button",L"NEW PLAYER",WS_VISIBLE |WS_CHILD|WS_BORDER ,250,50,128,38,hwnd,(HMENU)NEW_PLAYER,0,0);///botón registrar new player
+    CreateWindowW(L"Button",L"ALL PLAYERS",WS_VISIBLE |WS_CHILD|WS_BORDER,100,120,108,38,hwnd,(HMENU)GENERATE_BUTTON,0,0);///botón para imprimir todos los jugadores registrados manualmente
+    CreateWindowW(L"Button",L"PRINT USER_FILE",WS_VISIBLE |WS_CHILD|WS_BORDER,250,120,128,38,hwnd,(HMENU)ARCHIVO_USERS,0,0);///botón para imprimir 20 usuarios en orden alfabético
+    CreateWindowW(L"Button",L"EXIT",WS_VISIBLE |WS_CHILD|WS_BORDER,100,190,278,38,hwnd,(HMENU)FILE_MENU_EXIT,0,0);///botón para salir
     ///este fragmento de código es un intento fallido de insertar una imagen en la pagina principal
     hLogo=CreateWindowW(L"Static",NULL,WS_VISIBLE |WS_CHILD|SS_BITMAP,0,0,38,38,hwnd,0,0,0);
     SendMessageW(hLogo,STM_SETIMAGE,IMAGE_BITMAP,(LPARAM)hLogoImage);
@@ -351,7 +351,7 @@ LRESULT CALLBACK DialogProcedure(HWND hwnd,UINT msg, WPARAM wp, LPARAM lp)
                     char publicacion[MAX_LENGTH];
                     printf("Ingrese 10 publicaciones:\n");
 
-                    for (int i = 0; i < 11; i++) {
+                    for (int i = 0; i < 11; i++) {///hacemos 10 publicaciones
                         printf("Publicacion %d: ", i + 1);
                         fgets(publicacion, sizeof(publicacion), stdin);
 
@@ -444,8 +444,7 @@ ListNode *searchUser2(char *username, ListNode *userList) {///función que busca
 
 
 ///**************************************** Inicio declaracion de funciones de imprimir usuarios de una lista, imprimir usuarios,  leer archivo de usuarios,*************
-///**************************************************  agregar_publicacion y mostrar publicación   **********************************************************************
-void print_user_list(ListNode* llista) {
+void print_user_list(ListNode* llista) {///esta función imprime todos los usuarios dada una lista dinámica
     printf("Lista de usuarios:\n");
 
     ListNode* currentNode = llista;
@@ -464,7 +463,7 @@ void print_user_list(ListNode* llista) {
     }
 }
 
-void printuser(ListNode*User){///función de impresión de usuarios
+void printuser(ListNode*User){///función de impresión de datos del usuario
     printf(" - Nombre de usuario: %s\n", User->user->username);
     printf(" - Edad: %d\n", User->user->age);
     printf(" - Password: %d\n", User->user->password);
@@ -472,54 +471,55 @@ void printuser(ListNode*User){///función de impresión de usuarios
     printf(" - Ciudad: %s\n", User->user->city);
     printf(" - Jugador 1: %s\n", User->user->j1);
     printf(" - Jugador 2: %s\n", User->user->j2);
-
+    printf("Posicion favorita: %s\n", User->user->posicion);
 
 }
 
 int read_users_file(User* user, ListNode** llista) {
+    ///inicializamos variables fp para abrir el archivo y max_usuarios para saber el numero de veces a leer cada línea
     int max_usuarios = 20;
-    FILE* fp = fopen("archivo_users.csv", "r");
-    if (fp == NULL) {
+    FILE* fp = fopen("archivo_users.csv", "r");///abrimos el fichero
+    if (fp == NULL) {///si ha habido un error devolvemos un mensaje por consola
         printf("Error al abrir el archivo\n");
         return 0;
     }
-
+///si no;
     char linea[MAX_CHAR];
     int i = 0;
-    while (fgets(linea, MAX_CHAR, fp) != NULL && i < max_usuarios) {
+    while (fgets(linea, MAX_CHAR, fp) != NULL && i < max_usuarios) {///hacemos iteraciones donde vamos a ir leyendo cada línea siempre y cuando sea menor a max_usuarios o la linea sea diferente a NULL
         char* token;
         token = strtok(linea, ",");
 
         User* newUser = (User*)malloc(sizeof(User)); ///creamos el nuevo usuario
-        if (newUser == NULL) {
+        if (newUser == NULL) {///si hay error al crear el usuario
             printf("Error al asignar memoria para el nuevo usuario\n");
-            fclose(fp);
+            fclose(fp); ///cerramos el fichero
             return 0;
         }
 
-        strncpy(newUser->username, token, MAX_CHAR);// lee los datos del nombre
+        strncpy(newUser->username, token, MAX_CHAR);/// lee los datos del nombre
         token = strtok(NULL, ",");
 
-        newUser->age = atoi(token);// lee los datos de la edad
+        newUser->age = atoi(token);/// lee los datos de la edad
         token = strtok(NULL, ",");
 
-        newUser->password = atoi(token);// lee los datos de la contraseña
+        newUser->password = atoi(token);/// lee los datos de la contraseña
         token = strtok(NULL, ",");
 
-        strncpy(newUser->email, token, MAX_CHAR);// lee los datos del email
+        strncpy(newUser->email, token, MAX_CHAR);/// lee los datos del email
         token = strtok(NULL, ",");
 
-        strncpy(newUser->city, token, MAX_CHAR);// lee los datos de la ciudad
+        strncpy(newUser->city, token, MAX_CHAR);/// lee los datos de la ciudad
         token = strtok(NULL, ",");
 
-        strncpy(newUser->j1, token, MAX_CHAR);// lee los datos del email
+        strncpy(newUser->j1, token, MAX_CHAR);/// lee los datos del jugador 1
         token = strtok(NULL, ",");
-        strncpy(newUser->j2, token, MAX_CHAR);// lee los datos del email
+        strncpy(newUser->j2, token, MAX_CHAR);/// lee los datos del jugador 2
         token = strtok(NULL, ",");
-        strncpy(newUser->posicion, token, MAX_CHAR);// lee los datos del email
+        strncpy(newUser->posicion, token, MAX_CHAR);/// lee los datos de la posición de juego
         token = strtok(NULL, ",");
 
-        ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));// Crear un nuevo nodo de lista
+        ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));/// Crear un nuevo nodo de lista
         if (newNode == NULL) {
             printf("Error al asignar memoria para el nuevo nodo de lista\n");
             free(newUser);
@@ -528,9 +528,9 @@ int read_users_file(User* user, ListNode** llista) {
         }
 
 
-        newNode->user = newUser;// Asignamos el usuario al nodo
-        newNode->next = *llista;// Asignamos el siguiente nodo al actual
-        *llista= newNode;// Actualizamos el puntero de la lista al nuevo nodo
+        newNode->user = newUser;/// Asignamos el usuario al nodo
+        newNode->next = *llista;/// Asignamos el siguiente nodo al actual
+        *llista= newNode;/// Actualizamos el puntero de la lista al nuevo nodo
 
         i++;
     }
@@ -545,20 +545,20 @@ int read_users_file(User* user, ListNode** llista) {
         ptr1 = *llista;
 
         while (ptr1->next != lptr) {
-            // Comparar los nombres sin distinguir entre mayúsculas y minúsculas
+            /// Comparar los nombres sin distinguir entre mayúsculas y minúsculas
             if (strcasecmp(ptr1->user->username, ptr1->next->user->username) > 0) {
-                // Intercambiar los usuarios entre nodos para lograr el ordenamiento
+                /// Intercambiar los usuarios entre nodos para lograr el ordenamiento
                 User* temp = ptr1->user;
                 ptr1->user = ptr1->next->user;
                 ptr1->next->user = temp;
-                swapped = 1;  // Indicar que se realizó un intercambio
+                swapped = 1;  /// Indicar que se realizó un intercambio
             }
 
-            ptr1 = ptr1->next;  // Avanzar al siguiente nodo
+            ptr1 = ptr1->next;  /// Avanzar al siguiente nodo
         }
 
-        lptr = ptr1;  // Marcar el último nodo ordenado
-    } while (swapped);  // Repetir hasta que no se realicen intercambios
+        lptr = ptr1;  /// Marcar el último nodo ordenado
+    } while (swapped);  /// Repetir hasta que no se realicen intercambios
 
     fclose(fp); ///cerramos el fichero
     return i; ///devolvemos el numero de usuarios leídos
@@ -660,7 +660,7 @@ void mostrarPalabrasFrecuentes() {
     free(arregloPalabras);
 }
 
-// Ejemplo de función para procesar una publicación y contar las palabras
+///función para procesar una publicación y contar las palabras
 void procesarPublicacion(char* contenido) {
     char* token = strtok(contenido, " ");
     while (token != NULL) {
@@ -671,7 +671,7 @@ void procesarPublicacion(char* contenido) {
 
 /////////////////////////////////////////////////////////
 
-//esta funcion elimina la solicitud de amistad
+///esta funcion elimina la solicitud de amistad
 void eliminar_solicitud_amistad(FriendRequestNode* solicitud, FriendRequestQueue* cola) {
     if (cola->front ==
         solicitud) { ///primero y antetodo comprobamos si la solicitud que queremos eliminar es el primer de la cola
@@ -695,26 +695,25 @@ void eliminar_solicitud_amistad(FriendRequestNode* solicitud, FriendRequestQueue
                 }
             }
         }
-        free(solicitud->request);
+        free(solicitud->request);///alliberem la memòria
         free(solicitud);///alliberem la memòria
     }
 }
 
 ///comprovación con pila si EMAIL ES CORRECTO O NO
-// Definición de la estructura de la pila
 
 
-// Función para inicializar la pila
+/// Función de inicialización de la pila
 void initializeStack(Stack* stack) {
     stack->top = NULL;
 }
 
-// Función para comprobar si la pila está vacía
+/// Función que comprueba si la pila esta vacía
 bool isEmpty(Stack* stack) {
     return (stack->top == NULL);
 }
 
-// Función para empujar un elemento a la pila
+/// Función para insertar un elemento en el top d la pila
 void push(Stack* stack, char data) {
     NODE* newNode = (NODE*)malloc(sizeof(NODE));
     newNode->data = data;
@@ -722,13 +721,13 @@ void push(Stack* stack, char data) {
     stack->top = newNode;
 }
 
-// Función para sacar un elemento de la pila
+///Utilizamos esta función para sacar un elemento de la pila
 char pop(Stack* stack) {
     if (isEmpty(stack)) {
         printf("La pila está vacía.\n");
         exit(EXIT_FAILURE);
     }
-
+    ///en el caso de que no este vacía devolvemos el caracter guardado, con una variable auxiliar temp
     NODE* temp = stack->top;
     char data = temp->data;
     stack->top = temp->next;
@@ -736,20 +735,22 @@ char pop(Stack* stack) {
     return data;
 }
 
-// Función para comprobar si la dirección de correo electrónico tiene solo un símbolo "@"
+///En esta función comprobamos que la dirección de correo electrónico tiene solo un símbolo "@"
 bool validateEmail(char* email) {
+    ///inicialicamos variable stack para la pila
     Stack stack;
     initializeStack(&stack);
 
-    // Recorre cada carácter de la cadena de correo electrónico
+    /// Recorre cada carácter de la cadena de correo electrónico
     for (int i = 0; email[i] != '\0'; i++) {
         if (email[i] == '@') {
-            // Si encuentra un símbolo "@", lo empuja a la pila
+            /// Si encuentra un símbolo "@", lo mete a la pila con la función push
             push(&stack, email[i]);
         }
     }
 
-    // Comprueba si la pila tiene exactamente un símbolo "@"
+    /// Comprueba si la pila tiene exactamente un símbolo "@". Si esta vacía o la siguinte posición de la pila no es NULL, el correo sera erróneo ya que
+    ///querra decir que o bien no tiene ningun "@" o que tiene más de uno. Asi mismo devolveremos false si el email no es correcto o True si es correcto
     if (isEmpty(&stack) || stack.top->next != NULL) {
         return false;
     } else {

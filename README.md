@@ -8,7 +8,7 @@ Integrantes del grupo:
 - Anshpreet Singh Kaur (u215093) 
 - Danial Imran Muhammad Begum (u215090)
 
-# **INFORME DEL PROJECTO**
+# **INFORME DEL PROYECTO**
 
 ## **TABLA DE CONTENIDOS**
 
@@ -19,7 +19,7 @@ Integrantes del grupo:
 5. Referencias
 
 
-## **INTRODUCCION** [maximo 250 palabras]
+## **INTRODUCCIÓN** [maximo 250 palabras]
 
 En un mundo que avanza a estar cada vez más conectado, las redes sociales son y serán una parte fundamental de nuestras vidas. Así pues, a nuestro equipo nos ha surgido la necesidad de crear una red social de baloncesto llamada Dunk Nation, que permita a los jugadores comunicarse y organizar partidos de una forma fácil y eficaz, ya que muy a menudo, los jugadores no encuentran compañeros con quién compartir o sitios adecuados para jugar. Para crear esta red social, nos hemos inspirado en Facebook por el sistema de crear publicaciones, en el que se va a definir el lugar y hora del encuentro, y los otros jugadores podrán publicar si asisten o no.
 Los objetivos alcanzados hasta el momento han sido: un sistema de registro y login de jugadores, un sistema de perfiles con las características de cada usuario (datos personales, ubicación, posición de juego, etc.), enviar solicitudes de amistad a otros jugadores, realizar publicaciones sobre encuentros y mostrar aquellos más comunes. 
